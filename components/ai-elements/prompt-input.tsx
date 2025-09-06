@@ -2,7 +2,6 @@
 
 import { type HTMLMotionProps, motion } from "motion/react";
 import type { ComponentProps } from "react";
-import { buttonVariants } from "@/components/ui/button";
 import { ArrowUpIcon } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 
@@ -55,8 +54,8 @@ function PurePromptInputSubmit({
 	return (
 		<motion.button
 			className={cn(
-				buttonVariants({ className, size: "icon" }),
-				"shrink-0 rounded-full shadow-none [grid-area:action]",
+				"disabled:!pointer-events-none disabled:!opacity-50 flex size-9 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-none transition-opacity duration-500 ease-[cubic-bezier(.32,.72,0,1)] [grid-area:action]",
+				className,
 			)}
 			layout="position"
 			layoutId="submit-button"

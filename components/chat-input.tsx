@@ -17,46 +17,81 @@ import { useTypewriter } from "@/hooks/use-typewriter";
 
 export function ChatInput() {
 	const inputRef = useRef<HTMLTextAreaElement>(null);
+	const expandedHeightRef = useRef<number>(24);
 
 	const [prompt, setPrompt] = useState("");
 	const [threshold, setThreshold] = useState<number | null>(null);
 	const [isExpanded, setIsExpanded] = useState(false);
 
-	const resetHeight = useCallback(() => {
-		if (inputRef.current) {
-			inputRef.current.style.height = "auto";
-			inputRef.current.style.height = "24px";
-		}
-	}, []);
-
+	// Auto-resize textarea and handle expansion logic
+	// biome-ignore lint/correctness/useExhaustiveDependencies: We intentionally avoid circular dependencies by only depending on prompt
 	useLayoutEffect(() => {
 		if (!inputRef.current) {
 			return;
 		}
 
-		let height = inputRef.current.style.height;
+		// Always reset to auto to get accurate measurement
+		inputRef.current.style.height = "auto";
 		const scrollHeight = inputRef.current.scrollHeight;
+		const shouldExpand = scrollHeight > 24;
 
-		if (height !== `${scrollHeight}px`) {
-			height = `${scrollHeight}px`;
-
-			const shouldExpand = scrollHeight > 24;
-
-			if (shouldExpand !== isExpanded) {
-				setIsExpanded(shouldExpand);
-			}
-
-			if (shouldExpand && !threshold) {
-				setThreshold(prompt.length);
-			}
+		// Record the largest expanded height seen so far
+		if (shouldExpand) {
+			expandedHeightRef.current = Math.max(
+				expandedHeightRef.current,
+				scrollHeight,
+			);
 		}
 
-		if (threshold && prompt.length >= threshold) {
-			height = "24px";
+		// Apply height: if expanded, lock to at least the last expanded height to avoid shrinking
+		if (isExpanded) {
+			const targetHeight = Math.max(
+				shouldExpand ? scrollHeight : 24,
+				expandedHeightRef.current,
+			);
+			inputRef.current.style.height = `${targetHeight}px`;
+		} else {
+			inputRef.current.style.height = shouldExpand
+				? `${scrollHeight}px`
+				: "24px";
+		}
+
+		// Handle state changes based on content and threshold
+
+		// Handle threshold-based collapse (user deleted enough text AND content fits in 24px)
+		if (
+			threshold !== null &&
+			prompt.length <= threshold &&
+			isExpanded &&
+			!shouldExpand
+		) {
 			setIsExpanded(false);
 			setThreshold(null);
+			expandedHeightRef.current = 24;
+			// Ensure immediate visual collapse without waiting another cycle
+			inputRef.current.style.height = "24px";
+			return;
 		}
-	});
+
+		// Handle expansion - only expand if not already expanded
+		if (shouldExpand && !isExpanded) {
+			setIsExpanded(true);
+			// Set threshold when expanding for the first time
+			if (!threshold) {
+				setThreshold(prompt.length);
+			}
+			expandedHeightRef.current = Math.max(48, scrollHeight);
+			return;
+		}
+
+		// Handle natural collapse (content shrunk and no longer needs expansion)
+		if (!shouldExpand && isExpanded && !threshold) {
+			setIsExpanded(false);
+			expandedHeightRef.current = 24;
+			inputRef.current.style.height = "24px";
+			return;
+		}
+	}, [prompt]);
 
 	const handleChange = useCallback(
 		(event: React.ChangeEvent<HTMLTextAreaElement>) => {

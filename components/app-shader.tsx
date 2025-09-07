@@ -7,12 +7,14 @@ import { useMounted } from "@/hooks/use-mounted";
 export function AppShader({
 	size,
 	speed,
+
 	pxSize,
 	darkColor,
 	lightColor,
 }: {
 	size: number;
 	speed: number;
+
 	pxSize: number;
 	darkColor: string;
 	lightColor: string;
@@ -28,13 +30,12 @@ export function AppShader({
 	}
 
 	const isDark = resolvedTheme === "dark";
-	const colorBack = isDark ? "rgb(33, 33, 33)" : "rgb(255, 255, 255)";
 	const colorFront = isDark ? darkColor : lightColor;
 
 	return (
 		<Dithering
 			className="rounded-full"
-			colorBack={colorBack}
+			colorBack="rgb(0, 0, 0, 0)"
 			colorFront={colorFront}
 			offsetX={0}
 			offsetY={0}

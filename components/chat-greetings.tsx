@@ -29,7 +29,7 @@ function Shader() {
 
 	const isDark = resolvedTheme === "dark";
 	const colorBack = isDark ? "rgb(33, 33, 33)" : "rgb(255, 255, 255)";
-	const colorFront = isDark ? "rgb(255, 255, 255)" : "rgb(10, 10, 10)";
+	const colorFront = isDark ? "rgb(1, 105, 204)" : "rgb(51, 156, 255)";
 
 	return (
 		<Dithering

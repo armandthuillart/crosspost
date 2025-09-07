@@ -46,7 +46,7 @@
 
 
 :root {
-	--primary: oklch(14.5% 0 0);
+	--primary: oklch(68.2% 0.173 251);
 	--primary-foreground: oklch(100% 0 0);
 	--secondary: oklch(92.2% 0 0);
 	--secondary-foreground: oklch(14.5% 0 0);
@@ -80,8 +80,8 @@
 }
 
 .dark {
-	--primary: oklch(98.2% 0 0);
-	--primary-foreground: oklch(15.9% 0 0);
+	--primary: oklch(52.9% 0.173 255);
+	--primary-foreground: oklch(100% 0 0);
 	--secondary: oklch(37.9% 0 0);
 	--secondary-foreground: oklch(100% 0 0);
 	--accent: oklch(100% 0 0 / 13.5%);

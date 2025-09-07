@@ -9,88 +9,68 @@ import {
 } from "react";
 import {
 	PromptInput,
+	PromptInputSubmit,
 	PromptInputTextarea,
-	PurePromptInputSubmit,
 } from "@/components/ai-elements/prompt-input";
 import { useAutoFocus } from "@/hooks/use-auto-focus";
 import { useTypewriter } from "@/hooks/use-typewriter";
 
+// Constants for textarea sizing
+const TEXTAREA_MIN_HEIGHT = 24;
+const TEXTAREA_EXPANDED_MIN_HEIGHT = 48;
+
 export function ChatInput() {
 	const inputRef = useRef<HTMLTextAreaElement>(null);
-	const expandedHeightRef = useRef<number>(24);
 
 	const [prompt, setPrompt] = useState("");
 	const [threshold, setThreshold] = useState<number | null>(null);
 	const [isExpanded, setIsExpanded] = useState(false);
 
-	// Auto-resize textarea and handle expansion logic
-	// biome-ignore lint/correctness/useExhaustiveDependencies: We intentionally avoid circular dependencies by only depending on prompt
+	// Auto-resize textarea and handle expansion/collapse logic in a single place
+	// biome-ignore lint/correctness/useExhaustiveDependencies: intentionally depend only on prompt to avoid feedback loops from setState
 	useLayoutEffect(() => {
-		if (!inputRef.current) {
-			return;
-		}
+		const textarea = inputRef.current;
+		if (!textarea) return;
 
-		// Always reset to auto to get accurate measurement
-		inputRef.current.style.height = "auto";
-		const scrollHeight = inputRef.current.scrollHeight;
-		const shouldExpand = scrollHeight > 24;
+		textarea.style.height = "auto";
+		const scrollHeight = textarea.scrollHeight;
+		const isOverflowing = scrollHeight > TEXTAREA_MIN_HEIGHT;
 
-		// Record the largest expanded height seen so far
-		if (shouldExpand) {
-			expandedHeightRef.current = Math.max(
-				expandedHeightRef.current,
-				scrollHeight,
-			);
-		}
+		let nextIsExpanded = isExpanded;
+		let nextThreshold = threshold;
 
-		// Apply height: if expanded, lock to at least the last expanded height to avoid shrinking
-		if (isExpanded) {
-			const targetHeight = Math.max(
-				shouldExpand ? scrollHeight : 24,
-				expandedHeightRef.current,
-			);
-			inputRef.current.style.height = `${targetHeight}px`;
-		} else {
-			inputRef.current.style.height = shouldExpand
-				? `${scrollHeight}px`
-				: "24px";
-		}
+		const shouldExpand = isOverflowing && !isExpanded;
 
-		// Handle state changes based on content and threshold
-
-		// Handle threshold-based collapse (user deleted enough text AND content fits in 24px)
-		if (
-			threshold !== null &&
-			prompt.length <= threshold &&
+		const shouldCollapse =
 			isExpanded &&
-			!shouldExpand
-		) {
-			setIsExpanded(false);
-			setThreshold(null);
-			expandedHeightRef.current = 24;
-			// Ensure immediate visual collapse without waiting another cycle
-			inputRef.current.style.height = "24px";
-			return;
-		}
+			!isOverflowing &&
+			(nextThreshold == null || prompt.length < nextThreshold);
 
-		// Handle expansion - only expand if not already expanded
-		if (shouldExpand && !isExpanded) {
-			setIsExpanded(true);
-			// Set threshold when expanding for the first time
-			if (!threshold) {
-				setThreshold(prompt.length);
+		if (shouldExpand) {
+			nextIsExpanded = true;
+			if (nextThreshold == null) {
+				nextThreshold = prompt.length;
 			}
-			expandedHeightRef.current = Math.max(48, scrollHeight);
-			return;
 		}
 
-		// Handle natural collapse (content shrunk and no longer needs expansion)
-		if (!shouldExpand && isExpanded && !threshold) {
-			setIsExpanded(false);
-			expandedHeightRef.current = 24;
-			inputRef.current.style.height = "24px";
-			return;
+		if (shouldCollapse) {
+			nextThreshold = null;
+			nextIsExpanded = false;
 		}
+
+		const currentHeight = isOverflowing ? scrollHeight : TEXTAREA_MIN_HEIGHT;
+
+		const newHeight = nextIsExpanded
+			? Math.max(currentHeight, TEXTAREA_EXPANDED_MIN_HEIGHT)
+			: currentHeight;
+
+		const newHeightPx = `${newHeight}px`;
+		if (textarea.style.height !== newHeightPx) {
+			textarea.style.height = newHeightPx;
+		}
+
+		if (nextThreshold !== threshold) setThreshold(nextThreshold);
+		if (nextIsExpanded !== isExpanded) setIsExpanded(nextIsExpanded);
 	}, [prompt]);
 
 	const handleChange = useCallback(
@@ -133,9 +113,11 @@ export function ChatInput() {
 			"your app...",
 			"anything...",
 			"your day...",
+			"your life...",
 			"your week...",
 			"your work...",
 			"your goals...",
+			"your business...",
 			"your thoughts...",
 		],
 		typingSpeed: 100,
@@ -152,7 +134,7 @@ export function ChatInput() {
 				ref={inputRef}
 				value={prompt}
 			/>
-			<PurePromptInputSubmit disabled={prompt.length === 0} />
+			<PromptInputSubmit disabled={prompt.length === 0} />
 		</PromptInput>
 	);
 }

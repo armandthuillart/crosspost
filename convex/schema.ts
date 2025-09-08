@@ -43,8 +43,8 @@ export default defineSchema({
 		.index("by_user", ["userId"])
 		.index("by_user_created_at", ["userId", "createdAt"]),
 	users: defineTable({
-		// ...
-	}),
+		isAnonymous: v.optional(v.boolean()),
+	}).index("by_is_anonymous", ["isAnonymous"]),
 	versions: defineTable({
 		content: v.string(),
 		createdAt: v.number(),

@@ -1,7 +1,9 @@
 "use client";
 
+import type { UseChatHelpers } from "@ai-sdk/react";
 import {
 	type KeyboardEvent,
+	type MouseEvent,
 	useCallback,
 	useLayoutEffect,
 	useRef,
@@ -9,17 +11,25 @@ import {
 } from "react";
 import {
 	PromptInput,
+	PromptInputStop,
 	PromptInputSubmit,
 	PromptInputTextarea,
 } from "@/components/ai-elements/prompt-input";
 import { useAutoFocus } from "@/hooks/use-auto-focus";
 import { useTypewriter } from "@/hooks/use-typewriter";
+import type { MyMessage } from "@/lib/types";
 
 // Constants for textarea sizing
 const TEXTAREA_MIN_HEIGHT = 24;
 const TEXTAREA_EXPANDED_MIN_HEIGHT = 48;
 
-export function ChatInput() {
+interface ChatInputProps {
+	stop: UseChatHelpers<MyMessage>["stop"];
+	status: UseChatHelpers<MyMessage>["status"];
+	setMessages: UseChatHelpers<MyMessage>["setMessages"];
+}
+
+export function ChatInput({ stop, status, setMessages }: ChatInputProps) {
 	const inputRef = useRef<HTMLTextAreaElement>(null);
 
 	const [prompt, setPrompt] = useState("");
@@ -72,6 +82,15 @@ export function ChatInput() {
 		if (nextThreshold !== threshold) setThreshold(nextThreshold);
 		if (nextIsExpanded !== isExpanded) setIsExpanded(nextIsExpanded);
 	}, [prompt]);
+
+	const handleStop = useCallback(
+		(event: MouseEvent<HTMLButtonElement>) => {
+			event.preventDefault();
+			stop();
+			setMessages((messages) => messages);
+		},
+		[stop, setMessages],
+	);
 
 	const handleChange = useCallback(
 		(event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -134,7 +153,11 @@ export function ChatInput() {
 				ref={inputRef}
 				value={prompt}
 			/>
-			<PromptInputSubmit disabled={prompt.length === 0} />
+			{status === "submitted" ? (
+				<PromptInputStop onClick={handleStop} />
+			) : (
+				<PromptInputSubmit disabled={prompt.length === 0} />
+			)}
 		</PromptInput>
 	);
 }

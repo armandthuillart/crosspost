@@ -1,7 +1,7 @@
 "use client";
 
 import { type HTMLMotionProps, motion } from "motion/react";
-import { ArrowUpIcon } from "@/components/ui/icons";
+import { ArrowUpIcon, StopIcon } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 
 function PromptInput({ className, ...props }: HTMLMotionProps<"form">) {
@@ -66,4 +66,22 @@ function PromptInputSubmit({ className, ...props }: HTMLMotionProps<"button">) {
 	);
 }
 
-export { PromptInput, PromptInputSubmit, PromptInputTextarea };
+function PromptInputStop({ className, ...props }: HTMLMotionProps<"button">) {
+	return (
+		<motion.button
+			className={cn(
+				"disabled:!pointer-events-none disabled:!opacity-50 flex size-9 shrink-0 items-center justify-center rounded-full bg-secondary text-secondary-foreground shadow-none transition-opacity duration-500 ease-[cubic-bezier(.32,.72,0,1)] [grid-area:action] hover:bg-secondary/80",
+				className,
+			)}
+			layout="position"
+			layoutId="prompt-input-stop"
+			transition={{ layout: { duration: 0.5, ease: [0.32, 0.72, 0, 1] } }}
+			type="button"
+			{...props}
+		>
+			<StopIcon className="size-5" />
+		</motion.button>
+	);
+}
+
+export { PromptInput, PromptInputSubmit, PromptInputTextarea, PromptInputStop };

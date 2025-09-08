@@ -9,7 +9,11 @@
  */
 
 import type * as auth from "../auth.js";
+import type * as chat_mutations from "../chat/mutations.js";
+import type * as chat_queries from "../chat/queries.js";
+import type * as crons from "../crons.js";
 import type * as http from "../http.js";
+import type * as users from "../users.js";
 
 import type {
   ApiFromModules,
@@ -27,7 +31,11 @@ import type {
  */
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
+  "chat/mutations": typeof chat_mutations;
+  "chat/queries": typeof chat_queries;
+  crons: typeof crons;
   http: typeof http;
+  users: typeof users;
 }>;
 declare const fullApiWithMounts: typeof fullApi;
 
@@ -117,10 +125,10 @@ export declare const components: {
               }
             | {
                 data: {
-                  createdAt?: null | number;
+                  createdAt: number;
                   expiresAt: number;
                   identifier: string;
-                  updatedAt?: null | number;
+                  updatedAt: number;
                   value: string;
                 };
                 model: "verification";
@@ -289,6 +297,8 @@ export declare const components: {
                   status?: null | string;
                   stripeCustomerId?: null | string;
                   stripeSubscriptionId?: null | string;
+                  trialEnd?: null | number;
+                  trialStart?: null | number;
                 };
                 model: "subscription";
               }
@@ -652,10 +662,10 @@ export declare const components: {
                 sortBy?: { direction: "asc" | "desc"; field: string };
                 unique?: boolean;
                 update: {
-                  createdAt?: null | number;
+                  createdAt?: number;
                   expiresAt?: number;
                   identifier?: string;
-                  updatedAt?: null | number;
+                  updatedAt?: number;
                   value?: string;
                 };
                 where?: Array<{
@@ -1318,6 +1328,8 @@ export declare const components: {
                   status?: null | string;
                   stripeCustomerId?: null | string;
                   stripeSubscriptionId?: null | string;
+                  trialEnd?: null | number;
+                  trialStart?: null | number;
                 };
                 where?: Array<{
                   connector?: "AND" | "OR";
@@ -1563,10 +1575,10 @@ export declare const components: {
             | {
                 model: "verification";
                 update: {
-                  createdAt?: null | number;
+                  createdAt?: number;
                   expiresAt?: number;
                   identifier?: string;
-                  updatedAt?: null | number;
+                  updatedAt?: number;
                   value?: string;
                 };
                 where?: Array<{
@@ -2047,6 +2059,8 @@ export declare const components: {
                   status?: null | string;
                   stripeCustomerId?: null | string;
                   stripeSubscriptionId?: null | string;
+                  trialEnd?: null | number;
+                  trialStart?: null | number;
                 };
                 where?: Array<{
                   connector?: "AND" | "OR";

@@ -14,7 +14,7 @@ const publicAuthFunctions: PublicAuthFunctions = api.auth;
 export const betterAuthComponent = new BetterAuth(components.betterAuth, {
 	authFunctions,
 	publicAuthFunctions,
-	verbose: false,
+	verbose: true,
 });
 
 export const {
@@ -24,8 +24,10 @@ export const {
 	createSession,
 	isAuthenticated,
 } = betterAuthComponent.createAuthFunctions<DataModel>({
-	onCreateUser: async (ctx) => {
-		const userId = await ctx.db.insert("users", {});
+	onCreateUser: async (ctx, user) => {
+		const userId = await ctx.db.insert("users", {
+			isAnonymous: user.isAnonymous ?? false,
+		});
 
 		return userId;
 	},

@@ -21,6 +21,7 @@ const createOptions = (ctx: GenericCtx) =>
 				},
 			},
 		},
+		appName: "Fragment",
 		baseURL: siteUrl,
 		database: convexAdapter(ctx, betterAuthComponent),
 		plugins: [anonymous()],
@@ -28,6 +29,14 @@ const createOptions = (ctx: GenericCtx) =>
 			cookieCache: {
 				enabled: true,
 				maxAge: toSeconds(minutes(5)),
+			},
+		},
+		socialProviders: {
+			google: {
+				accessType: "offline",
+				clientId: process.env.GOOGLE_CLIENT_ID as string,
+				clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+				prompt: "select_account consent",
 			},
 		},
 		telemetry: {

@@ -14,5 +14,5 @@ export default async function HomePage() {
 		return redirect("/api/auth/anonymous");
 	}
 
-	return <Chat initialMessages={[]} />;
+	return <Chat initialMessages={[]} isAnonymous={user.isAnonymous ?? false} />;
 }

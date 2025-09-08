@@ -1,24 +1,25 @@
 "use client";
 
-import { Dithering } from "@paper-design/shaders-react";
+import { Dithering, type DitheringProps } from "@paper-design/shaders-react";
 import { useTheme } from "next-themes";
 import { useMounted } from "@/hooks/use-mounted";
+import { cn } from "@/lib/utils";
+
+interface AppShaderProps extends DitheringProps {
+	size: number;
+	darkColor: string;
+	lightColor: string;
+}
 
 export function AppShader({
 	size,
 	speed,
-
 	pxSize,
 	darkColor,
+	className,
 	lightColor,
-}: {
-	size: number;
-	speed: number;
-
-	pxSize: number;
-	darkColor: string;
-	lightColor: string;
-}) {
+	...props
+}: AppShaderProps) {
 	const { resolvedTheme } = useTheme();
 	const mounted = useMounted();
 
@@ -34,7 +35,7 @@ export function AppShader({
 
 	return (
 		<Dithering
-			className="rounded-full"
+			className={cn("rounded-full", className)}
 			colorBack="rgb(0, 0, 0, 0)"
 			colorFront={colorFront}
 			offsetX={0}
@@ -46,6 +47,7 @@ export function AppShader({
 			speed={speed}
 			style={{ height: size, width: size }}
 			type="4x4"
+			{...props}
 		/>
 	);
 }

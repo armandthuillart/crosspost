@@ -7,7 +7,6 @@ import { api } from "../../convex/_generated/api";
 
 export default async function HomePage() {
 	const token = await getToken(createAuth);
-
 	const user = await fetchQuery(api.auth.getUser, {}, { token });
 
 	if (!user) {

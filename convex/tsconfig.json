@@ -14,5 +14,5 @@
 		"target": "ESNext"
 	},
 	"exclude": ["./_generated"],
-	"include": ["./**/*", "../markdown.d.ts"]
+	"include": ["./**/*"]
 }

@@ -1,6 +1,7 @@
 import { createTool } from "@convex-dev/agent";
 import { z } from "zod/v3";
 import { api } from "../../convex/_generated/api";
+import type { Id } from "../_generated/dataModel";
 
 export const zodSchema = z.object({
 	title: z.string().describe("The title of the draft"),
@@ -21,9 +22,10 @@ export const zodSchema = z.object({
 export const createDraft = createTool({
 	args: zodSchema,
 	handler: async (ctx, { title, versions }) => {
-		const draft = await ctx.runMutation(api.drafts.createDraft, {
-			title,
-			versions,
-		});
+		const draftId: Id<"drafts"> = await ctx.runMutation(
+			api.drafts.createDraft,
+			{ title, versions },
+		);
+		return draftId;
 	},
 });

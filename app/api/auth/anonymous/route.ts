@@ -1,3 +1,4 @@
+// TODO: This works, but isn't fast enough.
 export async function GET() {
 	const convexSiteUrl = process.env.NEXT_PUBLIC_CONVEX_SITE_URL;
 	if (!convexSiteUrl) {

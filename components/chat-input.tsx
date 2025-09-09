@@ -1,9 +1,11 @@
 "use client";
 
-import type { UseChatHelpers } from "@ai-sdk/react";
+import { optimisticallySendMessage } from "@convex-dev/agent/react";
+import { useMutation } from "convex/react";
+import { useAtom } from "jotai";
 import {
+	type FormEvent,
 	type KeyboardEvent,
-	type MouseEvent,
 	useCallback,
 	useLayoutEffect,
 	useRef,
@@ -11,32 +13,63 @@ import {
 } from "react";
 import {
 	PromptInput,
-	PromptInputStop,
 	PromptInputSubmit,
 	PromptInputTextarea,
 } from "@/components/ai-elements/prompt-input";
+import { isStreamingAtom } from "@/components/chat-messages";
 import { useAutoFocus } from "@/hooks/use-auto-focus";
 import { useTypewriter } from "@/hooks/use-typewriter";
-import type { MyMessage } from "@/lib/types";
+import { api } from "../convex/_generated/api";
 
-// Constants for textarea sizing
 const TEXTAREA_MIN_HEIGHT = 24;
 const TEXTAREA_EXPANDED_MIN_HEIGHT = 48;
 
-interface ChatInputProps {
-	stop: UseChatHelpers<MyMessage>["stop"];
-	status: UseChatHelpers<MyMessage>["status"];
-	setMessages: UseChatHelpers<MyMessage>["setMessages"];
-}
-
-export function ChatInput({ stop, status, setMessages }: ChatInputProps) {
+export function ChatInput({ threadId }: { threadId?: string }) {
 	const inputRef = useRef<HTMLTextAreaElement>(null);
+	const [isStreaming] = useAtom(isStreamingAtom);
 
 	const [prompt, setPrompt] = useState("");
 	const [threshold, setThreshold] = useState<number | null>(null);
 	const [isExpanded, setIsExpanded] = useState(false);
 
-	// Auto-resize textarea and handle expansion/collapse logic in a single place
+	const isDirty = prompt.trim().length > 0;
+
+	const createThread = useMutation(api.threads.createThread);
+
+	const sendMessage = useMutation(api.threads.sendMessage).withOptimisticUpdate(
+		optimisticallySendMessage(api.threads.listMessages),
+	);
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: would loop
+	const handleSubmit = useCallback(
+		async (event: FormEvent<HTMLFormElement>) => {
+			event.preventDefault();
+			if (!isDirty) return;
+
+			if (!threadId) {
+				threadId = await createThread();
+			}
+
+			await sendMessage({
+				prompt,
+				threadId,
+			});
+
+			window.history.replaceState({}, "", `/t/${threadId}`);
+
+			setPrompt("");
+			resetHeight();
+		},
+		[prompt, sendMessage],
+	);
+
+	const resetHeight = useCallback(() => {
+		if (inputRef.current) {
+			inputRef.current.style.height = "auto";
+			inputRef.current.style.height = "24px";
+		}
+	}, []);
+
 	// biome-ignore lint/correctness/useExhaustiveDependencies: intentionally depend only on prompt to avoid feedback loops from setState
 	useLayoutEffect(() => {
 		const textarea = inputRef.current;
@@ -54,7 +87,7 @@ export function ChatInput({ stop, status, setMessages }: ChatInputProps) {
 		const shouldCollapse =
 			isExpanded &&
 			!isOverflowing &&
-			(nextThreshold == null || prompt.length < nextThreshold);
+			(threshold == null || prompt.length < threshold);
 
 		if (shouldExpand) {
 			nextIsExpanded = true;
@@ -82,15 +115,6 @@ export function ChatInput({ stop, status, setMessages }: ChatInputProps) {
 		if (nextThreshold !== threshold) setThreshold(nextThreshold);
 		if (nextIsExpanded !== isExpanded) setIsExpanded(nextIsExpanded);
 	}, [prompt]);
-
-	const handleStop = useCallback(
-		(event: MouseEvent<HTMLButtonElement>) => {
-			event.preventDefault();
-			stop();
-			setMessages((messages) => messages);
-		},
-		[stop, setMessages],
-	);
 
 	const handleChange = useCallback(
 		(event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -145,7 +169,10 @@ export function ChatInput({ stop, status, setMessages }: ChatInputProps) {
 	const placeholder = `Ask to post about ${typewriter}`;
 
 	return (
-		<PromptInput data-state={isExpanded ? "expanded" : "collapsed"}>
+		<PromptInput
+			data-state={isExpanded ? "expanded" : "collapsed"}
+			onSubmit={handleSubmit}
+		>
 			<PromptInputTextarea
 				onChange={handleChange}
 				onKeyDown={handleKeyDown}
@@ -153,11 +180,7 @@ export function ChatInput({ stop, status, setMessages }: ChatInputProps) {
 				ref={inputRef}
 				value={prompt}
 			/>
-			{status === "submitted" ? (
-				<PromptInputStop onClick={handleStop} />
-			) : (
-				<PromptInputSubmit disabled={prompt.length === 0} />
-			)}
+			<PromptInputSubmit disabled={!isDirty || isStreaming} />
 		</PromptInput>
 	);
 }

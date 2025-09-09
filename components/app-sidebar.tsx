@@ -2,7 +2,6 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { AppShader } from "@/components/app-shader";
-import { Button } from "@/components/ui/button";
 import { SearchIcon } from "@/components/ui/icons";
 import {
 	Sidebar,
@@ -23,7 +22,6 @@ export function AppSidebar() {
 		<Sidebar>
 			<SidebarHeader>
 				<AppSearch />
-				<Button className="shrink-0 opacity-0" size="icon" variant="ghost" />
 			</SidebarHeader>
 
 			<SidebarContent>
@@ -57,8 +55,8 @@ export function AppSidebar() {
 
 function AppSearch() {
 	return (
-		<div className="flex items-center gap-2 pl-2.5 text-muted-foreground">
-			<div className="flex size-5 shrink-0 items-center justify-center">
+		<div className="flex w-full items-center gap-2 pl-2.5 text-muted-foreground">
+			<div className="my-2 flex size-5 shrink-0 items-center justify-center">
 				<SearchIcon className="size-4 shrink-0" />
 			</div>
 

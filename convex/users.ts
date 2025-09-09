@@ -1,6 +1,6 @@
 import { v } from "convex/values";
 import { subDays } from "date-fns";
-import { internal } from "./_generated/api";
+import { components, internal } from "./_generated/api";
 import { internalMutation } from "./_generated/server";
 
 export const deleteAnonymousUsers = internalMutation({
@@ -18,14 +18,10 @@ export const deleteAnonymousUsers = internalMutation({
 
 		await Promise.all(
 			batch.page.map(async (user) => {
-				const hasChat = await ctx.db
-					.query("chats")
-					.withIndex("by_user", (q) => q.eq("userId", user._id))
-					.first();
-
-				if (!hasChat) {
-					await ctx.db.delete(user._id);
-				}
+				await ctx.runMutation(components.agent.users.deleteAllForUserIdAsync, {
+					userId: user._id,
+				});
+				await ctx.db.delete(user._id);
 			}),
 		);
 

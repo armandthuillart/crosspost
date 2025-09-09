@@ -11,22 +11,16 @@
 		},
 		"enabled": true
 	},
-	"files": {
-		"ignoreUnknown": true
-	},
+	"files": { "ignoreUnknown": true },
 	"formatter": {
 		"enabled": true,
 		"indentStyle": "tab"
 	},
 	"javascript": {
-		"formatter": {
-			"quoteStyle": "double"
-		}
+		"formatter": { "quoteStyle": "double" }
 	},
 	"linter": {
-		"domains": {
-			"next": "recommended"
-		},
+		"domains": { "next": "recommended" },
 		"enabled": true,
 		"rules": {
 			"nursery": {
@@ -40,11 +34,16 @@
 				}
 			},
 			"recommended": true,
-			"suspicious": {
-				"noUnknownAtRules": "off"
-			}
+			"suspicious": { "noUnknownAtRules": "off" }
 		}
 	},
+	"overrides": [
+		{
+			"formatter": { "enabled": false },
+			"includes": ["convex/_generated/**"],
+			"linter": { "enabled": false }
+		}
+	],
 	"vcs": {
 		"clientKind": "git",
 		"enabled": true,

@@ -3,9 +3,11 @@ import { fetchQuery } from "convex/nextjs";
 import { redirect } from "next/navigation";
 import { Chat } from "@/components/chat";
 import { createAuth } from "@/lib/auth";
-import { api } from "../../convex/_generated/api";
+import { api } from "../../../../convex/_generated/api";
 
-export default async function HomePage() {
+type Params = Promise<{ threadId: string }>;
+
+export default async function ChatPage({ params }: { params: Params }) {
 	const token = await getToken(createAuth);
 	const user = await fetchQuery(api.auth.getUser, {}, { token });
 
@@ -13,5 +15,7 @@ export default async function HomePage() {
 		return redirect("/api/auth/anonymous");
 	}
 
-	return <Chat isAnonymous={user.isAnonymous ?? false} />;
+	const { threadId } = await params;
+
+	return <Chat isAnonymous={user.isAnonymous ?? false} threadId={threadId} />;
 }

@@ -2,10 +2,9 @@
 
 import type { ChatStatus, UIMessage } from "ai";
 import Link from "next/link";
-import { memo, useEffect, useState } from "react";
+import { memo } from "react";
 import { Streamdown, type StreamdownProps } from "streamdown";
 import { ArrowUpRightIcon } from "@/components/ui/icons";
-import { useSmoothStream } from "@/hooks/use-smooth-stream";
 
 const components: StreamdownProps["components"] = {
 	a: ({ node, children, ...props }) => (
@@ -87,43 +86,6 @@ function PureResponse({
 	className,
 	...props
 }: ResponseProps) {
-	const shouldStream = status === "streaming";
-	const [hasStreamed, setHasStreamed] = useState(false);
-
-	useEffect(() => {
-		if (shouldStream && !hasStreamed) {
-			setHasStreamed(true);
-		}
-	}, [shouldStream, hasStreamed]);
-
-	const { textStream } = useSmoothStream(
-		hasStreamed && shouldStream ? (children ?? "") : "",
-	);
-
-	if (!hasStreamed) {
-		return (
-			<Streamdown
-				className="size-full [&>*:first-child]:mt-0 [&>*:last-child]:mb-0"
-				components={components}
-				{...props}
-			>
-				{children}
-			</Streamdown>
-		);
-	}
-
-	if (shouldStream) {
-		return (
-			<Streamdown
-				className="size-full [&>*:first-child]:mt-0 [&>*:last-child]:mb-0"
-				components={components}
-				{...props}
-			>
-				{textStream}
-			</Streamdown>
-		);
-	}
-
 	return (
 		<Streamdown
 			className="size-full [&>*:first-child]:mt-0 [&>*:last-child]:mb-0"

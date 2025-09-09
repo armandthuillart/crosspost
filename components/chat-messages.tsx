@@ -1,6 +1,11 @@
 "use client";
 
-import type { UseChatHelpers } from "@ai-sdk/react";
+import {
+	toUIMessages,
+	type UIMessage,
+	useThreadMessages,
+} from "@convex-dev/agent/react";
+import { atom, useAtom } from "jotai";
 import { AnimatePresence } from "motion/react";
 import { useEffect, useState } from "react";
 import { Action, Actions } from "@/components/ai-elements/actions";
@@ -15,41 +20,46 @@ import {
 	RepeatIcon,
 	TickIcon,
 } from "@/components/ui/icons";
-import type { MyMessage } from "@/lib/types";
+import { api } from "@/convex/_generated/api";
 import { ChatMessagePart } from "./chat-message-part";
 
-interface ChatMessagesProps {
-	chatId: string;
-	status: UseChatHelpers<MyMessage>["status"];
-	messages: UseChatHelpers<MyMessage>["messages"];
-	regenerate: UseChatHelpers<MyMessage>["regenerate"];
-	setMessages: UseChatHelpers<MyMessage>["setMessages"];
-}
+export const isStreamingAtom = atom(false);
 
-export function ChatMessages({
-	chatId,
-	status,
-	messages,
-	regenerate,
-	setMessages,
-}: ChatMessagesProps) {
+export function ChatMessages({ threadId }: { threadId: string }) {
+	const paginated = useThreadMessages(
+		api.threads.listMessages,
+		{ threadId },
+		{ initialNumItems: 10, stream: true },
+	);
+
+	const [, setIsStreaming] = useAtom(isStreamingAtom);
+
+	const messages = toUIMessages(paginated.results);
+	const lastMessage = messages.at(-1);
+	const isStreaming = messages.some((m) => m.status === "streaming");
+	const hasSentMessage = messages.some((m) => m.status === "pending");
+
+	useEffect(() => {
+		setIsStreaming(isStreaming);
+	}, [isStreaming, setIsStreaming]);
+
 	const [isCopied, setIsCopied] = useState(false);
 	const [editingId, setEditingId] = useState<string | null>(null);
-	const [hasSentMessage, setHasSentMessage] = useState(false);
+	const [isPending, setIsPending] = useState(false);
 
 	useEffect(() => {
-		if (chatId) {
-			setHasSentMessage(false);
+		if (threadId) {
+			setIsPending(false);
 		}
-	}, [chatId]);
+	}, [threadId]);
 
 	useEffect(() => {
-		if (status === "submitted") {
-			setHasSentMessage(true);
+		if (hasSentMessage) {
+			setIsPending(true);
 		}
-	}, [status]);
+	}, [hasSentMessage]);
 
-	async function handleCopy(message: MyMessage) {
+	async function handleCopy(message: UIMessage) {
 		const textFromParts = message.parts
 			?.filter((part) => part.type === "text")
 			.map((part) => part.text)
@@ -63,28 +73,26 @@ export function ChatMessages({
 			setIsCopied(false);
 		}, 2000);
 	}
+
 	return (
 		<Conversation>
 			<ConversationContent>
 				<AnimatePresence initial={false} mode="popLayout">
-					{messages.map((message, i) => (
+					{messages.map((message) => (
 						<Message
 							data-mode={editingId === message.id ? "edit" : "view"}
 							from={message.role}
-							hasScrollPadding={hasSentMessage && i === messages.length - 1}
+							hasScrollPadding={isPending && message.id === lastMessage?.id}
 							key={message.id}
 						>
 							<MessageContent>
-								{message.parts?.map((part, i) => (
+								{message.parts.map((part, i) => (
 									<ChatMessagePart
 										key={`${message.id}-${i}`}
 										message={message}
 										mode={editingId === message.id ? "edit" : "view"}
 										onCancel={() => setEditingId(null)}
 										part={part}
-										regenerate={regenerate}
-										setMessages={setMessages}
-										status={status}
 									/>
 								))}
 								<Actions>
@@ -99,7 +107,7 @@ export function ChatMessages({
 											<PencilEditIcon />
 										</Action>
 									) : (
-										<Action onClick={() => regenerate()} tooltip="Try again">
+										<Action tooltip="Try again">
 											<RepeatIcon />
 										</Action>
 									)}

@@ -1,7 +1,6 @@
-import type { UIMessage } from "ai";
+import type { Infer } from "convex/values";
+import type { platform } from "../convex/schema";
 
-export type Tools = {};
+export type Tier = "anonymous" | "free" | "pro";
 
-export type Metadata = { createdAt: string };
-
-export type MyMessage = UIMessage<Metadata, never, Tools>;
+export type Platform = Infer<typeof platform>;

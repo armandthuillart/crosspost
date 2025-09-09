@@ -6,7 +6,6 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ConvexReactClient } from "convex/react";
 import { Provider as JotaiProvider } from "jotai";
 import { ThemeProvider } from "next-themes";
-import { NuqsAdapter } from "nuqs/adapters/next/app";
 import type { ReactNode } from "react";
 import { authClient } from "@/lib/auth-client";
 
@@ -25,13 +24,11 @@ export function Providers({ children }: { children: ReactNode }) {
 			storageKey="chat:theme"
 		>
 			<JotaiProvider>
-				<NuqsAdapter>
-					<ConvexBetterAuthProvider authClient={authClient} client={convex}>
-						{children}
-						<Analytics debug={false} />
-						<SpeedInsights debug={false} />
-					</ConvexBetterAuthProvider>
-				</NuqsAdapter>
+				<ConvexBetterAuthProvider authClient={authClient} client={convex}>
+					{children}
+					<Analytics debug={false} />
+					<SpeedInsights debug={false} />
+				</ConvexBetterAuthProvider>
 			</JotaiProvider>
 		</ThemeProvider>
 	);

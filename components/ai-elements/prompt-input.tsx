@@ -34,7 +34,7 @@ function PromptInputTextarea({
 		>
 			<motion.textarea
 				className={cn(
-					"my-4 max-h-52 w-full resize-none overflow-hidden truncate antialiased outline-none ring-0 placeholder:text-muted-foreground focus-visible:ring-0",
+					"my-4 max-h-52 w-full resize-none antialiased outline-none ring-0 placeholder:text-muted-foreground focus-visible:ring-0",
 					className,
 				)}
 				layout="position"

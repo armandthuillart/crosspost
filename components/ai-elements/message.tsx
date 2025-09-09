@@ -1,7 +1,7 @@
 "use client";
 
 import type { UseChatHelpers } from "@ai-sdk/react";
-import type { UIMessage } from "ai";
+import type { UIMessage } from "@convex-dev/agent/react";
 import { useMutation } from "convex/react";
 import { type HTMLMotionProps, motion, type Variants } from "motion/react";
 import {
@@ -109,7 +109,7 @@ function parseMessage(message: MyMessage): string {
 }
 
 interface MessageEditorProps extends HTMLAttributes<HTMLDivElement> {
-	message: MyMessage;
+	message: UIMessage;
 	onCancel: () => void;
 	regenerate: UseChatHelpers<MyMessage>["regenerate"];
 	setMessages: UseChatHelpers<MyMessage>["setMessages"];
@@ -124,7 +124,7 @@ function MessageEditor({
 	...props
 }: MessageEditorProps) {
 	const deleteMessagesAtOrAfterMessage = useMutation(
-		api.chat.mutations.deleteMessagesAtOrAfterMessage,
+		api.streaming.deleteMessagesAtOrAfterMessage,
 	);
 
 	const textareaRef = useRef<HTMLTextAreaElement>(null);

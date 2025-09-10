@@ -23,8 +23,6 @@ export default async function HomePage() {
 		tier = await fetchAction(api.customers.getTier, { userId }, { token });
 	}
 
-	console.log("the tier is:", tier);
-
 	return (
 		<Chat
 			isAnonymous={isAnonymous ?? false}

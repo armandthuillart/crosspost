@@ -24,12 +24,12 @@ export const isStreamingAtom = atom(false);
 
 export function ChatMessages({ threadId }: { threadId: string }) {
 	const { results: messages } = useUIMessages(
-		api.messages.list,
+		api.chat.messages.list,
 		{ threadId },
 		{ initialNumItems: 10, stream: true },
 	);
 
-	const _abort = useMutation(api.stream.abort);
+	const _abort = useMutation(api.chat.stream.abort);
 
 	const [, setIsStreaming] = useAtom(isStreamingAtom);
 

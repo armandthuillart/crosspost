@@ -1,0 +1,5 @@
+User-Agent: *
+Allow: /
+Disallow: /t/
+
+Sitemap: https://fragment.ai/sitemap.xml

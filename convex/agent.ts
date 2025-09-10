@@ -2,7 +2,7 @@ import { gateway } from "@ai-sdk/gateway";
 import { Agent } from "@convex-dev/agent";
 import { components } from "./_generated/api";
 
-export const agent = new Agent(components.agent, {
+export const chatAgent = new Agent(components.agent, {
 	contextOptions: {
 		recentMessages: 50,
 		searchOptions: {
@@ -35,6 +35,18 @@ export const agent = new Agent(components.agent, {
 	
 	Make every conversation feel like talking to someone who gets it. Be human. Be real. Be helpful.`,
 	languageModel: gateway.languageModel("google/gemini-2.5-flash"),
+	name: "Fragment",
+	textEmbeddingModel: gateway.textEmbeddingModel("google/text-embedding-005"),
+});
+
+export const titleAgent = new Agent(components.agent, {
+	instructions: `Generate a title that are 3-6 words, descriptive, sentence case, sound like something a person would actually say that is relevant to the first message in the thread.
+        
+	Good examples: 
+	- Monday motivation hits
+	- Morning coffee ritual
+	- New AI SDK 5`,
+	languageModel: gateway.languageModel("google/gemini-2.5-flash-lite"),
 	name: "Fragment",
 	textEmbeddingModel: gateway.textEmbeddingModel("google/text-embedding-005"),
 });

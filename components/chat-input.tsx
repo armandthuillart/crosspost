@@ -40,10 +40,10 @@ export function ChatInput({ threadId }: { threadId: string | null }) {
 
 	const isDirty = prompt.trim().length > 0;
 
-	const createChat = useMutation(api.chat.create);
+	const createChat = useMutation(api.chat.thread.create);
 
-	const sendMessage = useMutation(api.chat.start).withOptimisticUpdate(
-		optimisticallySendMessage(api.messages.list),
+	const sendMessage = useMutation(api.chat.thread.start).withOptimisticUpdate(
+		optimisticallySendMessage(api.chat.messages.list),
 	);
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: would loop

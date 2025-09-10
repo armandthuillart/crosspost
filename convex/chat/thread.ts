@@ -1,20 +1,21 @@
 import { getThreadMetadata } from "@convex-dev/agent";
 import { v } from "convex/values";
-import { ChatSDKError } from "../lib/errors";
-import type { Tier } from "../lib/types";
-import { api, components, internal } from "./_generated/api";
-import type { Id } from "./_generated/dataModel";
-import { internalAction, internalQuery, mutation } from "./_generated/server";
-import { agent } from "./agent";
-import { betterAuthComponent } from "./auth";
-import { rateLimiter } from "./rateLimiting";
+import { ChatSDKError } from "../../lib/errors";
+import type { Tier } from "../../lib/types";
+import { api, components, internal } from "../_generated/api";
+import type { Id } from "../_generated/dataModel";
+import { internalAction, internalQuery, mutation } from "../_generated/server";
+import { chatAgent } from "../agent";
+import { betterAuthComponent } from "../auth";
+import { rateLimiter } from "../rateLimiting";
 
 export const create = mutation({
 	args: {},
 	handler: async (ctx) => {
 		const userId = await betterAuthComponent.getAuthUserId(ctx);
 
-		const { threadId } = await agent.createThread(ctx, {
+		const { threadId } = await chatAgent.createThread(ctx, {
+			title: "New Chat",
 			userId,
 		});
 
@@ -28,20 +29,26 @@ export const start = mutation({
 		threadId: v.string(),
 	},
 	handler: async (ctx, { threadId, prompt }) => {
-		const { userId, userTier } = await ctx.runQuery(internal.chat.authorize, {
-			threadId,
-		});
+		const { userId, userTier } = await ctx.runQuery(
+			internal.chat.thread.authorize,
+			{ threadId },
+		);
 
 		await rateLimiter.limit(ctx, userTier, { key: userId, throws: true });
 
-		const { messageId } = await agent.saveMessage(ctx, {
+		const { messageId } = await chatAgent.saveMessage(ctx, {
 			prompt,
 			skipEmbeddings: true,
 			threadId,
 		});
 
-		await ctx.scheduler.runAfter(0, internal.chat.stream, {
+		await ctx.scheduler.runAfter(0, internal.chat.thread.stream, {
 			promptMessageId: messageId,
+			threadId,
+		});
+
+		await ctx.scheduler.runAfter(0, internal.chat.title.generate, {
+			prompt,
 			threadId,
 		});
 	},
@@ -53,7 +60,7 @@ export const stream = internalAction({
 		threadId: v.string(),
 	},
 	handler: async (ctx, { threadId, promptMessageId }) => {
-		const result = await agent.streamText(
+		const result = await chatAgent.streamText(
 			ctx,
 			{ threadId },
 			{ promptMessageId },

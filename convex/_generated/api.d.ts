@@ -10,14 +10,15 @@
 
 import type * as agent from "../agent.js";
 import type * as auth from "../auth.js";
-import type * as chat from "../chat.js";
+import type * as chat_messages from "../chat/messages.js";
+import type * as chat_stream from "../chat/stream.js";
+import type * as chat_thread from "../chat/thread.js";
+import type * as chat_title from "../chat/title.js";
 import type * as crons from "../crons.js";
 import type * as customers from "../customers.js";
 import type * as drafts from "../drafts.js";
 import type * as http from "../http.js";
-import type * as messages from "../messages.js";
 import type * as rateLimiting from "../rateLimiting.js";
-import type * as stream from "../stream.js";
 import type * as tools_createDraft from "../tools/createDraft.js";
 import type * as tools_publishDraft from "../tools/publishDraft.js";
 import type * as users from "../users.js";
@@ -39,14 +40,15 @@ import type {
 declare const fullApi: ApiFromModules<{
   agent: typeof agent;
   auth: typeof auth;
-  chat: typeof chat;
+  "chat/messages": typeof chat_messages;
+  "chat/stream": typeof chat_stream;
+  "chat/thread": typeof chat_thread;
+  "chat/title": typeof chat_title;
   crons: typeof crons;
   customers: typeof customers;
   drafts: typeof drafts;
   http: typeof http;
-  messages: typeof messages;
   rateLimiting: typeof rateLimiting;
-  stream: typeof stream;
   "tools/createDraft": typeof tools_createDraft;
   "tools/publishDraft": typeof tools_publishDraft;
   users: typeof users;

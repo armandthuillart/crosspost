@@ -8,13 +8,16 @@
  * @module
  */
 
+import type * as agent from "../agent.js";
 import type * as auth from "../auth.js";
+import type * as chat from "../chat.js";
 import type * as crons from "../crons.js";
 import type * as customers from "../customers.js";
 import type * as drafts from "../drafts.js";
 import type * as http from "../http.js";
+import type * as messages from "../messages.js";
 import type * as rateLimiting from "../rateLimiting.js";
-import type * as threads from "../threads.js";
+import type * as stream from "../stream.js";
 import type * as tools_createDraft from "../tools/createDraft.js";
 import type * as tools_publishDraft from "../tools/publishDraft.js";
 import type * as users from "../users.js";
@@ -34,13 +37,16 @@ import type {
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  agent: typeof agent;
   auth: typeof auth;
+  chat: typeof chat;
   crons: typeof crons;
   customers: typeof customers;
   drafts: typeof drafts;
   http: typeof http;
+  messages: typeof messages;
   rateLimiting: typeof rateLimiting;
-  threads: typeof threads;
+  stream: typeof stream;
   "tools/createDraft": typeof tools_createDraft;
   "tools/publishDraft": typeof tools_publishDraft;
   users: typeof users;
@@ -4608,6 +4614,7 @@ export declare const components: {
         "internal",
         {
           agentName?: string;
+          format?: "UIMessageChunk" | "TextStreamPart";
           model?: string;
           order: number;
           provider?: string;
@@ -4672,6 +4679,7 @@ export declare const components: {
         },
         Array<{
           agentName?: string;
+          format?: "UIMessageChunk" | "TextStreamPart";
           model?: string;
           order: number;
           provider?: string;

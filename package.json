@@ -2,7 +2,7 @@
 	"dependencies": {
 		"@ai-sdk/gateway": "^1.0.20",
 		"@convex-dev/action-cache": "^0.2.11",
-		"@convex-dev/agent": "^0.2.7",
+		"@convex-dev/agent": "^0.2.8-alpha.4",
 		"@convex-dev/better-auth": "^0.8.0-alpha.9",
 		"@convex-dev/rate-limiter": "^0.2.12",
 		"@paper-design/shaders-react": "^0.0.52",

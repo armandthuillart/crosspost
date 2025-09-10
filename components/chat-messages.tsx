@@ -1,10 +1,7 @@
 "use client";
 
-import {
-	toUIMessages,
-	type UIMessage,
-	useThreadMessages,
-} from "@convex-dev/agent/react";
+import { type UIMessage, useUIMessages } from "@convex-dev/agent/react";
+import { useMutation } from "convex/react";
 import { atom, useAtom } from "jotai";
 import { AnimatePresence } from "motion/react";
 import { useEffect, useState } from "react";
@@ -14,27 +11,28 @@ import {
 	ConversationContent,
 } from "@/components/ai-elements/conversation";
 import { Message, MessageContent } from "@/components/ai-elements/message";
+import { MessagePart } from "@/components/chat-message-part";
 import {
 	CopyIcon,
 	PencilEditIcon,
 	RepeatIcon,
 	TickIcon,
 } from "@/components/ui/icons";
-import { api } from "@/convex/_generated/api";
-import { ChatMessagePart } from "./chat-message-part";
+import { api } from "../convex/_generated/api";
 
 export const isStreamingAtom = atom(false);
 
 export function ChatMessages({ threadId }: { threadId: string }) {
-	const paginated = useThreadMessages(
-		api.threads.listMessages,
+	const { results: messages } = useUIMessages(
+		api.messages.list,
 		{ threadId },
 		{ initialNumItems: 10, stream: true },
 	);
 
+	const abort = useMutation(api.stream.abort);
+
 	const [, setIsStreaming] = useAtom(isStreamingAtom);
 
-	const messages = toUIMessages(paginated.results);
 	const lastMessage = messages.at(-1);
 	const isStreaming = messages.some((m) => m.status === "streaming");
 	const hasSentMessage = messages.some((m) => m.status === "pending");
@@ -45,12 +43,7 @@ export function ChatMessages({ threadId }: { threadId: string }) {
 
 	useEffect(() => {
 		setIsStreaming(isStreaming);
-		console.log("isStreaming", isStreaming);
-		console.log(
-			"messages statuses:",
-			messages.map((m) => ({ id: m.id, role: m.role, status: m.status })),
-		);
-	}, [isStreaming, setIsStreaming, messages]);
+	}, [isStreaming, setIsStreaming]);
 
 	const [isCopied, setIsCopied] = useState(false);
 	const [editingId, setEditingId] = useState<string | null>(null);
@@ -96,7 +89,7 @@ export function ChatMessages({ threadId }: { threadId: string }) {
 						>
 							<MessageContent>
 								{message.parts.map((part, i) => (
-									<ChatMessagePart
+									<MessagePart
 										key={`${message.id}-${i}`}
 										message={message}
 										mode={editingId === message.id ? "edit" : "view"}

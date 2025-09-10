@@ -2,30 +2,28 @@
 
 import type { UIMessage } from "@convex-dev/agent/react";
 import { useSmoothText } from "@convex-dev/agent/react";
-import type { TextUIPart } from "ai";
 import { MessageBubble, MessageEditor } from "@/components/ai-elements/message";
 import { Response } from "@/components/ai-elements/response";
 
 interface TextProps {
-	part: TextUIPart;
-	mode: "edit" | "view";
 	message: UIMessage;
 	onCancel: () => void;
+	isEditing: boolean;
 }
 
-export function Text({ mode, part, message, onCancel }: TextProps) {
+export function Text({ message, onCancel, isEditing }: TextProps) {
 	const [visibleText] = useSmoothText(message.text, {
 		startStreaming: message.status === "streaming",
 	});
 
 	switch (message.role) {
 		case "user":
-			if (mode === "edit") {
+			if (isEditing) {
 				return <MessageEditor message={message} onCancel={onCancel} />;
 			}
 
 			return (
-				<MessageBubble data-multiline={(part.text.length ?? 0) > 55}>
+				<MessageBubble data-multiline={message.text.length > 55}>
 					<Response>{visibleText}</Response>
 				</MessageBubble>
 			);

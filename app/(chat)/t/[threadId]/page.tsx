@@ -9,6 +9,8 @@ import { api } from "../../../../convex/_generated/api";
 type Params = Promise<{ threadId: string }>;
 
 export default async function ChatPage({ params }: { params: Params }) {
+	const { threadId } = await params;
+
 	const token = await getToken(createAuth);
 	const user = await fetchQuery(api.auth.getUser, {}, { token });
 
@@ -18,8 +20,6 @@ export default async function ChatPage({ params }: { params: Params }) {
 	if (!userId) {
 		return redirect("/api/auth/anonymous");
 	}
-
-	const { threadId } = await params;
 
 	let tier: Tier = "anonymous";
 

@@ -29,7 +29,7 @@ export function ChatMessages({ threadId }: { threadId: string }) {
 		{ initialNumItems: 10, stream: true },
 	);
 
-	const abort = useMutation(api.stream.abort);
+	const _abort = useMutation(api.stream.abort);
 
 	const [, setIsStreaming] = useAtom(isStreamingAtom);
 

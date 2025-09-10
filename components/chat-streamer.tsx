@@ -29,11 +29,36 @@ export function ChatStreamer({
 			break;
 	}
 
-	const { status } = useRateLimit(getRateLimitApi, {
+	const { check, status } = useRateLimit(getRateLimitApi, {
 		key: userId,
 	});
 
-	if (status && !status.ok) {
-		return <div>you're limited bro</div>;
+	const now = Date.now();
+	const checked = check(now, 0);
+
+	const remaining =
+		checked?.config?.rate != null && checked?.value != null
+			? Math.max(0, Math.floor(checked.value))
+			: undefined;
+
+	if (!status) {
+		return null;
 	}
+
+	return (
+		<div>
+			{remaining !== undefined && (
+				<div>
+					Remaining: {remaining} /{" "}
+					{checked?.config?.capacity ?? checked?.config?.rate}
+				</div>
+			)}
+			{!status.ok && (
+				<div>
+					You’re limited. Try again after{" "}
+					{Math.ceil((status.retryAt - now) / 1000)}s
+				</div>
+			)}
+		</div>
+	);
 }

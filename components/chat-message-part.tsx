@@ -1,12 +1,10 @@
 "use client";
 
 import type { UIMessage } from "@convex-dev/agent/react";
-import type { UIMessagePart } from "ai";
 import { Text } from "@/components/chat-message-part.text";
-import type { Tools } from "@/lib/types";
 
 interface ChatMessagePartProps {
-	part: UIMessagePart<never, Tools>;
+	part: UIMessage["parts"][number];
 	mode: "view" | "edit";
 	message: UIMessage;
 	onCancel: () => void;

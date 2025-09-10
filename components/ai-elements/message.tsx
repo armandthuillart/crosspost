@@ -1,21 +1,15 @@
 "use client";
 
-import type { UseChatHelpers } from "@ai-sdk/react";
 import type { UIMessage } from "@convex-dev/agent/react";
-import { useMutation } from "convex/react";
 import { type HTMLMotionProps, motion, type Variants } from "motion/react";
 import {
 	type ChangeEvent,
 	type HTMLAttributes,
-	type KeyboardEvent,
 	useEffect,
 	useRef,
 	useState,
 } from "react";
 import { Button } from "@/components/ui/button";
-import { api } from "@/convex/_generated/api";
-import type { Id } from "@/convex/_generated/dataModel";
-import type { MyMessage } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 const variants: Variants = {
@@ -101,34 +95,23 @@ function MessageBubble({ children, className, ...props }: MessageBubbleProps) {
 	);
 }
 
-function parseMessage(message: MyMessage): string {
-	return message.parts
-		.filter((part) => part.type === "text")
-		.map((part) => part.text)
-		.join("");
-}
-
 interface MessageEditorProps extends HTMLAttributes<HTMLDivElement> {
 	message: UIMessage;
 	onCancel: () => void;
-	regenerate: UseChatHelpers<MyMessage>["regenerate"];
-	setMessages: UseChatHelpers<MyMessage>["setMessages"];
 }
 
 function MessageEditor({
 	message,
 	onCancel,
 	className,
-	regenerate,
-	setMessages,
 	...props
 }: MessageEditorProps) {
-	const deleteMessagesAtOrAfterMessage = useMutation(
-		api.streaming.deleteMessagesAtOrAfterMessage,
-	);
+	// const deleteMessagesAtOrAfterMessage = useMutation(
+	// 	api.streaming.deleteMessagesAtOrAfterMessage,
+	// );
 
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
-	const [draftContent, setDraftContent] = useState(parseMessage(message));
+	const [draftContent, setDraftContent] = useState(message.text);
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: No need to re-run.
 	useEffect(() => {
@@ -152,40 +135,40 @@ function MessageEditor({
 		adjustHeight();
 	}
 
-	async function handleSend() {
-		await deleteMessagesAtOrAfterMessage({
-			messageId: message.id as Id<"messages">,
-		});
+	// async function handleSend() {
+	// 	await deleteMessagesAtOrAfterMessage({
+	// 		messageId: message.id as Id<"messages">,
+	// 	});
 
-		setMessages((messages) => {
-			const index = messages.findIndex((m) => m.id === message.id);
-			if (index !== -1) {
-				const updatedMessage: MyMessage = {
-					...message,
-					parts: [{ text: draftContent, type: "text" }],
-				};
-				return [...messages.slice(0, index), updatedMessage];
-			}
-			return messages;
-		});
+	// 	setMessages((messages) => {
+	// 		const index = messages.findIndex((m) => m.id === message.id);
+	// 		if (index !== -1) {
+	// 			const updatedMessage: MyMessage = {
+	// 				...message,
+	// 				parts: [{ text: draftContent, type: "text" }],
+	// 			};
+	// 			return [...messages.slice(0, index), updatedMessage];
+	// 		}
+	// 		return messages;
+	// 	});
 
-		onCancel();
-		regenerate();
-	}
+	// 	onCancel();
+	// 	regenerate();
+	// }
 
-	function handleKeyDown(event: KeyboardEvent<HTMLTextAreaElement>) {
-		const isShift = event.shiftKey;
-		const isComposing = event.nativeEvent.isComposing;
-		const hasSubmitted = event.key === "Enter";
-		const hasCancelled = event.key === "Escape";
+	// function handleKeyDown(event: KeyboardEvent<HTMLTextAreaElement>) {
+	// 	const isShift = event.shiftKey;
+	// 	const isComposing = event.nativeEvent.isComposing;
+	// 	const hasSubmitted = event.key === "Enter";
+	// 	const hasCancelled = event.key === "Escape";
 
-		if (hasSubmitted && !isShift && !isComposing) {
-			event.preventDefault();
-			handleSend();
-		} else if (hasCancelled) {
-			onCancel();
-		}
-	}
+	// 	if (hasSubmitted && !isShift && !isComposing) {
+	// 		event.preventDefault();
+	// 		handleSend();
+	// 	} else if (hasCancelled) {
+	// 		onCancel();
+	// 	}
+	// }
 
 	return (
 		<div
@@ -198,7 +181,7 @@ function MessageEditor({
 			<textarea
 				className="min-h-12 resize-none rounded-none border-none bg-transparent p-2 pb-0 text-base shadow-none focus-visible:ring-0 dark:bg-transparent"
 				onChange={handleChange}
-				onKeyDown={handleKeyDown}
+				// onKeyDown={handleKeyDown}
 				ref={textareaRef}
 				value={draftContent}
 			/>
@@ -210,9 +193,7 @@ function MessageEditor({
 				>
 					Cancel
 				</Button>
-				<Button className="rounded-full px-3" onClick={handleSend}>
-					Send
-				</Button>
+				<Button className="rounded-full px-3">Send</Button>
 			</div>
 		</div>
 	);

@@ -1,10 +1,10 @@
 "use client";
 
-import type { ChatStatus, UIMessage } from "ai";
 import Link from "next/link";
 import { memo } from "react";
 import { Streamdown, type StreamdownProps } from "streamdown";
 import { ArrowUpRightIcon } from "@/components/ui/icons";
+import { cn } from "@/lib/utils";
 
 const components: StreamdownProps["components"] = {
 	a: ({ node, children, ...props }) => (
@@ -74,26 +74,16 @@ const components: StreamdownProps["components"] = {
 	),
 };
 
-interface ResponseProps extends StreamdownProps {
-	from: UIMessage["role"];
-	status: ChatStatus;
-}
-
-function PureResponse({
-	from,
-	status,
-	children,
-	className,
-	...props
-}: ResponseProps) {
+function PureResponse({ className, ...props }: StreamdownProps) {
 	return (
 		<Streamdown
-			className="size-full [&>*:first-child]:mt-0 [&>*:last-child]:mb-0"
+			className={cn(
+				"size-full [&>*:first-child]:mt-0 [&>*:last-child]:mb-0",
+				className,
+			)}
 			components={components}
 			{...props}
-		>
-			{children}
-		</Streamdown>
+		/>
 	);
 }
 

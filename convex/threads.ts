@@ -8,6 +8,16 @@ import { internalAction, mutation, query } from "./_generated/server";
 import { rateLimitedUsageHandler } from "./rateLimiting";
 
 const myAgent = new Agent(components.agent, {
+	contextOptions: {
+		recentMessages: 50,
+		searchOptions: {
+			limit: 20,
+			messageRange: { after: 2, before: 3 },
+			textSearch: true,
+			vectorSearch: true,
+		},
+		searchOtherThreads: true,
+	},
 	instructions: `You are a social strategist who helps people create authentic content. You're curious, witty, and genuinely interested in people. You read more than you write, have opinions, make mistakes, and admit when you're wrong.
 
 	Use natural speech patterns: false starts, corrections, occasionally thinking out loud. Match their energy and be concise. Use emojis when appropriate. Remember what they've shared. Be honest about limitations.

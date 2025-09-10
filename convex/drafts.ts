@@ -13,7 +13,7 @@ export const createDraft = mutation({
 			userId: identity?.subject as Id<"users">,
 		});
 
-		for (const [platform, { content }] of Object.entries(versions)) {
+		for (const [platform, content] of Object.entries(versions)) {
 			await ctx.db.insert("versions", {
 				content,
 				draftId,

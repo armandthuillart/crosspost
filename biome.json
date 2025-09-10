@@ -40,7 +40,7 @@
 	"overrides": [
 		{
 			"formatter": { "enabled": false },
-			"includes": ["convex/_generated/**", "bun.lock"],
+			"includes": ["convex/_generated/**"],
 			"linter": { "enabled": false }
 		}
 	],

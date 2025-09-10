@@ -13,13 +13,11 @@ export const abort = mutation({
 		if (
 			await abortStream(ctx, components.agent, {
 				order,
-				reason: "Aborting explicitly",
+				reason: "Explicitly aborted",
 				threadId,
 			})
 		) {
-			console.log("Aborted stream", threadId, order);
-		} else {
-			console.log("No stream found", threadId, order);
+			return;
 		}
 	},
 });

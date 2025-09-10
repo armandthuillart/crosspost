@@ -18,12 +18,11 @@ export const createDraft = mutation({
 			userId: userId as Id<"users">,
 		});
 
-		for (const [platform, content] of Object.entries(versions)) {
+		for (const [key, content] of Object.entries(versions)) {
 			await ctx.db.insert("draftsVersions", {
 				content,
 				draftId,
-				// @ts-expect-error — already validated by zod + convex
-				platform,
+				platform: key as "bluesky" | "threads" | "x",
 			});
 		}
 

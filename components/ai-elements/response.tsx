@@ -1,5 +1,6 @@
 "use client";
 
+import type { Route } from "next";
 import Link from "next/link";
 import { memo } from "react";
 import { Streamdown, type StreamdownProps } from "streamdown";
@@ -7,10 +8,10 @@ import { ArrowUpRightIcon } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 
 const components: StreamdownProps["components"] = {
-	a: ({ node, children, ...props }) => (
-		// @ts-expect-error - Link component accepts any props
+	a: ({ href, node, children, ...props }) => (
 		<Link
 			className="inline cursor-pointer align-baseline text-primary underline decoration-2 decoration-muted-foreground decoration-dotted underline-offset-2"
+			href={href as Route}
 			rel="noreferrer"
 			target="_blank"
 			{...props}

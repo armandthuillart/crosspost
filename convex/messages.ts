@@ -2,10 +2,9 @@ import { listUIMessages } from "@convex-dev/agent";
 import { vStreamArgs } from "@convex-dev/agent/validators";
 import { paginationOptsValidator } from "convex/server";
 import { v } from "convex/values";
-import { components } from "./_generated/api";
+import { components, internal } from "./_generated/api";
 import { query } from "./_generated/server";
 import { agent } from "./agent";
-import { authorize } from "./chat";
 
 export const list = query({
 	args: {
@@ -14,7 +13,9 @@ export const list = query({
 		threadId: v.string(),
 	},
 	handler: async (ctx, args) => {
-		await authorize(ctx, args.threadId);
+		await ctx.runQuery(internal.chat.authorize, {
+			threadId: args.threadId,
+		});
 
 		const streams = await agent.syncStreams(ctx, {
 			streamArgs: args.streamArgs,

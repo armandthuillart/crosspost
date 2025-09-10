@@ -1,5 +1,5 @@
 import { getToken } from "@convex-dev/better-auth/nextjs";
-import { fetchAction, fetchQuery } from "convex/nextjs";
+import { fetchQuery } from "convex/nextjs";
 import { redirect } from "next/navigation";
 import { Chat } from "@/components/chat";
 import { createAuth } from "@/lib/auth";
@@ -13,7 +13,7 @@ export default async function ChatPage({ params }: { params: Params }) {
 	const user = await fetchQuery(api.auth.getUser, {}, { token });
 
 	const userId = user?._id;
-	const isAnonymous = user?.isAnonymous;
+	const isAnonymous = user?.isAnonymous ?? false;
 
 	if (!userId) {
 		return redirect("/api/auth/anonymous");
@@ -24,12 +24,12 @@ export default async function ChatPage({ params }: { params: Params }) {
 	let tier: Tier = "anonymous";
 
 	if (!isAnonymous) {
-		tier = await fetchAction(api.customers.getTier, { userId }, { token });
+		tier = await fetchQuery(api.customers.getTier, { userId }, { token });
 	}
 
 	return (
 		<Chat
-			isAnonymous={isAnonymous ?? false}
+			isAnonymous={isAnonymous}
 			threadId={threadId}
 			userId={userId}
 			userTier={tier}

@@ -156,7 +156,7 @@ export function ChatInput({ threadId }: { threadId: string | null }) {
 	});
 
 	const typewriter = useTypewriter({
-		enabled: Boolean(threadId),
+		enabled: !threadId,
 		loop: true,
 		pauseDuration: 2000,
 		texts: [

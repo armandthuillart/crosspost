@@ -3,11 +3,10 @@ import {
 	BetterAuth,
 	type PublicAuthFunctions,
 } from "@convex-dev/better-auth";
-import { v } from "convex/values";
 import { createAuth } from "../lib/auth";
 import { api, components, internal } from "./_generated/api";
 import type { DataModel, Id } from "./_generated/dataModel";
-import { internalQuery, query } from "./_generated/server";
+import { query } from "./_generated/server";
 
 const authFunctions: AuthFunctions = internal.auth;
 const publicAuthFunctions: PublicAuthFunctions = api.auth;
@@ -71,13 +70,5 @@ export const getSession = query({
 		}
 
 		return session;
-	},
-});
-
-export const fetchUser = internalQuery({
-	args: { userId: v.id("users") },
-	handler: async (ctx, { userId }) => {
-		const user = await ctx.db.get(userId);
-		return user;
 	},
 });

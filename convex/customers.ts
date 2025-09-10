@@ -1,14 +1,11 @@
-import { ActionCache } from "@convex-dev/action-cache";
-import { HOUR } from "@convex-dev/rate-limiter";
 import { v } from "convex/values";
 import { Effect } from "effect";
 import { polarClient } from "../lib/auth";
 import { ChatSDKError } from "../lib/errors";
 import type { Tier } from "../lib/types";
-import { api, components } from "./_generated/api";
-import { action } from "./_generated/server";
+import { query } from "./_generated/server";
 
-export const tierSearch = action({
+export const getTier = query({
 	args: { userId: v.id("users") },
 	handler: async (_, { userId }): Promise<Tier> =>
 		Effect.runPromise(
@@ -28,17 +25,4 @@ export const tierSearch = action({
 				return tier;
 			}),
 		),
-});
-
-const tierCache = new ActionCache(components.actionCache, {
-	action: api.customers.getTier,
-	name: "tier",
-	ttl: HOUR,
-});
-
-export const getTier = action({
-	args: { userId: v.id("users") },
-	handler: async (ctx, { userId }): Promise<Tier> => {
-		return await tierCache.fetch(ctx, { userId });
-	},
 });

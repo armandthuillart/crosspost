@@ -1,13 +1,14 @@
 import { abortStream } from "@convex-dev/agent";
 import { v } from "convex/values";
-import { components } from "./_generated/api";
+import { components, internal } from "./_generated/api";
 import { mutation } from "./_generated/server";
-import { authorize } from "./chat";
 
 export const abort = mutation({
 	args: { order: v.number(), threadId: v.string() },
 	handler: async (ctx, { threadId, order }) => {
-		await authorize(ctx, threadId);
+		await ctx.runQuery(internal.chat.authorize, {
+			threadId,
+		});
 
 		if (
 			await abortStream(ctx, components.agent, {

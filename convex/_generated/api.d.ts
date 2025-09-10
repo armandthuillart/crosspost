@@ -16,6 +16,7 @@ import type * as http from "../http.js";
 import type * as rateLimiting from "../rateLimiting.js";
 import type * as threads from "../threads.js";
 import type * as tools_createDraft from "../tools/createDraft.js";
+import type * as tools_publishPost from "../tools/publishPost.js";
 import type * as users from "../users.js";
 
 import type {
@@ -41,6 +42,7 @@ declare const fullApi: ApiFromModules<{
   rateLimiting: typeof rateLimiting;
   threads: typeof threads;
   "tools/createDraft": typeof tools_createDraft;
+  "tools/publishPost": typeof tools_publishPost;
   users: typeof users;
 }>;
 declare const fullApiWithMounts: typeof fullApi;

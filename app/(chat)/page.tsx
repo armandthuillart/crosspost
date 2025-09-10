@@ -3,23 +3,34 @@ import { fetchAction, fetchQuery } from "convex/nextjs";
 import { redirect } from "next/navigation";
 import { Chat } from "@/components/chat";
 import { createAuth } from "@/lib/auth";
+import type { Tier } from "@/lib/types";
 import { api } from "../../convex/_generated/api";
 
 export default async function HomePage() {
 	const token = await getToken(createAuth);
 	const user = await fetchQuery(api.auth.getUser, {}, { token });
 
-	if (!user?._id) {
+	const userId = user?._id;
+	const isAnonymous = user?.isAnonymous;
+
+	if (!userId) {
 		return redirect("/api/auth/anonymous");
 	}
 
-	const userTier = await fetchAction(
-		api.customers.getTierCached,
-		{
-			userId: user._id,
-		},
-		{ token },
-	);
+	let tier: Tier = "anonymous";
 
-	return <Chat isAnonymous={user.isAnonymous ?? false} userTier={userTier} />;
+	if (!isAnonymous) {
+		tier = await fetchAction(api.customers.getTier, { userId }, { token });
+	}
+
+	console.log("the tier is:", tier);
+
+	return (
+		<Chat
+			isAnonymous={isAnonymous ?? false}
+			threadId={null}
+			userId={userId}
+			userTier={tier}
+		/>
+	);
 }

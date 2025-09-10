@@ -12,6 +12,11 @@ export default defineSchema({
 		title: v.string(),
 		userId: v.id("users"),
 	}).index("by_user", ["userId"]),
+	draftsVersions: defineTable({
+		content: v.string(),
+		draftId: v.id("drafts"),
+		platform,
+	}).index("by_version_platform", ["draftId", "platform"]),
 	posts: defineTable({
 		content: v.string(),
 		platform,
@@ -22,9 +27,4 @@ export default defineSchema({
 	users: defineTable({
 		isAnonymous: v.optional(v.boolean()),
 	}).index("by_is_anonymous", ["isAnonymous"]),
-	versions: defineTable({
-		content: v.string(),
-		draftId: v.id("drafts"),
-		platform,
-	}).index("by_version_platform", ["draftId", "platform"]),
 });

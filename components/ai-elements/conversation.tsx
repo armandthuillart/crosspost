@@ -1,25 +1,29 @@
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
-import { memo, useCallback } from "react";
-import {
-	StickToBottom,
-	type StickToBottomProps,
-	useStickToBottomContext,
-} from "use-stick-to-bottom";
+import { type ComponentProps, memo, useCallback } from "react";
+import { StickToBottom, useStickToBottomContext } from "use-stick-to-bottom";
 import { Button, type ButtonProps } from "@/components/ui/button";
 import { ArrowDownIcon } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 
-function Conversation({ className, ...props }: StickToBottomProps) {
+function Conversation({
+	className,
+	children,
+	...props
+}: ComponentProps<"div">) {
 	return (
-		<div className="-mb-(--composer-overlap) flex h-full overflow-hidden [--composer-overlap:--spacing(7)]">
+		<div
+			className="-mb-(--composer-overlap) flex h-full overflow-hidden [--composer-overlap:--spacing(7)]"
+			{...props}
+		>
 			<StickToBottom
 				className={cn("relative flex-1 overflow-y-auto", className)}
 				initial="smooth"
 				resize="smooth"
-				{...props}
-			/>
+			>
+				{children}
+			</StickToBottom>
 		</div>
 	);
 }

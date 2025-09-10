@@ -1,23 +1,28 @@
 import { zodToConvex } from "convex-helpers/server/zod";
 import type { Id } from "./_generated/dataModel";
 import { mutation } from "./_generated/server";
+import { betterAuthComponent } from "./auth";
 import { zodSchema } from "./tools/createDraft";
 
 export const createDraft = mutation({
 	args: zodToConvex(zodSchema),
 	handler: async (ctx, { title, versions }) => {
-		const identity = await ctx.auth.getUserIdentity();
+		const userId = await betterAuthComponent.getAuthUserId(ctx);
+
+		if (!userId) {
+			throw new Error("User ID not found");
+		}
 
 		const draftId = await ctx.db.insert("drafts", {
 			title,
-			userId: identity?.subject as Id<"users">,
+			userId: userId as Id<"users">,
 		});
 
 		for (const [platform, content] of Object.entries(versions)) {
-			await ctx.db.insert("versions", {
+			await ctx.db.insert("draftsVersions", {
 				content,
 				draftId,
-				// @ts-expect-error — ?
+				// @ts-expect-error — already validated by zod + convex
 				platform,
 			});
 		}

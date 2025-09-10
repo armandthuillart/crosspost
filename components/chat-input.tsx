@@ -24,7 +24,7 @@ import { api } from "../convex/_generated/api";
 const TEXTAREA_MIN_HEIGHT = 24;
 const TEXTAREA_EXPANDED_MIN_HEIGHT = 48;
 
-export function ChatInput({ threadId }: { threadId?: string }) {
+export function ChatInput({ threadId }: { threadId: string | null }) {
 	const inputRef = useRef<HTMLTextAreaElement>(null);
 	const [isStreaming] = useAtom(isStreamingAtom);
 

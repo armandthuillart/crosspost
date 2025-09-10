@@ -1,33 +1,28 @@
-// TODO: This works, but isn't fast enough.
-export async function GET() {
-	const convexSiteUrl = process.env.NEXT_PUBLIC_CONVEX_SITE_URL;
-	if (!convexSiteUrl) {
-		throw new Error("NEXT_PUBLIC_CONVEX_SITE_URL is not set");
-	}
+export async function GET(request: Request) {
+	const url = new URL(request.url);
+	const endpoint = new URL("/api/auth/sign-in/anonymous", url.origin);
 
-	const response = await fetch(`${convexSiteUrl}/api/auth/sign-in/anonymous`, {
+	const response = await fetch(endpoint, {
 		body: JSON.stringify({}),
-		headers: { "Content-Type": "application/json" },
+		headers: {
+			Accept: "application/json",
+			"Content-Type": "application/json",
+		},
 		method: "POST",
 	});
 
 	if (!response.ok) {
-		throw new Error("Failed to create anonymous session");
+		return new Response("Failed to create anonymous session", { status: 500 });
 	}
 
-	// Forward cookies from the auth response
-	const cookies = response.headers.getSetCookie();
 	const headers = new Headers();
-
-	cookies.forEach((cookie) => {
+	for (const cookie of response.headers.getSetCookie() ?? []) {
 		headers.append("Set-Cookie", cookie);
-	});
+	}
+	headers.set("Location", "/");
 
 	return new Response(null, {
-		headers: {
-			Location: "/",
-			...Object.fromEntries(headers.entries()),
-		},
+		headers,
 		status: 302,
 	});
 }

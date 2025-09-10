@@ -5,6 +5,7 @@ import { v } from "convex/values";
 import { components, internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
 import { internalAction, mutation, query } from "./_generated/server";
+import { betterAuthComponent } from "./auth";
 import { rateLimitedUsageHandler } from "./rateLimiting";
 
 const myAgent = new Agent(components.agent, {
@@ -48,10 +49,10 @@ const myAgent = new Agent(components.agent, {
 export const createThread = mutation({
 	args: {},
 	handler: async (ctx) => {
-		const identity = await ctx.auth.getUserIdentity();
+		const userId = await betterAuthComponent.getAuthUserId(ctx);
 
 		const { threadId } = await myAgent.createThread(ctx, {
-			userId: identity?.subject as Id<"users">,
+			userId,
 		});
 
 		return threadId;
@@ -64,15 +65,22 @@ export const sendMessage = mutation({
 		threadId: v.string(),
 	},
 	handler: async (ctx, { threadId, prompt }) => {
-		const identity = await ctx.auth.getUserIdentity();
+		const userId = await betterAuthComponent.getAuthUserId(ctx);
+
+		if (!userId) {
+			throw new Error("User ID not found");
+		}
+		
 		const { messageId } = await saveMessage(ctx, components.agent, {
 			prompt,
 			threadId,
-			userId: identity?.subject as Id<"users">,
+			userId,
 		});
+
 		await ctx.scheduler.runAfter(0, internal.threads.generateResponseAsync, {
 			promptMessageId: messageId,
 			threadId,
+			userId: userId as Id<"users">,
 		});
 	},
 });
@@ -81,13 +89,16 @@ export const generateResponseAsync = internalAction({
 	args: {
 		promptMessageId: v.string(),
 		threadId: v.string(),
+		userId: v.id("users"),
 	},
-	handler: async (ctx, { threadId, promptMessageId }) => {
-		const { thread } = await myAgent.continueThread(ctx, { threadId });
+	handler: async (ctx, { userId, threadId, promptMessageId }) => {
+		const { thread } = await myAgent.continueThread(ctx, { threadId, userId });
+
 		const result = await thread.streamText(
 			{ promptMessageId },
 			{ saveStreamDeltas: true },
 		);
+
 		await result.consumeStream();
 	},
 });

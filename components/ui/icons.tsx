@@ -140,7 +140,12 @@ export const StopIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
 
 export const PencilEditIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
 	return (
-		<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
+		<svg
+			fill="none"
+			viewBox="0 0 24 24"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
 			<title>Pencil Edit</title>
 			<path
 				d="M15.2141 5.98239L16.6158 4.58063C17.39 3.80646 18.6452 3.80646 19.4194 4.58063C20.1935 5.3548 20.1935 6.60998 19.4194 7.38415L18.0176 8.78591M15.2141 5.98239L6.98023 14.2163C5.93493 15.2616 5.41226 15.7842 5.05637 16.4211C4.70047 17.058 4.3424 18.5619 4 20C5.43809 19.6576 6.94199 19.2995 7.57889 18.9436C8.21579 18.5877 8.73844 18.0651 9.78375 17.0198L18.0176 8.78591M15.2141 5.98239L18.0176 8.78591"
@@ -161,7 +166,12 @@ export const PencilEditIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
 
 export const CopyIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
 	return (
-		<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
+		<svg
+			fill="none"
+			viewBox="0 0 24 24"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
 			<title>Copy</title>
 			<path
 				d="M9 15C9 12.1716 9 10.7574 9.87868 9.87868C10.7574 9 12.1716 9 15 9L16 9C18.8284 9 20.2426 9 21.1213 9.87868C22 10.7574 22 12.1716 22 15V16C22 18.8284 22 20.2426 21.1213 21.1213C20.2426 22 18.8284 22 16 22H15C12.1716 22 10.7574 22 9.87868 21.1213C9 20.2426 9 18.8284 9 16L9 15Z"

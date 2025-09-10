@@ -4,8 +4,6 @@ import {
 	type RateLimitConfig,
 	RateLimiter,
 } from "@convex-dev/rate-limiter";
-import { Effect } from "effect";
-import { ChatSDKError } from "../lib/errors";
 import type { Tier } from "../lib/types";
 import { components, internal } from "./_generated/api";
 import type { DataModel, Id } from "./_generated/dataModel";
@@ -49,56 +47,20 @@ export const rateLimitedUsageHandler: UsageHandler = async (
 		return;
 	}
 
-	const tier = await ctx.runAction(internal.customers.getTier, {
+	const tier = await ctx.runAction(internal.customers.useTier, {
 		userId: userId as Id<"users">,
 	});
+
+	console.log("we're about to pass userId: ", userId);
 
 	await rateLimiter.limit(ctx, tier, { key: userId, throws: true });
 };
 
 export const { getRateLimit: getAnonymousRateLimit } =
-	rateLimiter.hookAPI<DataModel>("anonymous", {
-		key: (ctx) =>
-			Effect.runPromise(
-				Effect.gen(function* () {
-					const identity = yield* Effect.tryPromise({
-						catch: () => new ChatSDKError("unauthorized:api").toResponse(),
-						try: () => ctx.auth.getUserIdentity(),
-					});
-
-					return identity?.subject as Id<"users">;
-				}),
-			),
-	});
+	rateLimiter.hookAPI<DataModel>("anonymous");
 
 export const { getRateLimit: getFreeRateLimit } =
-	rateLimiter.hookAPI<DataModel>("free", {
-		key: (ctx) =>
-			Effect.runPromise(
-				Effect.gen(function* () {
-					const identity = yield* Effect.tryPromise({
-						catch: () => new ChatSDKError("unauthorized:api").toResponse(),
-						try: () => ctx.auth.getUserIdentity(),
-					});
+	rateLimiter.hookAPI<DataModel>("free");
 
-					return identity?.subject as Id<"users">;
-				}),
-			),
-	});
-
-export const { getRateLimit: getProRateLimit } = rateLimiter.hookAPI<DataModel>(
-	"pro",
-	{
-		key: (ctx) =>
-			Effect.runPromise(
-				Effect.gen(function* () {
-					const identity = yield* Effect.tryPromise({
-						catch: () => new ChatSDKError("unauthorized:api").toResponse(),
-						try: () => ctx.auth.getUserIdentity(),
-					});
-
-					return identity?.subject as Id<"users">;
-				}),
-			),
-	},
-);
+export const { getRateLimit: getProRateLimit } =
+	rateLimiter.hookAPI<DataModel>("pro");

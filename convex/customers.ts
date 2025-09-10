@@ -6,9 +6,9 @@ import { polarClient } from "../lib/auth";
 import { ChatSDKError } from "../lib/errors";
 import type { Tier } from "../lib/types";
 import { api, components } from "./_generated/api";
-import { action, internalAction } from "./_generated/server";
+import { action } from "./_generated/server";
 
-export const getTier = action({
+export const tierSearch = action({
 	args: { userId: v.id("users") },
 	handler: async (_, { userId }): Promise<Tier> =>
 		Effect.runPromise(
@@ -36,9 +36,9 @@ const tierCache = new ActionCache(components.actionCache, {
 	ttl: HOUR,
 });
 
-export const useTier = internalAction({
+export const getTier = action({
 	args: { userId: v.id("users") },
-	handler: async (ctx, args): Promise<Tier> => {
-		return await tierCache.fetch(ctx, { userId: args.userId });
+	handler: async (ctx, { userId }): Promise<Tier> => {
+		return await tierCache.fetch(ctx, { userId });
 	},
 });

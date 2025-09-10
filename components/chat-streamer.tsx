@@ -29,11 +29,13 @@ export function ChatStreamer({
 			break;
 	}
 
-	const { status } = useRateLimit(getRateLimitApi, { key: userId });
+	console.log(userId);
 
-	if (status?.ok) {
-		return null;
+	const { status } = useRateLimit(getRateLimitApi, {
+		key: userId,
+	});
+
+	if (status && !status) {
+		return <div>you're limited bro</div>;
 	}
-
-	return <div />;
 }

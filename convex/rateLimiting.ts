@@ -1,12 +1,11 @@
-import type { UsageHandler } from "@convex-dev/agent";
 import {
 	MINUTE,
 	type RateLimitConfig,
 	RateLimiter,
 } from "@convex-dev/rate-limiter";
 import type { Tier } from "../lib/types";
-import { components, internal } from "./_generated/api";
-import type { DataModel, Id } from "./_generated/dataModel";
+import { components } from "./_generated/api";
+import type { DataModel } from "./_generated/dataModel";
 
 const HOUR = 60 * MINUTE;
 const DAY = 24 * HOUR;
@@ -37,30 +36,6 @@ export const rateLimiter = new RateLimiter(
 	components.rateLimiter,
 	rateLimitConfig,
 );
-
-export const rateLimitedUsageHandler: UsageHandler = async (
-	ctx,
-	{ userId },
-) => {
-	if (!userId) {
-		console.warn("No user ID found in usage handler");
-		return;
-	}
-
-	const user = await ctx.runQuery(internal.auth.fetchUser, {
-		userId: userId as Id<"users">,
-	});
-
-	let tier: Tier = "anonymous";
-
-	if (!user?.isAnonymous) {
-		tier = await ctx.runAction(internal.customers.useTier, {
-			userId: userId as Id<"users">,
-		});
-	}
-
-	await rateLimiter.limit(ctx, tier, { key: userId, throws: true });
-};
 
 export const { getRateLimit: getAnonymousRateLimit } =
 	rateLimiter.hookAPI<DataModel>("anonymous");

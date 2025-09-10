@@ -79,7 +79,7 @@ function MessageContent({
 
 type MessageBubbleProps = HTMLAttributes<HTMLDivElement>;
 
-function MessageBubble({ children, className, ...props }: MessageBubbleProps) {
+function MessageBubble({ className, ...props }: MessageBubbleProps) {
 	return (
 		<div className="flex flex-col group-data-[role=user]/message:items-end">
 			<div
@@ -88,9 +88,7 @@ function MessageBubble({ children, className, ...props }: MessageBubbleProps) {
 					className,
 				)}
 				{...props}
-			>
-				<div>{children}</div>
-			</div>
+			/>
 		</div>
 	);
 }
@@ -106,10 +104,6 @@ function MessageEditor({
 	className,
 	...props
 }: MessageEditorProps) {
-	// const deleteMessagesAtOrAfterMessage = useMutation(
-	// 	api.streaming.deleteMessagesAtOrAfterMessage,
-	// );
-
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
 	const [draftContent, setDraftContent] = useState(message.text);
 
@@ -179,9 +173,9 @@ function MessageEditor({
 			{...props}
 		>
 			<textarea
-				className="min-h-12 resize-none rounded-none border-none bg-transparent p-2 pb-0 text-base shadow-none focus-visible:ring-0 dark:bg-transparent"
-				onChange={handleChange}
+				className="min-h-12 resize-none rounded-none border-none bg-transparent p-2 pb-0 text-base shadow-none outline-none focus-visible:ring-0 dark:bg-transparent"
 				// onKeyDown={handleKeyDown}
+				onChange={handleChange}
 				ref={textareaRef}
 				value={draftContent}
 			/>

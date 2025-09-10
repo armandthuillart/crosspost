@@ -1,6 +1,13 @@
 import { getThreadMetadata } from "@convex-dev/agent";
+import { getToken } from "@convex-dev/better-auth/nextjs";
+import { checkBotId } from "botid/server";
+import { fetchAction, fetchQuery } from "convex/nextjs";
 import { v } from "convex/values";
-import { components, internal } from "./_generated/api";
+import { createAuth } from "../lib/auth";
+import { ChatSDKError } from "../lib/errors";
+import type { Tier } from "../lib/types";
+import { api, components, internal } from "./_generated/api";
+import type { Id } from "./_generated/dataModel";
 import {
 	type ActionCtx,
 	internalAction,
@@ -10,6 +17,7 @@ import {
 } from "./_generated/server";
 import { agent } from "./agent";
 import { betterAuthComponent } from "./auth";
+import { rateLimiter } from "./rateLimiting";
 
 export const create = mutation({
 	args: {},
@@ -30,7 +38,9 @@ export const start = mutation({
 		threadId: v.string(),
 	},
 	handler: async (ctx, { threadId, prompt }) => {
-		await authorize(ctx, threadId);
+		const { userId, userTier } = await authorize(ctx, threadId);
+
+		await rateLimiter.limit(ctx, userTier, { key: userId, throws: true });
 
 		const { messageId } = await agent.saveMessage(ctx, {
 			prompt,
@@ -55,31 +65,55 @@ export const stream = internalAction({
 			ctx,
 			{ threadId },
 			{ promptMessageId },
-			{ saveStreamDeltas: true },
+			{ saveStreamDeltas: { chunking: "word", throttleMs: 100 } },
 		);
 
 		await result.consumeStream();
 	},
 });
 
+// This is a Next.js Server Action (fluid compute), that does:
+// 1. Get the user's token by creating an auth client (betterAuth adapter)
+// 2. Get user metadata (betterAuth user) + convex user fields merged into one object
+// 3. Some guards for userId, threadId, and user.isAnonymous
+// 4. Ensure the current user id matches the thread's user id (ownership check)
+// 5. Get the user's tier to be able to rate limit the user based on their tier
+// 6. Return the userId and userTier for a lot of convex functions that need them.
 export async function authorize(
 	ctx: QueryCtx | MutationCtx | ActionCtx,
 	threadId: string,
-	requireUser?: boolean,
 ) {
-	const userId = await betterAuthComponent.getAuthUserId(ctx);
+	const { isBot } = await checkBotId();
 
-	if (requireUser && !userId) {
-		throw new Error("Unauthorized: user is required");
+	if (isBot) {
+		throw new ChatSDKError("forbidden:chat", "Bots can't chat");
 	}
 
-	const { userId: threadUserId } = await getThreadMetadata(
-		ctx,
-		components.agent,
-		{ threadId },
-	);
+	const token = await getToken(createAuth);
+	const user = await fetchQuery(api.auth.getUser, {}, { token });
+	const isAnonymous = user?.isAnonymous;
 
-	if (requireUser && threadUserId !== userId) {
-		throw new Error("Unauthorized: user does not match thread user");
+	if (!user) {
+		throw new ChatSDKError("unauthorized:chat");
 	}
+
+	const { userId } = await getThreadMetadata(ctx, components.agent, {
+		threadId,
+	});
+
+	if (user.userId !== userId) {
+		throw new ChatSDKError("forbidden:chat");
+	}
+
+	let userTier: Tier = "anonymous";
+
+	if (!isAnonymous) {
+		userTier = await fetchAction(
+			api.customers.getTier,
+			{ userId: userId as Id<"users"> },
+			{ token },
+		);
+	}
+
+	return { userId, userTier };
 }

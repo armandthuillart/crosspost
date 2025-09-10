@@ -3,7 +3,7 @@
 import { optimisticallySendMessage } from "@convex-dev/agent/react";
 import { useMutation } from "convex/react";
 import { useAtom } from "jotai";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
 	type FormEvent,
 	type KeyboardEvent,
@@ -27,6 +27,10 @@ const TEXTAREA_EXPANDED_MIN_HEIGHT = 48;
 
 export function ChatInput({ threadId }: { threadId: string | null }) {
 	const router = useRouter();
+
+	const pathname = usePathname();
+	const isChat = pathname.includes("/t/");
+
 	const inputRef = useRef<HTMLTextAreaElement>(null);
 	const [isStreaming] = useAtom(isStreamingAtom);
 
@@ -52,12 +56,14 @@ export function ChatInput({ threadId }: { threadId: string | null }) {
 				threadId = await createChat();
 			}
 
+			if (!isChat) {
+				router.push(`/t/${threadId}`);
+			}
+
 			void sendMessage({
 				prompt,
 				threadId,
 			});
-
-			router.push(`/t/${threadId}`);
 
 			setPrompt("");
 			resetHeight();

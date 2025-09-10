@@ -40,8 +40,17 @@ export function ChatMessages({ threadId }: { threadId: string }) {
 	const hasSentMessage = messages.some((m) => m.status === "pending");
 
 	useEffect(() => {
+		setIsStreaming(false);
+	}, [setIsStreaming]);
+
+	useEffect(() => {
 		setIsStreaming(isStreaming);
-	}, [isStreaming, setIsStreaming]);
+		console.log("isStreaming", isStreaming);
+		console.log(
+			"messages statuses:",
+			messages.map((m) => ({ id: m.id, role: m.role, status: m.status })),
+		);
+	}, [isStreaming, setIsStreaming, messages]);
 
 	const [isCopied, setIsCopied] = useState(false);
 	const [editingId, setEditingId] = useState<string | null>(null);

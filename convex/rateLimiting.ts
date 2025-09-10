@@ -47,11 +47,17 @@ export const rateLimitedUsageHandler: UsageHandler = async (
 		return;
 	}
 
-	const tier = await ctx.runAction(internal.customers.useTier, {
+	const user = await ctx.runQuery(internal.auth.fetchUser, {
 		userId: userId as Id<"users">,
 	});
 
-	console.log("we're about to pass userId: ", userId);
+	let tier: Tier = "anonymous";
+
+	if (!user?.isAnonymous) {
+		tier = await ctx.runAction(internal.customers.useTier, {
+			userId: userId as Id<"users">,
+		});
+	}
 
 	await rateLimiter.limit(ctx, tier, { key: userId, throws: true });
 };

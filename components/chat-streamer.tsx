@@ -15,8 +15,6 @@ export function ChatStreamer({
 	userId: Id<"users">;
 	userTier: Tier;
 }) {
-	console.log("the user is:", userTier);
-
 	let getRateLimitApi: GetRateLimitValueQuery;
 
 	switch (userTier) {

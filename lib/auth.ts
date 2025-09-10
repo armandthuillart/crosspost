@@ -5,9 +5,9 @@ import { checkout, polar, portal, usage } from "@polar-sh/better-auth";
 import { Polar } from "@polar-sh/sdk";
 import { type BetterAuthOptions, betterAuth } from "better-auth";
 import { anonymous } from "better-auth/plugins";
+import { betterAuthComponent } from "@/convex/auth";
+import { isProduction } from "@/lib/constants";
 import type { GenericCtx } from "../convex/_generated/server";
-import { betterAuthComponent } from "../convex/auth";
-import { isProduction } from "../lib/constants";
 
 const siteUrl = requireEnv("SITE_URL");
 

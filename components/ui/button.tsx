@@ -30,8 +30,7 @@ const buttonVariants = cva(
 				sm: "h-8 gap-1.5 px-3",
 			},
 			variant: {
-				default:
-					"bg-primary text-primary-foreground hover:bg-primary/90",
+				default: "bg-primary text-primary-foreground hover:bg-primary/90",
 				destructive:
 					"bg-destructive-foreground text-white shadow-xs hover:bg-destructive-foreground/90",
 				ghost: "hover:bg-accent hover:text-accent-foreground",

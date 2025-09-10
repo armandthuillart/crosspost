@@ -1,5 +1,5 @@
 import type { Infer } from "convex/values";
-import type { platform } from "../convex/schema";
+import type { platform } from "@/convex/schema";
 
 export type Tier = "anonymous" | "free" | "pro";
 

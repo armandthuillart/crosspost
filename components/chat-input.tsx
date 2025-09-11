@@ -3,7 +3,6 @@
 import { optimisticallySendMessage } from "@convex-dev/agent/react";
 import { useMutation } from "convex/react";
 import { useAtom } from "jotai";
-import { usePathname } from "next/navigation";
 import {
 	type FormEvent,
 	type KeyboardEvent,
@@ -18,6 +17,7 @@ import {
 	PromptInputSubmit,
 	PromptInputTextarea,
 } from "@/components/ai-elements/prompt-input";
+import { thread } from "@/components/chat";
 import { isStreamingAtom } from "@/components/chat-messages";
 import { useAutoFocus } from "@/hooks/use-auto-focus";
 import { useTypewriter } from "@/hooks/use-typewriter";
@@ -27,8 +27,7 @@ const TEXTAREA_MIN_HEIGHT = 24;
 const TEXTAREA_EXPANDED_MIN_HEIGHT = 48;
 
 export function ChatInput({ threadId }: { threadId: string }) {
-	const pathname = usePathname();
-	const isChat = pathname.includes("/t/");
+	const [isThread, setIsThread] = useAtom(thread);
 
 	const inputRef = useRef<HTMLTextAreaElement>(null);
 	const [isStreaming] = useAtom(isStreamingAtom);
@@ -49,6 +48,7 @@ export function ChatInput({ threadId }: { threadId: string }) {
 			event.preventDefault();
 			if (!isDirty) return;
 
+			setIsThread(true); // Changes the layout directly.
 			window.history.replaceState(null, "", `/t/${threadId}`);
 
 			void sendMessage({
@@ -147,7 +147,7 @@ export function ChatInput({ threadId }: { threadId: string }) {
 	});
 
 	const typewriter = useTypewriter({
-		enabled: !isChat,
+		enabled: !isThread,
 		loop: true,
 		pauseDuration: 2000,
 		texts: [

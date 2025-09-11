@@ -10,12 +10,7 @@ export function ChatGreetings() {
 			layout="position"
 			layoutId="app-shader"
 		>
-			<AppShader
-				darkColor="rgb(1, 105, 204)"
-				lightColor="rgb(51, 156, 255)"
-				size={80}
-				speed={1}
-			/>
+			<AppShader colors={["rgb(51, 156, 255)"]} size={80} speed={1} />
 		</motion.div>
 	);
 }

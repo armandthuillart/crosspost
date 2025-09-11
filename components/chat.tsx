@@ -2,6 +2,7 @@
 
 import { useUIMessages } from "@convex-dev/agent/react";
 import { useMutation } from "convex/react";
+import { atom, useAtom } from "jotai";
 import { useParams, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ChatGreetings } from "@/components/chat-greetings";
@@ -19,7 +20,11 @@ interface ChatProps {
 	isAnonymous: boolean;
 }
 
+export const thread = atom(false);
+
 export function Chat({ userId, userTier, isAnonymous }: ChatProps) {
+	const [isThread] = useAtom(thread);
+
 	const params = useParams();
 	const pathname = usePathname();
 	const isChat = pathname.includes("/t/");
@@ -44,23 +49,18 @@ export function Chat({ userId, userTier, isAnonymous }: ChatProps) {
 		initializeThread();
 	}, [isChat, params.threadId, threadId, createChat]);
 
-	if (!threadId) {
-		return <div>Loading...</div>;
-	}
-
 	return (
 		<main
 			className="group/chat @container/chat relative flex size-full flex-col"
-			data-thread={isChat}
+			data-thread={isThread}
 		>
 			<ChatHeader isAnonymous={isAnonymous} />
 			<div className="flex h-full flex-col overflow-y-scroll group-data-[thread=false]/chat:gap-32">
 				<div className="flex h-full flex-col overflow-hidden px-4 group-data-[thread=true]/chat:h-full group-data-[thread=true]/chat:justify-center max-md:shrink-0 group-data-[thread=false]/chat:md:gap-6 group-data-[thread=false]/chat:md:pt-24 group-data-[thread=false]/chat:lg:pt-[30svh]">
-					{isChat ? (
+					{isThread && (
 						<Thread threadId={threadId} userId={userId} userTier={userTier} />
-					) : (
-						<Home threadId={threadId} />
 					)}
+					{!isThread && <Home threadId={threadId} />}
 				</div>
 			</div>
 		</main>

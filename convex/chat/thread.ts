@@ -8,7 +8,7 @@ import { internalAction, internalQuery, mutation } from "../_generated/server";
 import { chatAgent } from "../agent";
 import { rateLimiter } from "../rateLimiting";
 
-export const create = mutation({
+export const createChat = mutation({
 	args: {},
 	handler: async (ctx) => {
 		const identity = await ctx.auth.getUserIdentity();

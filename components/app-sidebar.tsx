@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { AppIcon, SearchIcon } from "@/components/ui/icons";
+import { SearchIcon } from "@/components/ui/icons";
 import {
 	Sidebar,
 	SidebarContent,
@@ -12,6 +12,7 @@ import {
 	SidebarMenuButton,
 	SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { AppShader } from "./app-shader";
 
 export function AppSidebar() {
 	const pathname = usePathname();
@@ -32,8 +33,7 @@ export function AppSidebar() {
 									isActive={pathname === "/"}
 									onClick={() => router.push("/")}
 								>
-									<AppIcon className="size-5" />
-									Fragment
+									<AppShader colors={["rgb(51, 156, 255)"]} size={20} />
 								</SidebarMenuButton>
 							</SidebarMenuItem>
 						</SidebarMenu>

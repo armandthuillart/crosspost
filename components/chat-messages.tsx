@@ -1,7 +1,6 @@
 "use client";
 
-import { type UIMessage, useThreadMessages } from "@convex-dev/agent/react";
-import { type Preloaded, useMutation, usePreloadedQuery } from "convex/react";
+import type { UIMessage } from "@convex-dev/agent/react";
 import { atom, useAtom } from "jotai";
 import { AnimatePresence } from "motion/react";
 import { useEffect, useState } from "react";
@@ -18,30 +17,16 @@ import {
 	RepeatIcon,
 	TickIcon,
 } from "@/components/ui/icons";
-import { api } from "../convex/_generated/api";
 
 export const isStreamingAtom = atom(false);
 
 export function ChatMessages({
 	threadId,
-	preloadedMessages,
+	messages,
 }: {
 	threadId: string;
-	preloadedMessages: Preloaded<typeof api.chat.messages.list>;
+	messages: Array<UIMessage>;
 }) {
-	const { page: initialMessages } = usePreloadedQuery(preloadedMessages);
-
-	const { results: liveMessages, status } = useThreadMessages(
-		api.chat.messages.list,
-		{ threadId },
-		{ initialNumItems: 10, stream: true },
-	);
-
-	const hasHydrated = liveMessages.length > 0 || status !== "LoadingFirstPage";
-	const messages: UIMessage[] = hasHydrated ? liveMessages : initialMessages;
-
-	const _abort = useMutation(api.chat.stream.abort);
-
 	const [, setIsStreaming] = useAtom(isStreamingAtom);
 
 	const lastMessage = messages.at(-1);

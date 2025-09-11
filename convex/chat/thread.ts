@@ -6,17 +6,20 @@ import { api, components, internal } from "../_generated/api";
 import type { Id } from "../_generated/dataModel";
 import { internalAction, internalQuery, mutation } from "../_generated/server";
 import { chatAgent } from "../agent";
-import { betterAuthComponent } from "../auth";
 import { rateLimiter } from "../rateLimiting";
 
 export const create = mutation({
 	args: {},
 	handler: async (ctx) => {
-		const userId = await betterAuthComponent.getAuthUserId(ctx);
+		const identity = await ctx.auth.getUserIdentity();
+
+		if (!identity) {
+			throw new ChatSDKError("unauthorized:chat");
+		}
 
 		const { threadId } = await chatAgent.createThread(ctx, {
 			title: "New Chat",
-			userId,
+			userId: identity.subject,
 		});
 
 		return threadId;
@@ -77,9 +80,9 @@ export const authorize = internalQuery({
 		ctx,
 		{ threadId },
 	): Promise<{ userId: Id<"users">; userTier: Tier }> => {
-		const user = await ctx.runQuery(api.auth.getUser, {});
+		const identity = await ctx.auth.getUserIdentity();
 
-		if (!user) {
+		if (!identity) {
 			throw new ChatSDKError("unauthorized:chat");
 		}
 
@@ -87,9 +90,11 @@ export const authorize = internalQuery({
 			threadId,
 		});
 
-		if (user._id !== userId) {
+		if (identity.subject !== userId) {
 			throw new ChatSDKError("forbidden:chat");
 		}
+
+		const user = await ctx.db.get(userId as Id<"users">);
 
 		let userTier: Tier = "anonymous";
 

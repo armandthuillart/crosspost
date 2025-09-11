@@ -1,52 +1,130 @@
 "use client";
 
-import type { Preloaded } from "convex/react";
+import { useUIMessages } from "@convex-dev/agent/react";
+import { useMutation } from "convex/react";
+import { useParams, usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { ChatGreetings } from "@/components/chat-greetings";
 import { ChatHeader } from "@/components/chat-header";
 import { ChatInput } from "@/components/chat-input";
 import { ChatMessages } from "@/components/chat-messages";
 import { ChatStreamer } from "@/components/chat-streamer";
-import type { api } from "@/convex/_generated/api";
 import type { Tier } from "@/lib/types";
+import { api } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
 
 interface ChatProps {
 	userId: Id<"users">;
 	userTier: Tier;
-	threadId: string | null;
 	isAnonymous: boolean;
-	preloadedMessages: Preloaded<typeof api.chat.messages.list> | null;
 }
 
-export function Chat({
-	userId,
-	userTier,
-	threadId,
-	isAnonymous,
-	preloadedMessages,
-}: ChatProps) {
+export function Chat({ userId, userTier, isAnonymous }: ChatProps) {
+	const params = useParams();
+	const pathname = usePathname();
+	const isChat = pathname.includes("/t/");
+
+	const [threadId, setThreadId] = useState<string | null>(null);
+	const createChat = useMutation(api.chat.thread.create);
+
+	useEffect(() => {
+		async function initializeThread() {
+			console.log(
+				"🔍 Chat component - userId:",
+				userId,
+				"isChat:",
+				isChat,
+				"params.threadId:",
+				params.threadId,
+			);
+
+			if (isChat) {
+				// On chat page, use the threadId from URL
+				const urlThreadId = params.threadId as string;
+				if (urlThreadId) {
+					console.log("🔍 Setting threadId from URL:", urlThreadId);
+					setThreadId(urlThreadId);
+				}
+			} else {
+				// On home page, create a new thread
+				if (!threadId) {
+					console.log("🔍 Creating new thread for userId:", userId);
+					const newThreadId = await createChat();
+					console.log("🔍 Created new threadId:", newThreadId);
+					setThreadId(newThreadId);
+				}
+			}
+		}
+		initializeThread();
+	}, [isChat, params.threadId, threadId, createChat, userId]);
+
+	if (!threadId) {
+		return <div>Loading...</div>;
+	}
+
+	console.log(
+		"🔍 Rendering Chat - threadId:",
+		threadId,
+		"userId:",
+		userId,
+		"isChat:",
+		isChat,
+	);
+
 	return (
 		<main
 			className="group/chat @container/chat relative flex size-full flex-col"
-			data-messages={!!threadId}
+			data-thread={isChat}
 		>
 			<ChatHeader isAnonymous={isAnonymous} />
-			<div className="flex h-full flex-col overflow-y-scroll group-data-[messages=false]/chat:gap-32">
-				<div className="flex h-full flex-col overflow-hidden px-4 group-data-[messages=true]/chat:h-full group-data-[messages=true]/chat:justify-center max-md:shrink-0 group-data-[messages=false]/chat:md:gap-6 group-data-[messages=false]/chat:md:pt-24 group-data-[messages=false]/chat:lg:pt-[30svh]">
-					{threadId && preloadedMessages ? (
-						<ChatMessages
-							preloadedMessages={preloadedMessages}
-							threadId={threadId}
-						/>
+			<div className="flex h-full flex-col overflow-y-scroll group-data-[thread=false]/chat:gap-32">
+				<div className="flex h-full flex-col overflow-hidden px-4 group-data-[thread=true]/chat:h-full group-data-[thread=true]/chat:justify-center max-md:shrink-0 group-data-[thread=false]/chat:md:gap-6 group-data-[thread=false]/chat:md:pt-24 group-data-[thread=false]/chat:lg:pt-[30svh]">
+					{isChat ? (
+						<Thread threadId={threadId} userId={userId} userTier={userTier} />
 					) : (
-						<ChatGreetings />
+						<Home threadId={threadId} />
 					)}
-					<div className="relative mx-auto flex w-full max-w-(--chat-content-max-width) flex-col gap-4 pb-4 @[34rem]:[--chat-content-max-width:40rem] @[64rem]:[--chat-content-max-width:48rem] [--chat-content-max-width:32rem] md:group-data-[messages=false]/chat:pb-0">
-						{threadId && <ChatStreamer userId={userId} userTier={userTier} />}
-						<ChatInput threadId={threadId ?? null} />
-					</div>
 				</div>
 			</div>
 		</main>
+	);
+}
+
+function Thread({
+	userId,
+	userTier,
+	threadId,
+}: {
+	userId: Id<"users">;
+	userTier: Tier;
+	threadId: string;
+}) {
+	console.log("🔍 Thread component - threadId:", threadId, "userId:", userId);
+
+	const { results: messages } = useUIMessages(
+		api.chat.messages.list,
+		{ threadId },
+		{ initialNumItems: 10, stream: true },
+	);
+
+	return (
+		<>
+			<ChatMessages messages={messages} threadId={threadId} />
+			<div className="relative mx-auto flex w-full max-w-(--chat-content-max-width) flex-col gap-4 pb-4 @[34rem]:[--chat-content-max-width:40rem] @[64rem]:[--chat-content-max-width:48rem] [--chat-content-max-width:32rem] md:group-data-[thread=false]/chat:pb-0">
+				<ChatStreamer userId={userId} userTier={userTier} />
+				<ChatInput threadId={threadId} />
+			</div>
+		</>
+	);
+}
+
+function Home({ threadId }: { threadId: string }) {
+	return (
+		<>
+			<ChatGreetings />
+			<div className="relative mx-auto flex w-full max-w-(--chat-content-max-width) flex-col gap-4 pb-4 @[34rem]:[--chat-content-max-width:40rem] @[64rem]:[--chat-content-max-width:48rem] [--chat-content-max-width:32rem] md:group-data-[thread=false]/chat:pb-0">
+				<ChatInput threadId={threadId} />
+			</div>
+		</>
 	);
 }

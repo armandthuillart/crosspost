@@ -41,7 +41,7 @@ function ConversationContent({
 }
 
 function PureConversationScrollButton({ className, ...props }: ButtonProps) {
-	const { isAtBottom, scrollToBottom } = useStickToBottomContext();
+	const { isAtBottom, scrollToBottom} = useStickToBottomContext();
 
 	const handleScroll = useCallback(() => {
 		scrollToBottom();

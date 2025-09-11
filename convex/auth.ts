@@ -42,18 +42,9 @@ export const {
 export const getUser = query({
 	args: {},
 	handler: async (ctx) => {
-		const userMetadata = await betterAuthComponent.getAuthUser(ctx);
-
-		if (!userMetadata) {
-			return null;
-		}
-
-		const user = await ctx.db.get(userMetadata.userId as Id<"users">);
-
-		return {
-			...user,
-			...userMetadata,
-		};
+		const user = await betterAuthComponent.getAuthUser(ctx);
+		console.log("🔍 getUser - userId:", user?.userId);
+		return user;
 	},
 });
 

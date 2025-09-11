@@ -14,6 +14,7 @@ import {
 } from "react";
 import {
 	PromptInput,
+	PromptInputStop,
 	PromptInputSubmit,
 	PromptInputTextarea,
 } from "@/components/ai-elements/prompt-input";
@@ -25,7 +26,7 @@ import { api } from "../convex/_generated/api";
 const TEXTAREA_MIN_HEIGHT = 24;
 const TEXTAREA_EXPANDED_MIN_HEIGHT = 48;
 
-export function ChatInput({ threadId }: { threadId: string | null }) {
+export function ChatInput({ threadId }: { threadId: string }) {
 	const router = useRouter();
 
 	const pathname = usePathname();
@@ -40,8 +41,6 @@ export function ChatInput({ threadId }: { threadId: string | null }) {
 
 	const isDirty = prompt.trim().length > 0;
 
-	const createChat = useMutation(api.chat.thread.create);
-
 	const sendMessage = useMutation(api.chat.thread.start).withOptimisticUpdate(
 		optimisticallySendMessage(api.chat.messages.list),
 	);
@@ -51,10 +50,6 @@ export function ChatInput({ threadId }: { threadId: string | null }) {
 		async (event: FormEvent<HTMLFormElement>) => {
 			event.preventDefault();
 			if (!isDirty) return;
-
-			if (!threadId) {
-				threadId = await createChat();
-			}
 
 			if (!isChat) {
 				router.push(`/t/${threadId}`);
@@ -188,7 +183,11 @@ export function ChatInput({ threadId }: { threadId: string | null }) {
 				ref={inputRef}
 				value={prompt}
 			/>
-			<PromptInputSubmit disabled={!isDirty || isStreaming} />
+			{isStreaming ? (
+				<PromptInputStop onClick={() => {}} />
+			) : (
+				<PromptInputSubmit disabled={!isDirty || isStreaming} />
+			)}
 		</PromptInput>
 	);
 }

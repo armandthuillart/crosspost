@@ -1,7 +1,7 @@
 "use client";
 
 import { type UIMessage, useUIMessages } from "@convex-dev/agent/react";
-import { useMutation } from "convex/react";
+import { type Preloaded, useMutation, usePreloadedQuery } from "convex/react";
 import { atom, useAtom } from "jotai";
 import { AnimatePresence } from "motion/react";
 import { useEffect, useState } from "react";
@@ -22,12 +22,23 @@ import { api } from "../convex/_generated/api";
 
 export const isStreamingAtom = atom(false);
 
-export function ChatMessages({ threadId }: { threadId: string }) {
-	const { results: messages } = useUIMessages(
+export function ChatMessages({
+	threadId,
+	preloadedMessages,
+}: {
+	threadId: string;
+	preloadedMessages: Preloaded<typeof api.chat.messages.list>;
+}) {
+	const { page: initialMessages } = usePreloadedQuery(preloadedMessages);
+
+	const { results: liveMessages, status } = useUIMessages(
 		api.chat.messages.list,
 		{ threadId },
 		{ initialNumItems: 10, stream: true },
 	);
+
+	const hasHydrated = liveMessages.length > 0 || status !== "LoadingMore";
+	const messages: UIMessage[] = hasHydrated ? liveMessages : initialMessages;
 
 	const _abort = useMutation(api.chat.stream.abort);
 

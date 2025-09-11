@@ -1,5 +1,5 @@
 import { getToken } from "@convex-dev/better-auth/nextjs";
-import { fetchQuery } from "convex/nextjs";
+import { fetchQuery, preloadQuery } from "convex/nextjs";
 import { redirect } from "next/navigation";
 import { Chat } from "@/components/chat";
 import { createAuth } from "@/lib/auth";
@@ -27,9 +27,19 @@ export default async function ChatPage({ params }: { params: Params }) {
 		tier = await fetchQuery(api.customers.getTier, { userId }, { token });
 	}
 
+	const preloadedMessages = await preloadQuery(
+		api.chat.messages.list,
+		{
+			paginationOpts: { cursor: null, numItems: 10 },
+			threadId,
+		},
+		{ token },
+	);
+
 	return (
 		<Chat
 			isAnonymous={isAnonymous}
+			preloadedMessages={preloadedMessages}
 			threadId={threadId}
 			userId={userId}
 			userTier={tier}

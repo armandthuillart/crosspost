@@ -26,6 +26,7 @@ export default async function HomePage() {
 	return (
 		<Chat
 			isAnonymous={isAnonymous}
+			preloadedMessages={null}
 			threadId={null}
 			userId={userId}
 			userTier={tier}

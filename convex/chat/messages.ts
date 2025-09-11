@@ -16,13 +16,13 @@ export const list = query({
 			threadId,
 		});
 
-		const paginated = await listUIMessages(ctx, components.agent, {
-			paginationOpts,
+		const streams = await chatAgent.syncStreams(ctx, {
+			streamArgs,
 			threadId,
 		});
 
-		const streams = await chatAgent.syncStreams(ctx, {
-			streamArgs,
+		const paginated = await listUIMessages(ctx, components.agent, {
+			paginationOpts,
 			threadId,
 		});
 

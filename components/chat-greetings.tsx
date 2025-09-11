@@ -1,10 +1,15 @@
 "use client";
 
+import { motion } from "motion/react";
 import { AppShader } from "@/components/app-shader";
 
 export function ChatGreetings() {
 	return (
-		<div className="mx-auto size-20 max-md:my-auto">
+		<motion.div
+			className="mx-auto size-20 max-md:my-auto"
+			layout="position"
+			layoutId="app-shader"
+		>
 			<AppShader
 				darkColor="rgb(1, 105, 204)"
 				lightColor="rgb(51, 156, 255)"
@@ -12,6 +17,6 @@ export function ChatGreetings() {
 				size={80}
 				speed={1}
 			/>
-		</div>
+		</motion.div>
 	);
 }

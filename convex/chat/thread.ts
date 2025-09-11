@@ -43,6 +43,7 @@ export const start = mutation({
 			prompt,
 			skipEmbeddings: true,
 			threadId,
+			userId,
 		});
 
 		await ctx.scheduler.runAfter(0, internal.chat.thread.stream, {
@@ -67,7 +68,7 @@ export const stream = internalAction({
 			ctx,
 			{ threadId },
 			{ promptMessageId },
-			{ saveStreamDeltas: { chunking: "word", throttleMs: 100 } },
+			{ saveStreamDeltas: true },
 		);
 
 		await result.consumeStream();
@@ -85,8 +86,6 @@ export const authorize = internalQuery({
 		if (!identity) {
 			throw new ChatSDKError("unauthorized:chat");
 		}
-
-		console.log("🔍 Authorize - identity:", identity);
 
 		const { userId } = await getThreadMetadata(ctx, components.agent, {
 			threadId,

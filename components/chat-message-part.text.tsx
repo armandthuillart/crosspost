@@ -9,11 +9,17 @@ interface TextProps {
 	message: UIMessage;
 	onCancel: () => void;
 	isEditing: boolean;
+	shouldStream: boolean;
 }
 
-export function Text({ message, onCancel, isEditing }: TextProps) {
+export function Text({
+	message,
+	onCancel,
+	isEditing,
+	shouldStream,
+}: TextProps) {
 	const [visibleText] = useSmoothText(message.text, {
-		startStreaming: message.status === "streaming",
+		startStreaming: shouldStream,
 	});
 
 	switch (message.role) {

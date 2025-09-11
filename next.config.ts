@@ -4,6 +4,7 @@ const nextConfig: NextConfig = {
 	experimental: {
 		browserDebugInfoInTerminal: true,
 	},
+	reactStrictMode: false,
 	typedRoutes: true,
 };
 

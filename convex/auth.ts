@@ -42,9 +42,7 @@ export const {
 export const getUser = query({
 	args: {},
 	handler: async (ctx) => {
-		const user = await betterAuthComponent.getAuthUser(ctx);
-		console.log("🔍 getUser - userId:", user?.userId);
-		return user;
+		return await betterAuthComponent.getAuthUser(ctx);
 	},
 });
 

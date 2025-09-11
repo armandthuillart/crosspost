@@ -29,47 +29,24 @@ export function Chat({ userId, userTier, isAnonymous }: ChatProps) {
 
 	useEffect(() => {
 		async function initializeThread() {
-			console.log(
-				"🔍 Chat component - userId:",
-				userId,
-				"isChat:",
-				isChat,
-				"params.threadId:",
-				params.threadId,
-			);
-
 			if (isChat) {
-				// On chat page, use the threadId from URL
 				const urlThreadId = params.threadId as string;
 				if (urlThreadId) {
-					console.log("🔍 Setting threadId from URL:", urlThreadId);
 					setThreadId(urlThreadId);
 				}
 			} else {
-				// On home page, create a new thread
 				if (!threadId) {
-					console.log("🔍 Creating new thread for userId:", userId);
 					const newThreadId = await createChat();
-					console.log("🔍 Created new threadId:", newThreadId);
 					setThreadId(newThreadId);
 				}
 			}
 		}
 		initializeThread();
-	}, [isChat, params.threadId, threadId, createChat, userId]);
+	}, [isChat, params.threadId, threadId, createChat]);
 
 	if (!threadId) {
 		return <div>Loading...</div>;
 	}
-
-	console.log(
-		"🔍 Rendering Chat - threadId:",
-		threadId,
-		"userId:",
-		userId,
-		"isChat:",
-		isChat,
-	);
 
 	return (
 		<main
@@ -99,8 +76,6 @@ function Thread({
 	userTier: Tier;
 	threadId: string;
 }) {
-	console.log("🔍 Thread component - threadId:", threadId, "userId:", userId);
-
 	const { results: messages } = useUIMessages(
 		api.chat.messages.list,
 		{ threadId },

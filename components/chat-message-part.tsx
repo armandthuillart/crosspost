@@ -8,6 +8,7 @@ interface MessagePartProps {
 	mode: "view" | "edit";
 	message: UIMessage;
 	onCancel: () => void;
+	messages: UIMessage[];
 }
 
 export function MessagePart({
@@ -15,7 +16,12 @@ export function MessagePart({
 	part,
 	message,
 	onCancel,
+	messages,
 }: MessagePartProps) {
+	const shouldStream =
+		message.id === messages.at(-1)?.id &&
+		(message.status === "streaming" || message.role === "assistant");
+
 	switch (part.type) {
 		case "text":
 			return (
@@ -23,6 +29,7 @@ export function MessagePart({
 					isEditing={mode === "edit"}
 					message={message}
 					onCancel={onCancel}
+					shouldStream={shouldStream}
 				/>
 			);
 		default:

@@ -88,6 +88,7 @@ export function ChatMessages({
 									<MessagePart
 										key={`${message.id}-${i}`}
 										message={message}
+										messages={messages}
 										mode={editingId === message.id ? "edit" : "view"}
 										onCancel={() => setEditingId(null)}
 										part={part}

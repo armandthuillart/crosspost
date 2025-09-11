@@ -1,8 +1,7 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { AppShader } from "@/components/app-shader";
-import { SearchIcon } from "@/components/ui/icons";
+import { AppIcon, SearchIcon } from "@/components/ui/icons";
 import {
 	Sidebar,
 	SidebarContent,
@@ -33,15 +32,7 @@ export function AppSidebar() {
 									isActive={pathname === "/"}
 									onClick={() => router.push("/")}
 								>
-									<div className="flex size-5 shrink-0 items-center justify-center">
-										<AppShader
-											darkColor="rgb(255, 255, 255)"
-											lightColor="rgb(10, 10, 10)"
-											pxSize={1 / 3}
-											size={20}
-											speed={0}
-										/>
-									</div>
+									<AppIcon className="size-5" />
 									Fragment
 								</SidebarMenuButton>
 							</SidebarMenuItem>

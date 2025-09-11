@@ -3,6 +3,7 @@
 import { optimisticallySendMessage } from "@convex-dev/agent/react";
 import { useMutation } from "convex/react";
 import { useAtom } from "jotai";
+import { usePathname } from "next/navigation";
 import {
 	type FormEvent,
 	type KeyboardEvent,
@@ -26,6 +27,9 @@ const TEXTAREA_MIN_HEIGHT = 24;
 const TEXTAREA_EXPANDED_MIN_HEIGHT = 48;
 
 export function ChatInput({ threadId }: { threadId: string }) {
+	const pathname = usePathname();
+	const isChat = pathname.includes("/t/");
+
 	const inputRef = useRef<HTMLTextAreaElement>(null);
 	const [isStreaming] = useAtom(isStreamingAtom);
 
@@ -143,7 +147,7 @@ export function ChatInput({ threadId }: { threadId: string }) {
 	});
 
 	const typewriter = useTypewriter({
-		enabled: !threadId,
+		enabled: !isChat,
 		loop: true,
 		pauseDuration: 2000,
 		texts: [

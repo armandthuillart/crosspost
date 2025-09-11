@@ -13,7 +13,6 @@ export function ChatGreetings() {
 			<AppShader
 				darkColor="rgb(1, 105, 204)"
 				lightColor="rgb(51, 156, 255)"
-				pxSize={1}
 				size={80}
 				speed={1}
 			/>

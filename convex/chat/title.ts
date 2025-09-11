@@ -1,7 +1,8 @@
+import { gateway } from "@ai-sdk/gateway";
 import { v } from "convex/values";
 import { internal } from "../_generated/api";
 import { internalAction } from "../_generated/server";
-import { titleAgent } from "../agent";
+import { chatAgent } from "../agent";
 
 export const generate = internalAction({
 	args: { prompt: v.string(), threadId: v.string() },
@@ -10,13 +11,13 @@ export const generate = internalAction({
 			threadId,
 		});
 
-		const result = await titleAgent.generateText(
+		const result = await chatAgent.generateText(
 			ctx,
 			{ threadId, userId },
-			{ prompt },
+			{ model: gateway.languageModel("google/gemini-2.5-flash-lite"), prompt },
 		);
 
-		const { title } = await titleAgent.updateThreadMetadata(ctx, {
+		const { title } = await chatAgent.updateThreadMetadata(ctx, {
 			patch: { title: result.text },
 			threadId,
 		});

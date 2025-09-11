@@ -86,6 +86,8 @@ export const authorize = internalQuery({
 			throw new ChatSDKError("unauthorized:chat");
 		}
 
+		console.log("🔍 Authorize - identity:", identity);
+
 		const { userId } = await getThreadMetadata(ctx, components.agent, {
 			threadId,
 		});

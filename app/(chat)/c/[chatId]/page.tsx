@@ -7,7 +7,7 @@ import { createAuth } from "@/lib/auth";
 import type { Tier } from "@/lib/types";
 import { api } from "../../../../convex/_generated/api";
 
-export default async function ChatPage() {
+export default async function Page() {
 	const token = await getToken(createAuth);
 	const user = await fetchQuery(api.auth.getUser, {}, { token });
 

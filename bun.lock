@@ -6,10 +6,8 @@
       "dependencies": {
         "@ai-sdk/gateway": "^1.0.21",
         "@ai-sdk/react": "^2.0.40",
-        "@convex-dev/action-cache": "^0.2.11",
         "@convex-dev/agent": "^0.2.8-alpha.4",
         "@convex-dev/better-auth": "^0.7.18",
-        "@convex-dev/persistent-text-streaming": "^0.2.3",
         "@convex-dev/rate-limiter": "^0.2.12",
         "@paper-design/shaders-react": "^0.0.52",
         "@polar-sh/better-auth": "^1.1.3",
@@ -99,13 +97,9 @@
 
     "@chevrotain/utils": ["@chevrotain/utils@11.0.3", "", {}, "sha512-YslZMgtJUyuMbZ+aKvfF3x1f5liK4mWNxghFRv7jqRR9C3R3fAOGTTKvxXDa2Y1s9zSbcpuO0cAxDYsc9SrXoQ=="],
 
-    "@convex-dev/action-cache": ["@convex-dev/action-cache@0.2.11", "", { "peerDependencies": { "convex": "~1.16.5 || >=1.17.0 <1.35.0" } }, "sha512-jp7QPciGbVEX/LsWZ7Nf8cKMxW6UImVpBngsz6/K+wkggLmMgGmJ4KBWeeP+OsTS9ZnsC+p/ESHpWQnA9pJO5w=="],
-
     "@convex-dev/agent": ["@convex-dev/agent@0.2.8-alpha.4", "", { "peerDependencies": { "@ai-sdk/provider-utils": "^3.0.7", "ai": "^5.0.29", "convex": "^1.23.0", "convex-helpers": "^0.1.103", "react": "^18.3.1 || ^19.0.0" }, "optionalPeers": ["react"] }, "sha512-2PyaZSFWGExFJ4P7b9MN/jfRmlGBja09eR9AulxM0ZE8ulSjWA+vmEIjbwZMBj+LwQ3vnDBWk4BnZXEclRMJXQ=="],
 
     "@convex-dev/better-auth": ["@convex-dev/better-auth@0.7.18", "", { "dependencies": { "common-tags": "^1.8.2", "convex-helpers": "^0.1.95", "is-network-error": "^1.1.0", "type-fest": "^4.39.1", "zod": "^3.24.4" }, "peerDependencies": { "better-auth": "1.3.8", "convex": "^1.26.2", "react": "^18.3.1 || ^19.0.0", "react-dom": "^18.3.1 || ^19.0.0" } }, "sha512-lZwJcRJncmeKZfDQk7PJrJ+8z/S8rmO5rUfPWZd2gOjC+1sbd/JUZiTVPGLxeP5VEGG74TkRTUavK7s+wmKhwg=="],
-
-    "@convex-dev/persistent-text-streaming": ["@convex-dev/persistent-text-streaming@0.2.3", "", { "peerDependencies": { "convex": ">=1.23.0 <1.35.0", "react": "~18.3.1 || ^19.0.0", "react-dom": "~18.3.1 || ^19.0.0" } }, "sha512-v6by8JB2lXyd+ZBH0I5TOsd98zk+tvmfPt6ofRuxC2GtNkqUpy6F7CdijRaXiGW+ozlUiQyRsBzhvhTUwVUAHg=="],
 
     "@convex-dev/rate-limiter": ["@convex-dev/rate-limiter@0.2.12", "", { "peerDependencies": { "convex": "~1.16.5 || >=1.17.0 <1.35.0", "react": "^18.3.1 || ^19.0.0" }, "optionalPeers": ["react"] }, "sha512-Z7YXDSPa28/8eqVJYUWQBwK9hTiJcXfWY2qZ44Im3VpuBFJZCqYjem7QWjvoTlBjVGqK7FKw26xRneei09hm2w=="],
 

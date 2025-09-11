@@ -7,7 +7,7 @@ import { createAuth } from "@/lib/auth";
 import type { Tier } from "@/lib/types";
 import { api } from "../../convex/_generated/api";
 
-export default async function HomePage() {
+export default async function Page() {
 	const token = await getToken(createAuth);
 	const user = await fetchQuery(api.auth.getUser, {}, { token });
 
@@ -30,6 +30,7 @@ export default async function HomePage() {
 
 	return (
 		<Chat
+			initialMessages={[]}
 			isAnonymous={isAnonymous}
 			userId={userId as Id<"users">}
 			userTier={tier}

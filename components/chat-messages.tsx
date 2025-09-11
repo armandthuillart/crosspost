@@ -1,7 +1,6 @@
 "use client";
 
-import type { UIMessage } from "@convex-dev/agent/react";
-import { atom, useAtom } from "jotai";
+import type { UIMessage } from "ai";
 import { AnimatePresence } from "motion/react";
 import { useEffect, useState } from "react";
 import { Action, Actions } from "@/components/ai-elements/actions";
@@ -11,60 +10,38 @@ import {
 } from "@/components/ai-elements/conversation";
 import { Message, MessageContent } from "@/components/ai-elements/message";
 import { MessagePart } from "@/components/chat-message-part";
-import {
-	CopyIcon,
-	PencilEditIcon,
-	RepeatIcon,
-	TickIcon,
-} from "@/components/ui/icons";
+import { CopyIcon, TickIcon } from "@/components/ui/icons";
+import { attr, buildTextFromParts } from "@/lib/utils";
 
-export const isStreamingAtom = atom(false);
+interface ChatMessagesProps {
+	chatId: string;
+	messages: Array<UIMessage>;
+	isSubmitted: boolean;
+}
 
 export function ChatMessages({
-	threadId,
+	chatId,
 	messages,
-}: {
-	threadId: string;
-	messages: Array<UIMessage>;
-}) {
-	const [, setIsStreaming] = useAtom(isStreamingAtom);
-
-	const lastMessage = messages.at(-1);
-	const isStreaming = messages.some((m) => m.status === "streaming");
-	const hasSentMessage = messages.some((m) => m.status === "pending");
-
-	useEffect(() => {
-		setIsStreaming(false);
-	}, [setIsStreaming]);
-
-	useEffect(() => {
-		setIsStreaming(isStreaming);
-	}, [isStreaming, setIsStreaming]);
-
+	isSubmitted,
+}: ChatMessagesProps) {
 	const [isCopied, setIsCopied] = useState(false);
-	const [editingId, setEditingId] = useState<string | null>(null);
-	const [isPending, setIsPending] = useState(false);
+	const [hasSentMessage, setHasSentMessage] = useState(false);
 
 	useEffect(() => {
-		if (threadId) {
-			setIsPending(false);
+		if (chatId) {
+			setHasSentMessage(false);
 		}
-	}, [threadId]);
+	}, [chatId]);
 
 	useEffect(() => {
-		if (hasSentMessage) {
-			setIsPending(true);
+		if (isSubmitted) {
+			setHasSentMessage(true);
 		}
-	}, [hasSentMessage]);
+	}, [isSubmitted]);
 
 	async function handleCopy(message: UIMessage) {
-		const textFromParts = message.parts
-			?.filter((part) => part.type === "text")
-			.map((part) => part.text)
-			.join("\n")
-			.trim();
-
-		await navigator.clipboard.writeText(textFromParts);
+		const text = buildTextFromParts(message.parts);
+		await navigator.clipboard.writeText(text);
 		setIsCopied(true);
 
 		setTimeout(() => {
@@ -76,44 +53,32 @@ export function ChatMessages({
 		<Conversation>
 			<ConversationContent>
 				<AnimatePresence initial={false} mode="popLayout">
-					{messages.map((message) => (
-						<Message
-							data-mode={editingId === message.id ? "edit" : "view"}
-							from={message.role}
-							hasScrollPadding={isPending && message.id === lastMessage?.id}
-							key={message.id}
-						>
-							<MessageContent>
-								{message.parts.map((part, i) => (
-									<MessagePart
-										key={`${message.id}-${i}`}
-										message={message}
-										messages={messages}
-										mode={editingId === message.id ? "edit" : "view"}
-										onCancel={() => setEditingId(null)}
-										part={part}
-									/>
-								))}
-								<Actions>
-									<Action onClick={() => handleCopy(message)} tooltip="Copy">
-										{isCopied ? <TickIcon /> : <CopyIcon />}
-									</Action>
-									{message.role === "user" ? (
-										<Action
-											onClick={() => setEditingId(message.id)}
-											tooltip="Edit message"
-										>
-											<PencilEditIcon />
+					{messages.map((message, i) => {
+						const isLast = i === messages.length - 1;
+						return (
+							<Message
+								{...attr("scroll-padding", isLast && hasSentMessage)}
+								{...attr("user", message.role === "user")}
+								from={message.role}
+								key={message.id}
+							>
+								<MessageContent>
+									{message.parts.map((part, i) => (
+										<MessagePart
+											key={`${message.id}-${i}`}
+											part={part}
+											role={message.role}
+										/>
+									))}
+									<Actions>
+										<Action onClick={() => handleCopy(message)} tooltip="Copy">
+											{isCopied ? <TickIcon /> : <CopyIcon />}
 										</Action>
-									) : (
-										<Action tooltip="Try again">
-											<RepeatIcon />
-										</Action>
-									)}
-								</Actions>
-							</MessageContent>
-						</Message>
-					))}
+									</Actions>
+								</MessageContent>
+							</Message>
+						);
+					})}
 				</AnimatePresence>
 			</ConversationContent>
 		</Conversation>

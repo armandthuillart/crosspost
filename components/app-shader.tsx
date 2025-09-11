@@ -18,6 +18,7 @@ export function AppShader({
 			bandCount={2}
 			className={cn("rounded-full", className)}
 			colorBack="rgb(255, 255, 255, 0)"
+			colors={["rgb(51, 156, 255)"]}
 			noise={0}
 			noiseFrequency={0}
 			offsetX={-0.4}

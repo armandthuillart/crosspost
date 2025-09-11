@@ -1,8 +1,7 @@
 "use client";
 
-import { optimisticallySendMessage } from "@convex-dev/agent/react";
-import { useMutation } from "convex/react";
-import { useAtom } from "jotai";
+import type { UIMessage, UseChatHelpers } from "@ai-sdk/react";
+import type { ChatStatus } from "ai";
 import {
 	type FormEvent,
 	type KeyboardEvent,
@@ -13,24 +12,29 @@ import {
 } from "react";
 import {
 	PromptInput,
-	PromptInputStop,
 	PromptInputSubmit,
 	PromptInputTextarea,
 } from "@/components/ai-elements/prompt-input";
-import { thread } from "@/components/chat";
-import { isStreamingAtom } from "@/components/chat-messages";
 import { useAutoFocus } from "@/hooks/use-auto-focus";
 import { useTypewriter } from "@/hooks/use-typewriter";
-import { api } from "../convex/_generated/api";
 
 const TEXTAREA_MIN_HEIGHT = 24;
 const TEXTAREA_EXPANDED_MIN_HEIGHT = 48;
 
-export function ChatInput({ threadId }: { threadId: string }) {
-	const [isThread, setIsThread] = useAtom(thread);
+interface ChatInputProps {
+	chatId: string;
+	isChat: boolean;
+	chatStatus: ChatStatus;
+	sendMessageAction: UseChatHelpers<UIMessage>["sendMessage"];
+}
 
+export function ChatInput({
+	isChat,
+	chatId,
+	chatStatus,
+	sendMessageAction,
+}: ChatInputProps) {
 	const inputRef = useRef<HTMLTextAreaElement>(null);
-	const [isStreaming] = useAtom(isStreamingAtom);
 
 	const [prompt, setPrompt] = useState("");
 	const [threshold, setThreshold] = useState<number | null>(null);
@@ -38,28 +42,18 @@ export function ChatInput({ threadId }: { threadId: string }) {
 
 	const isDirty = prompt.trim().length > 0;
 
-	const sendMessage = useMutation(api.chat.thread.start).withOptimisticUpdate(
-		optimisticallySendMessage(api.chat.messages.list),
-	);
-
 	// biome-ignore lint/correctness/useExhaustiveDependencies: would loop
 	const handleSubmit = useCallback(
 		async (event: FormEvent<HTMLFormElement>) => {
 			event.preventDefault();
 			if (!isDirty) return;
 
-			setIsThread(true); // Changes the layout directly.
-			window.history.replaceState(null, "", `/t/${threadId}`);
-
-			void sendMessage({
-				prompt,
-				threadId,
-			});
+			window.history.replaceState({}, "", `/chat/${chatId}`);
 
 			setPrompt("");
 			resetHeight();
 		},
-		[prompt, sendMessage],
+		[prompt, sendMessageAction],
 	);
 
 	const resetHeight = useCallback(() => {
@@ -147,7 +141,7 @@ export function ChatInput({ threadId }: { threadId: string }) {
 	});
 
 	const typewriter = useTypewriter({
-		enabled: !isThread,
+		enabled: !isChat,
 		loop: true,
 		pauseDuration: 2000,
 		texts: [
@@ -165,7 +159,9 @@ export function ChatInput({ threadId }: { threadId: string }) {
 		typingSpeed: 100,
 	});
 
-	const placeholder = `Ask to post about ${typewriter}`;
+	const placeholder = isChat
+		? "Ask to post about anything..."
+		: `Ask to post about ${typewriter}`;
 
 	return (
 		<PromptInput
@@ -179,11 +175,7 @@ export function ChatInput({ threadId }: { threadId: string }) {
 				ref={inputRef}
 				value={prompt}
 			/>
-			{isStreaming ? (
-				<PromptInputStop onClick={() => {}} />
-			) : (
-				<PromptInputSubmit disabled={!isDirty || isStreaming} />
-			)}
+			<PromptInputSubmit disabled={!isDirty || chatStatus === "streaming"} />
 		</PromptInput>
 	);
 }

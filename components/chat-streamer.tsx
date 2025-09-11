@@ -8,13 +8,12 @@ import type { Id } from "@/convex/_generated/dataModel";
 import type { Tier } from "@/lib/types";
 import { api } from "../convex/_generated/api";
 
-export function ChatStreamer({
-	userId,
-	userTier,
-}: {
+interface ChatStreamerProps {
 	userId: Id<"users">;
 	userTier: Tier;
-}) {
+}
+
+export function ChatStreamer({ userId, userTier }: ChatStreamerProps) {
 	let getRateLimitApi: GetRateLimitValueQuery;
 
 	switch (userTier) {
@@ -55,7 +54,7 @@ export function ChatStreamer({
 			)}
 			{!status.ok && (
 				<div>
-					You’re limited. Try again after{" "}
+					You're limited. Try again after{" "}
 					{Math.ceil((status.retryAt - now) / 1000)}s
 				</div>
 			)}

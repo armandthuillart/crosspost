@@ -13,10 +13,7 @@ function Conversation({
 	...props
 }: ComponentProps<"div">) {
 	return (
-		<div
-			className="-mb-(--composer-overlap) flex h-full overflow-hidden [--composer-overlap:--spacing(7)]"
-			{...props}
-		>
+		<div className="-mb-7 flex h-full overflow-hidden" {...props}>
 			<StickToBottom
 				className={cn("relative flex-1 overflow-y-auto", className)}
 				initial="smooth"
@@ -41,7 +38,7 @@ function ConversationContent({
 }
 
 function PureConversationScrollButton({ className, ...props }: ButtonProps) {
-	const { isAtBottom, scrollToBottom} = useStickToBottomContext();
+	const { isAtBottom, scrollToBottom } = useStickToBottomContext();
 
 	const handleScroll = useCallback(() => {
 		scrollToBottom();
@@ -59,7 +56,7 @@ function PureConversationScrollButton({ className, ...props }: ButtonProps) {
 				>
 					<Button
 						className={cn(
-							"-translate-x-1/2 absolute bottom-12 left-1/2 z-20 rounded-full bg-material hover:bg-material",
+							"-translate-x-1/2 absolute bottom-12 left-1/2 z-20 rounded-full",
 							className,
 						)}
 						onClick={handleScroll}

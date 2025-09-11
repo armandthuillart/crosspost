@@ -1,40 +1,29 @@
 "use client";
 
-import type { UIMessage } from "@convex-dev/agent/react";
 import { useSmoothText } from "@convex-dev/agent/react";
-import { MessageBubble, MessageEditor } from "@/components/ai-elements/message";
+import type { TextUIPart, UIMessage } from "ai";
+import { MessageBubble } from "@/components/ai-elements/message";
 import { Response } from "@/components/ai-elements/response";
+import { attr } from "@/lib/utils";
 
 interface TextProps {
-	message: UIMessage;
-	onCancel: () => void;
-	isEditing: boolean;
-	shouldStream: boolean;
+	part: TextUIPart;
+	role: UIMessage["role"];
 }
 
-export function Text({
-	message,
-	onCancel,
-	isEditing,
-	shouldStream,
-}: TextProps) {
-	const [visibleText] = useSmoothText(message.text, {
-		startStreaming: shouldStream,
+export function Text({ part, role }: TextProps) {
+	const [textPart] = useSmoothText(part.text, {
+		startStreaming: part.state === "streaming",
 	});
 
-	switch (message.role) {
+	switch (role) {
 		case "user":
-			if (isEditing) {
-				return <MessageEditor message={message} onCancel={onCancel} />;
-			}
-
 			return (
-				<MessageBubble data-multiline={message.text.length > 55}>
-					<Response>{visibleText}</Response>
+				<MessageBubble {...attr("multiline", part.text.length > 55)}>
+					<Response>{textPart}</Response>
 				</MessageBubble>
 			);
-
 		default:
-			return <Response>{visibleText}</Response>;
+			return <Response>{textPart}</Response>;
 	}
 }

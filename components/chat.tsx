@@ -1,105 +1,62 @@
 "use client";
 
-import { useUIMessages } from "@convex-dev/agent/react";
-import { useMutation } from "convex/react";
-import { atom, useAtom } from "jotai";
-import { useParams, usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { type UIMessage, useChat } from "@ai-sdk/react";
 import { ChatGreetings } from "@/components/chat-greetings";
 import { ChatHeader } from "@/components/chat-header";
 import { ChatInput } from "@/components/chat-input";
 import { ChatMessages } from "@/components/chat-messages";
 import { ChatStreamer } from "@/components/chat-streamer";
 import type { Tier } from "@/lib/types";
-import { api } from "../convex/_generated/api";
+import { attr } from "@/lib/utils";
 import type { Id } from "../convex/_generated/dataModel";
 
 interface ChatProps {
 	userId: Id<"users">;
 	userTier: Tier;
 	isAnonymous: boolean;
+	initialMessages: Array<UIMessage>;
 }
 
-export const thread = atom(false);
+export function Chat({
+	userId,
+	userTier,
+	isAnonymous,
+	initialMessages,
+}: ChatProps) {
+	const { id, status, messages, sendMessage } = useChat({
+		messages: initialMessages,
+	});
 
-export function Chat({ userId, userTier, isAnonymous }: ChatProps) {
-	const [isThread] = useAtom(thread);
-
-	const params = useParams();
-	const pathname = usePathname();
-	const isChat = pathname.includes("/t/");
-
-	const [threadId, setThreadId] = useState<string | null>(null);
-	const createChat = useMutation(api.chat.thread.create);
-
-	useEffect(() => {
-		async function initializeThread() {
-			if (isChat) {
-				const urlThreadId = params.threadId as string;
-				if (urlThreadId) {
-					setThreadId(urlThreadId);
-				}
-			} else {
-				if (!threadId) {
-					const newThreadId = await createChat();
-					setThreadId(newThreadId);
-				}
-			}
-		}
-		initializeThread();
-	}, [isChat, params.threadId, threadId, createChat]);
+	const isChat = messages.length > 0;
 
 	return (
 		<main
 			className="group/chat @container/chat relative flex size-full flex-col"
-			data-thread={isThread}
+			{...attr("chat", isChat)}
 		>
 			<ChatHeader isAnonymous={isAnonymous} />
-			<div className="flex h-full flex-col overflow-y-scroll group-data-[thread=false]/chat:gap-32">
-				<div className="flex h-full flex-col overflow-hidden px-4 group-data-[thread=true]/chat:h-full group-data-[thread=true]/chat:justify-center max-md:shrink-0 group-data-[thread=false]/chat:md:gap-6 group-data-[thread=false]/chat:md:pt-24 group-data-[thread=false]/chat:lg:pt-[30svh]">
-					{isThread && (
-						<Thread threadId={threadId} userId={userId} userTier={userTier} />
+			<div className="flex h-full flex-col overflow-y-scroll group-data-chat/chat:gap-32">
+				<div className="flex h-full flex-col overflow-hidden px-4 group-data-chat/chat:h-full group-data-chat/chat:justify-center max-md:shrink-0 group-data-chat/chat:md:gap-6 group-data-chat/chat:md:pt-24 group-data-chat/chat:lg:pt-[30svh]">
+					{!isChat ? (
+						<ChatGreetings />
+					) : (
+						<ChatMessages
+							chatId={id}
+							isSubmitted={status === "submitted"}
+							messages={messages}
+						/>
 					)}
-					{!isThread && <Home threadId={threadId} />}
+					<div className="relative mx-auto flex w-full max-w-(--chat-content-max-width) flex-col gap-4 pb-4 @[34rem]:[--chat-content-max-width:40rem] @[64rem]:[--chat-content-max-width:48rem] [--chat-content-max-width:32rem] md:group-data-chat/chat:pb-0">
+						{isChat && <ChatStreamer userId={userId} userTier={userTier} />}
+						<ChatInput
+							chatId={id}
+							chatStatus={status}
+							isChat={isChat}
+							sendMessageAction={sendMessage}
+						/>
+					</div>
 				</div>
 			</div>
 		</main>
-	);
-}
-
-function Thread({
-	userId,
-	userTier,
-	threadId,
-}: {
-	userId: Id<"users">;
-	userTier: Tier;
-	threadId: string;
-}) {
-	const { results: messages } = useUIMessages(
-		api.chat.messages.list,
-		{ threadId },
-		{ initialNumItems: 10, stream: true },
-	);
-
-	return (
-		<>
-			<ChatMessages messages={messages} threadId={threadId} />
-			<div className="relative mx-auto flex w-full max-w-(--chat-content-max-width) flex-col gap-4 pb-4 @[34rem]:[--chat-content-max-width:40rem] @[64rem]:[--chat-content-max-width:48rem] [--chat-content-max-width:32rem] md:group-data-[thread=false]/chat:pb-0">
-				<ChatStreamer userId={userId} userTier={userTier} />
-				<ChatInput threadId={threadId} />
-			</div>
-		</>
-	);
-}
-
-function Home({ threadId }: { threadId: string }) {
-	return (
-		<>
-			<ChatGreetings />
-			<div className="relative mx-auto flex w-full max-w-(--chat-content-max-width) flex-col gap-4 pb-4 @[34rem]:[--chat-content-max-width:40rem] @[64rem]:[--chat-content-max-width:48rem] [--chat-content-max-width:32rem] md:group-data-[thread=false]/chat:pb-0">
-				<ChatInput threadId={threadId} />
-			</div>
-		</>
 	);
 }

@@ -8,6 +8,17 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
 	description: "Post to social media by chatting with AI.",
+	keywords: [
+		"ai",
+		"ai chat",
+		"fragment",
+		"fragmant",
+		"marketing",
+		"broadcast",
+		"crosspost",
+		"social media",
+		"post scheduler",
+	],
 	title: "Fragment",
 };
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { type UIMessage, useUIMessages } from "@convex-dev/agent/react";
+import { type UIMessage, useThreadMessages } from "@convex-dev/agent/react";
 import { type Preloaded, useMutation, usePreloadedQuery } from "convex/react";
 import { atom, useAtom } from "jotai";
 import { AnimatePresence } from "motion/react";
@@ -31,13 +31,13 @@ export function ChatMessages({
 }) {
 	const { page: initialMessages } = usePreloadedQuery(preloadedMessages);
 
-	const { results: liveMessages, status } = useUIMessages(
+	const { results: liveMessages, status } = useThreadMessages(
 		api.chat.messages.list,
 		{ threadId },
 		{ initialNumItems: 10, stream: true },
 	);
 
-	const hasHydrated = liveMessages.length > 0 || status !== "LoadingMore";
+	const hasHydrated = liveMessages.length > 0 || status !== "LoadingFirstPage";
 	const messages: UIMessage[] = hasHydrated ? liveMessages : initialMessages;
 
 	const _abort = useMutation(api.chat.stream.abort);

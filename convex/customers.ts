@@ -6,7 +6,7 @@ import type { Tier } from "../lib/types";
 import { query } from "./_generated/server";
 
 export const getTier = query({
-	args: { userId: v.id("user") },
+	args: { userId: v.string() },
 	handler: async (_, { userId }): Promise<Tier> =>
 		Effect.runPromise(
 			Effect.gen(function* () {

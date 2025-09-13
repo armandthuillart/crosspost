@@ -3,12 +3,12 @@
 import { Swirl, type SwirlProps } from "@paper-design/shaders-react";
 import { cn } from "@/lib/utils";
 
-export function AppShader({ className, ...props }: SwirlProps) {
+export function AppShader({ colors, className, ...props }: SwirlProps) {
 	return (
 		<Swirl
 			className={cn("rounded-full", className)}
 			colorBack="rgb(255, 255, 255, 0)"
-			colors={["rgb(51, 150, 255)"]}
+			colors={colors || ["rgb(51, 150, 255)"]}
 			noise={0}
 			noiseFrequency={0}
 			offsetX={-0.4}

@@ -24,7 +24,6 @@ export const authComponent = createClient<DataModel, typeof authSchema>(
 
 export const createAuth = (ctx: GenericCtx<DataModel>) =>
 	betterAuth({
-		baseURL: siteUrl,
 		database: authComponent.adapter(ctx),
 		plugins: [
 			anonymous(),
@@ -38,7 +37,7 @@ export const createAuth = (ctx: GenericCtx<DataModel>) =>
 						products: [
 							{
 								productId: process.env.POLAR_PRODUCT_ID_PRO as string,
-								slug: "pro" as Tier,
+								slug: "pro" satisfies Tier,
 							},
 						],
 					}),
@@ -54,11 +53,12 @@ export const createAuth = (ctx: GenericCtx<DataModel>) =>
 				prompt: "select_account consent",
 			},
 		},
+		trustedOrigins: [siteUrl as string],
 	} satisfies BetterAuthOptions);
 
 export const getUser = query({
 	args: {},
 	handler: async (ctx) => {
-		return authComponent.safeGetAuthUser(ctx);
+		return authComponent.getAuthUser(ctx);
 	},
 });

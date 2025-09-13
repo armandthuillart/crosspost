@@ -18,7 +18,7 @@ import { rateLimiter } from "./rateLimiting";
 
 const http = httpRouter();
 
-authComponent.registerRoutes(http, createAuth);
+authComponent.registerRoutes(http, createAuth, { cors: true });
 
 const bodySchema = z.object({
 	messages: z.array(

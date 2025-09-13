@@ -18,6 +18,13 @@ export const authComponent = createClient<DataModel, typeof authSchema>(
 		local: {
 			schema: authSchema,
 		},
+		triggers: {
+			user: {
+				onCreate: async (ctx, authUser) => {},
+				onDelete: async (ctx, authUser) => {},
+				onUpdate: async (ctx, oldUser, newUser) => {},
+			},
+		},
 		verbose: false,
 	},
 );
@@ -62,7 +69,7 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
 export const getUser = query({
 	args: {},
 	handler: async (ctx) => {
-		const user = await authComponent.getAuthUser(ctx);
+		const user = await authComponent.safeGetAuthUser(ctx);
 		return {
 			isAnonymous: user?.isAnonymous ?? false,
 			userId: user?._id,

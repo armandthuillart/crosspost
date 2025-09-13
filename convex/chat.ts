@@ -4,13 +4,13 @@ import { v } from "convex/values";
 import { ChatSDKError } from "../lib/errors";
 import type { Tier } from "../lib/types";
 import { api, internal } from "./_generated/api";
-import type { Id } from "./_generated/dataModel";
 import {
 	internalMutation,
 	internalQuery,
 	mutation,
 	query,
 } from "./_generated/server";
+import type { Id } from "./betterAuth/_generated/dataModel";
 
 export const createChat = mutation({
 	args: { prompt: v.string() },
@@ -23,7 +23,7 @@ export const createChat = mutation({
 
 		const chatId = await ctx.db.insert("chats", {
 			title: "b New Chat",
-			userId: identity.subject as Id<"users">,
+			userId: identity.subject as Id<"user">,
 		});
 
 		await ctx.scheduler.runAfter(0, internal.chat.renameChat, {
@@ -101,7 +101,7 @@ export const getChat = query({
 });
 
 export const listChats = query({
-	args: { userId: v.id("users") },
+	args: { userId: v.id("user") },
 	handler: async (ctx, { userId }) => {},
 });
 
@@ -116,31 +116,27 @@ export const deleteMessages = mutation({
 });
 
 export const deleteChatsByUserId = internalMutation({
-	args: { userId: v.id("users") },
+	args: { userId: v.id("user") },
 	handler: async (ctx, { userId }) => {},
 });
 
 export const authorize = internalQuery({
 	args: {},
-	handler: async (ctx): Promise<{ userId: Id<"users">; userTier: Tier }> => {
-		const identity = await ctx.auth.getUserIdentity();
+	handler: async (ctx): Promise<{ userId: Id<"user">; userTier: Tier }> => {
+		const user = await ctx.runQuery(api.auth.getUser);
 
-		if (!identity) {
+		if (!user?.userId) {
 			throw new ChatSDKError("unauthorized:chat");
 		}
 
-		const userId = identity.subject as Id<"users">;
-
-		const user = await ctx.db.get(userId);
-
 		let userTier: Tier = "anonymous";
 
-		if (!user?.isAnonymous) {
+		if (!user.isAnonymous) {
 			userTier = await ctx.runQuery(api.customers.getTier, {
-				userId,
+				userId: user.userId as Id<"user">,
 			});
 		}
 
-		return { userId, userTier };
+		return { userId: user.userId as Id<"user">, userTier };
 	},
 });

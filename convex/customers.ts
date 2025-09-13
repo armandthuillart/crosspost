@@ -6,7 +6,7 @@ import type { Tier } from "../lib/types";
 import { query } from "./_generated/server";
 
 export const getTier = query({
-	args: { userId: v.string() },
+	args: { userId: v.id("user") },
 	handler: async (_, { userId }): Promise<Tier> =>
 		Effect.runPromise(
 			Effect.gen(function* () {
@@ -16,13 +16,13 @@ export const getTier = query({
 						polarClient.customers.getStateExternal({ externalId: userId }),
 				});
 
-				const tier: Tier = customerState.activeSubscriptions.some(
+				const userTier: Tier = customerState.activeSubscriptions.some(
 					({ status }) => status === "active",
 				)
 					? "pro"
 					: "free";
 
-				return tier;
+				return userTier;
 			}),
 		),
 });

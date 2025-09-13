@@ -17,11 +17,11 @@ export const role = v.union(
 export default defineSchema({
 	chats: defineTable({
 		title: v.string(),
-		userId: v.id("user"),
+		userId: v.string(),
 	}).index("by_user", ["userId"]),
 	drafts: defineTable({
 		title: v.string(),
-		userId: v.id("user"),
+		userId: v.string(),
 	}).index("by_user", ["userId"]),
 	messages: defineTable({
 		chatId: v.id("chats"),
@@ -33,7 +33,7 @@ export default defineSchema({
 		platform,
 		title: v.string(),
 		url: v.optional(v.string()),
-		userId: v.id("user"),
+		userId: v.string(),
 	}).index("by_user", ["userId"]),
 	versions: defineTable({
 		content: v.string(),

@@ -8,11 +8,9 @@ import { api } from "../../convex/_generated/api";
 export default async function Page() {
 	const token = await getToken();
 
-	const { userId, isAnonymous } = await fetchQuery(
-		api.auth.getUser,
-		{},
-		{ token },
-	);
+	const user = await fetchQuery(api.auth.getUser, {}, { token });
+	const userId = user?._id;
+	const isAnonymous = user?.isAnonymous ?? false;
 
 	if (!userId) {
 		return redirect("/api/auth/anonymous");

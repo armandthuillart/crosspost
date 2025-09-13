@@ -5,7 +5,7 @@ import { type BetterAuthOptions, betterAuth } from "better-auth";
 import { anonymous } from "better-auth/plugins";
 import { polarClient } from "../lib/polar";
 import type { Tier } from "../lib/types";
-import { api, components } from "./_generated/api";
+import { components } from "./_generated/api";
 import type { DataModel } from "./_generated/dataModel";
 import { query } from "./_generated/server";
 import authSchema from "./betterAuth/schema";
@@ -68,29 +68,7 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
 
 export const getUser = query({
 	args: {},
-	handler: async (
-		ctx,
-	): Promise<{
-		userId: string;
-		userTier: Tier;
-		isAnonymous: boolean;
-	} | null> => {
-		const user = await authComponent.safeGetAuthUser(ctx);
-		if (!user) return null;
-
-		const userId = user._id;
-		const isAnonymous = user?.isAnonymous ?? false;
-
-		let userTier: Tier = "anonymous";
-
-		if (!isAnonymous) {
-			userTier = await ctx.runQuery(api.customers.getTier, { userId });
-		}
-
-		return {
-			isAnonymous,
-			userId,
-			userTier,
-		};
+	handler: async (ctx) => {
+		return await authComponent.safeGetAuthUser(ctx);
 	},
 });

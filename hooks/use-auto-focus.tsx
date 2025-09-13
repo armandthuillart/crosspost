@@ -15,7 +15,6 @@ export function usePureAutoFocus({
 	onAutoFocus,
 	shouldFocus = defaultShouldFocus,
 }: PureAutoFocusOptions): void {
-	// 1. Memoize the event handler to avoid unnecessary re-renders.
 	const handleKeyboardEvent = useCallback(
 		(event: KeyboardEvent) => {
 			if (document.activeElement === targetRef.current) {
@@ -42,7 +41,6 @@ export function usePureAutoFocus({
 			return;
 		}
 
-		// 2. Use passive event listeners to avoid layout thrashing.
 		document.addEventListener("keydown", handleKeyboardEvent, {
 			passive: false,
 		});
@@ -117,17 +115,14 @@ export function useAutoFocus({
 	targetRef,
 	onValueChange,
 }: AutoFocusOptions): void {
-	// 3. Memoize the callback to prevent recreation.
 	const handleAutoFocus = useCallback(
 		(event: KeyboardEvent) => {
 			if (event.key.length === 1) {
 				const newValue = value + event.key;
 
-				// 4. Use a single RAF to batch all operations.
 				requestAnimationFrame(() => {
 					onValueChange(newValue);
 
-					// 5. Defer selection range update to avoid layout thrashing.
 					requestAnimationFrame(() => {
 						targetRef.current?.setSelectionRange(
 							newValue.length,

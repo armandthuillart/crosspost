@@ -32,7 +32,7 @@ export function AppSidebar() {
 									isActive={pathname === "/"}
 									onClick={() => router.push("/")}
 								>
-									<AppShader size={20} />
+									<AppShader style={{ height: 20, width: 20 }} />
 								</SidebarMenuButton>
 							</SidebarMenuItem>
 						</SidebarMenu>

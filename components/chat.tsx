@@ -23,9 +23,12 @@ export function Chat({
 	isAnonymous,
 	initialMessages,
 }: ChatProps) {
-	const { id, status, messages, sendMessage } = useChat({
-		messages: initialMessages,
-	});
+	const {
+		id: chatId,
+		status,
+		messages,
+		sendMessage,
+	} = useChat({ messages: initialMessages });
 
 	const isChat = messages.length > 0;
 
@@ -36,23 +39,23 @@ export function Chat({
 		>
 			<ChatHeader isAnonymous={isAnonymous} />
 			<div className="flex h-full flex-col overflow-y-scroll group-data-chat/chat:gap-32">
-				<div className="flex h-full flex-col overflow-hidden px-4 group-data-chat/chat:h-full group-data-chat/chat:justify-center max-md:shrink-0 group-data-chat/chat:md:gap-6 group-data-chat/chat:md:pt-24 group-data-chat/chat:lg:pt-[30svh]">
+				<div className="flex h-full flex-col overflow-hidden px-4 group-data-chat/chat:h-full group-data-chat/chat:justify-center max-md:shrink-0 group-not-data-chat/chat:md:gap-6 group-not-data-chat/chat:md:pt-24 group-not-data-chat/chat:lg:pt-[30dvh]">
 					{!isChat ? (
 						<ChatGreetings />
 					) : (
 						<ChatMessages
-							chatId={id}
+							chatId={chatId}
 							isSubmitted={status === "submitted"}
 							messages={messages}
 						/>
 					)}
-					<div className="relative mx-auto flex w-full max-w-(--chat-content-max-width) flex-col gap-4 pb-4 @[34rem]:[--chat-content-max-width:40rem] @[64rem]:[--chat-content-max-width:48rem] [--chat-content-max-width:32rem] md:group-data-chat/chat:pb-0">
+					<div className="relative mx-auto flex w-full max-w-(--chat-content-max-width) flex-col gap-4 pb-4 @[34rem]:[--chat-content-max-width:40rem] @[64rem]:[--chat-content-max-width:48rem] [--chat-content-max-width:32rem] md:group-not-data-chat/chat:pb-0">
 						{isChat && <ChatStreamer userId={userId} userTier={userTier} />}
 						<ChatInput
-							chatId={id}
+							chatId={chatId}
 							chatStatus={status}
 							isChat={isChat}
-							sendMessageAction={sendMessage}
+							sendMessage={sendMessage}
 						/>
 					</div>
 				</div>

@@ -25,14 +25,14 @@ interface ChatInputProps {
 	chatId: string;
 	isChat: boolean;
 	chatStatus: ChatStatus;
-	sendMessageAction: UseChatHelpers<UIMessage>["sendMessage"];
+	sendMessage: UseChatHelpers<UIMessage>["sendMessage"];
 }
 
 export function ChatInput({
 	isChat,
 	chatId,
 	chatStatus,
-	sendMessageAction,
+	sendMessage,
 }: ChatInputProps) {
 	const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -48,12 +48,17 @@ export function ChatInput({
 			event.preventDefault();
 			if (!isDirty) return;
 
-			window.history.replaceState({}, "", `/chat/${chatId}`);
+			window.history.replaceState({}, "", `/c/${chatId}`);
+
+			sendMessage({
+				parts: [{ text: prompt, type: "text" }],
+				role: "user",
+			});
 
 			setPrompt("");
 			resetHeight();
 		},
-		[prompt, sendMessageAction],
+		[prompt, sendMessage],
 	);
 
 	const resetHeight = useCallback(() => {

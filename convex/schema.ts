@@ -2,6 +2,7 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 export const platform = v.union(
+	v.literal("linkedin"),
 	v.literal("bluesky"),
 	v.literal("threads"),
 	v.literal("x"),
@@ -26,7 +27,7 @@ export default defineSchema({
 		chatId: v.id("chats"),
 		parts: v.any(),
 		role,
-	}).index("by_chat_created_at", ["chatId", "_creationTime"]),
+	}).index("by_chat", ["chatId"]),
 	posts: defineTable({
 		content: v.string(),
 		platform,
@@ -39,9 +40,8 @@ export default defineSchema({
 	}).index("by_is_anonymous", ["isAnonymous"]),
 	versions: defineTable({
 		content: v.string(),
-		createdAt: v.number(),
 		draftId: v.id("drafts"),
 		platform,
-		updatedAt: v.number(),
+		updatedAt: v.optional(v.number()),
 	}).index("by_draft_platform", ["draftId", "platform"]),
 });

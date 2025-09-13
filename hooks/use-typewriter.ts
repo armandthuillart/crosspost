@@ -17,9 +17,9 @@ export function useTypewriter({
 	pauseDuration = 2000,
 	loop = true,
 }: UseTypewriterOptions) {
+	const [isDeleting, setIsDeleting] = useState(false);
 	const [displayText, setDisplayText] = useState("");
 	const [currentIndex, setCurrentIndex] = useState(0);
-	const [isDeleting, setIsDeleting] = useState(false);
 	const [currentTextIndex, setCurrentTextIndex] = useState(0);
 
 	useEffect(() => {
@@ -58,7 +58,6 @@ export function useTypewriter({
 			}
 		};
 
-		// Apply initial delay only at the start
 		if (currentIndex === 0 && !isDeleting && displayText === "") {
 			timeout = setTimeout(startTyping, 0);
 		} else {
@@ -67,15 +66,15 @@ export function useTypewriter({
 
 		return () => clearTimeout(timeout);
 	}, [
-		currentIndex,
-		displayText,
-		isDeleting,
-		typingSpeed,
-		pauseDuration,
-		texts,
-		currentTextIndex,
 		loop,
+		texts,
 		enabled,
+		isDeleting,
+		displayText,
+		typingSpeed,
+		currentIndex,
+		pauseDuration,
+		currentTextIndex,
 	]);
 
 	return displayText;

@@ -1,7 +1,7 @@
 import { v } from "convex/values";
 import { Effect } from "effect";
-import { polarClient } from "../lib/auth";
 import { ChatSDKError } from "../lib/errors";
+import { polarClient } from "../lib/polar";
 import type { Tier } from "../lib/types";
 import { query } from "./_generated/server";
 

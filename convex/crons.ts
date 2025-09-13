@@ -4,7 +4,7 @@ import { internal } from "./_generated/api";
 const crons = cronJobs();
 
 crons.daily(
-	"delete anonymous users",
+	"Delete inactive anonymous users",
 	{ hourUTC: 0, minuteUTC: 0 },
 	internal.users.deleteAnonymousUsers,
 	{},

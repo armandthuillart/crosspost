@@ -1,16 +1,15 @@
-import { getToken } from "@convex-dev/better-auth/nextjs";
 import { fetchQuery } from "convex/nextjs";
 import { redirect } from "next/navigation";
 import { Chat } from "@/components/chat";
 import type { Id } from "@/convex/_generated/dataModel";
-import { createAuth } from "@/lib/auth";
+import { getToken } from "@/lib/auth-server";
 import type { Tier } from "@/lib/types";
 import { api } from "../../convex/_generated/api";
 
 export default async function Page() {
-	const token = await getToken(createAuth);
-	const user = await fetchQuery(api.auth.getUser, {}, { token });
+	const token = await getToken();
 
+	const user = await fetchQuery(api.auth.getUser, {}, { token });
 	const userId = user?.userId;
 	const isAnonymous = user?.isAnonymous ?? false;
 

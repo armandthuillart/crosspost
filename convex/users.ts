@@ -1,12 +1,10 @@
 import { v } from "convex/values";
 import { subDays } from "date-fns";
-import { components, internal } from "./_generated/api";
+import { internal } from "./_generated/api";
 import { internalMutation } from "./_generated/server";
 
 export const deleteAnonymousUsers = internalMutation({
-	args: {
-		cursor: v.optional(v.string()),
-	},
+	args: { cursor: v.optional(v.string()) },
 	handler: async (ctx, { cursor }) => {
 		const twentyFourHoursAgo = subDays(new Date(), 1).getTime();
 
@@ -18,7 +16,7 @@ export const deleteAnonymousUsers = internalMutation({
 
 		await Promise.all(
 			batch.page.map(async (user) => {
-				await ctx.runMutation(components.agent.users.deleteAllForUserIdAsync, {
+				await ctx.runMutation(internal.chat.deleteChatsByUserId, {
 					userId: user._id,
 				});
 				await ctx.db.delete(user._id);

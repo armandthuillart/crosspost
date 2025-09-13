@@ -1,28 +1,30 @@
+import type { Infer } from "convex/values";
 import { zodToConvex } from "convex-helpers/server/zod";
+import { ChatSDKError } from "../lib/errors";
+import { draftSchema } from "../lib/schema";
 import type { Id } from "./_generated/dataModel";
 import { mutation } from "./_generated/server";
-import { betterAuthComponent } from "./auth";
-import { zodSchema } from "./tools/createDraft";
+import type { platform } from "./schema";
 
 export const createDraft = mutation({
-	args: zodToConvex(zodSchema),
+	args: zodToConvex(draftSchema),
 	handler: async (ctx, { title, versions }) => {
-		const userId = await betterAuthComponent.getAuthUserId(ctx);
+		const identity = await ctx.auth.getUserIdentity();
 
-		if (!userId) {
-			throw new Error("User ID not found");
+		if (!identity) {
+			throw new ChatSDKError("unauthorized:draft");
 		}
 
 		const draftId = await ctx.db.insert("drafts", {
 			title,
-			userId: userId as Id<"users">,
+			userId: identity.subject as Id<"users">,
 		});
 
 		for (const [key, content] of Object.entries(versions)) {
-			await ctx.db.insert("draftsVersions", {
+			await ctx.db.insert("versions", {
 				content,
 				draftId,
-				platform: key as "bluesky" | "threads" | "x",
+				platform: key as Infer<typeof platform>,
 			});
 		}
 

@@ -1,63 +1,65 @@
-import {
-	type AuthFunctions,
-	BetterAuth,
-	type PublicAuthFunctions,
-} from "@convex-dev/better-auth";
-import { createAuth } from "../lib/auth";
-import { api, components, internal } from "./_generated/api";
-import type { DataModel, Id } from "./_generated/dataModel";
-import { query } from "./_generated/server";
+import { createClient, type GenericCtx } from "@convex-dev/better-auth";
+import { convex } from "@convex-dev/better-auth/plugins";
+import { checkout, polar, portal } from "@polar-sh/better-auth";
+import { type BetterAuthOptions, betterAuth } from "better-auth";
+import { anonymous } from "better-auth/plugins";
+import { polarClient } from "../lib/polar";
+import type { Tier } from "../lib/types";
+import { components } from "./_generated/api";
+import type { DataModel } from "./_generated/dataModel";
+import { query } from "./betterAuth/_generated/server";
+import authSchema from "./betterAuth/schema";
 
-const authFunctions: AuthFunctions = internal.auth;
-const publicAuthFunctions: PublicAuthFunctions = api.auth;
+const siteUrl = process.env.SITE_URL;
 
-export const betterAuthComponent = new BetterAuth(components.betterAuth, {
-	authFunctions,
-	publicAuthFunctions,
-});
+export const authComponent = createClient<DataModel, typeof authSchema>(
+	components.betterAuth,
+	{
+		local: {
+			schema: authSchema,
+		},
+		verbose: false,
+	},
+);
 
-export const {
-	createUser,
-	updateUser,
-	deleteUser,
-	createSession,
-	isAuthenticated,
-} = betterAuthComponent.createAuthFunctions<DataModel>({
-	onCreateUser: async (ctx, user) => {
-		const userId = await ctx.db.insert("users", {
-			isAnonymous: user.isAnonymous ?? undefined,
-		});
-		return userId;
-	},
-	onDeleteUser: async (ctx, userId) => {
-		await ctx.db.delete(userId as Id<"users">);
-	},
-	onUpdateUser: async (ctx, user) => {
-		await ctx.db.patch(user.userId as Id<"users">, {
-			isAnonymous: user.isAnonymous ?? undefined,
-		});
-	},
-});
+export const createAuth = (ctx: GenericCtx<DataModel>) =>
+	betterAuth({
+		baseURL: siteUrl,
+		database: authComponent.adapter(ctx),
+		plugins: [
+			anonymous(),
+			convex(),
+			polar({
+				client: polarClient,
+				createCustomerOnSignUp: false,
+				use: [
+					checkout({
+						authenticatedUsersOnly: true,
+						products: [
+							{
+								productId: process.env.POLAR_PRODUCT_ID_PRO as string,
+								slug: "pro" as Tier,
+							},
+						],
+					}),
+					portal(),
+				],
+			}),
+		],
+		socialProviders: {
+			google: {
+				accessType: "offline",
+				clientId: process.env.GOOGLE_CLIENT_ID as string,
+				clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+				prompt: "select_account consent",
+			},
+		},
+	} satisfies BetterAuthOptions);
 
 export const getUser = query({
 	args: {},
 	handler: async (ctx) => {
-		return await betterAuthComponent.getAuthUser(ctx);
-	},
-});
-
-export const getSession = query({
-	args: {},
-	handler: async (ctx) => {
-		const auth = createAuth(ctx);
-		const headers = await betterAuthComponent.getHeaders(ctx);
-
-		const session = await auth.api.getSession({ headers });
-
-		if (!session) {
-			return null;
-		}
-
-		return session;
+		// biome-ignore lint/suspicious/noExplicitAny: TODO: fix this
+		return authComponent.safeGetAuthUser(ctx as any);
 	},
 });

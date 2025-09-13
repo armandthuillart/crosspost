@@ -1,24 +1,14 @@
 "use client";
 
-import { type SimplexNoiseProps, Swirl } from "@paper-design/shaders-react";
+import { Swirl, type SwirlProps } from "@paper-design/shaders-react";
 import { cn } from "@/lib/utils";
 
-interface AppShaderProps extends SimplexNoiseProps {
-	size: number;
-}
-
-export function AppShader({
-	size,
-	speed,
-	className,
-	...props
-}: AppShaderProps) {
+export function AppShader({ className, ...props }: SwirlProps) {
 	return (
 		<Swirl
-			bandCount={2}
 			className={cn("rounded-full", className)}
 			colorBack="rgb(255, 255, 255, 0)"
-			colors={["rgb(51, 156, 255)"]}
+			colors={["rgb(51, 150, 255)"]}
 			noise={0}
 			noiseFrequency={0}
 			offsetX={-0.4}
@@ -27,7 +17,6 @@ export function AppShader({
 			scale={1}
 			softness={3}
 			speed={0.5}
-			style={{ height: size, width: size }}
 			twist={0.3}
 			{...props}
 		/>

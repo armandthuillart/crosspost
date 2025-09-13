@@ -8,7 +8,7 @@ function PromptInput({ className, ...props }: HTMLMotionProps<"form">) {
 	return (
 		<motion.form
 			className={cn(
-				"group/prompt-input grid grid-cols-[auto_1fr_auto] gap-x-2 rounded-4xl border bg-material p-2.5 shadow-2xs transition-[border,box-shadow] duration-500 ease-[cubic-bezier(.32,.72,0,1)] has-focus-visible:border-input has-focus-visible:shadow-xs data-[state=collapsed]:min-h-14 data-[state=collapsed]:pl-3.5 dark:border-transparent data-[state=collapsed]:[grid-template-areas:'tool_input_action'] data-[state=expanded]:[grid-template-areas:'input_input_input''tool_footer_action']",
+				"group/prompt-input grid grid-cols-[auto_1fr_auto] gap-x-2 rounded-4xl border bg-material p-2.5 shadow-2xs transition-[border,box-shadow] duration-500 ease-[cubic-bezier(.32,.72,0,1)] has-focus-visible:border-input has-focus-visible:shadow-xs data-[state=collapsed]:min-h-14 data-[state=collapsed]:pl-3.5 data-[state=collapsed]:[grid-template-areas:'tool_input_action'] data-[state=expanded]:[grid-template-areas:'input_input_input''tool_footer_action']",
 				className,
 			)}
 			layoutId="prompt-input"

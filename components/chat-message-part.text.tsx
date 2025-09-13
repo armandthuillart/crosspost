@@ -1,9 +1,9 @@
 "use client";
 
-import { useSmoothText } from "@convex-dev/agent/react";
 import type { TextUIPart, UIMessage } from "ai";
 import { MessageBubble } from "@/components/ai-elements/message";
 import { Response } from "@/components/ai-elements/response";
+import { useSmoothText } from "@/hooks/use-smooth-text";
 import { attr } from "@/lib/utils";
 
 interface TextProps {

@@ -22,13 +22,12 @@ export const authComponent = createClient<DataModel, typeof authSchema>(
 	},
 );
 
-export const createAuth = (ctx: GenericCtx<DataModel>) =>
-	betterAuth({
+export const createAuth = (ctx: GenericCtx<DataModel>) => {
+	return betterAuth({
 		baseURL: siteUrl,
 		database: authComponent.adapter(ctx),
 		plugins: [
 			anonymous(),
-			convex(),
 			polar({
 				client: polarClient,
 				createCustomerOnSignUp: false,
@@ -45,7 +44,9 @@ export const createAuth = (ctx: GenericCtx<DataModel>) =>
 					portal(),
 				],
 			}),
+			convex(),
 		],
+		secret: process.env.BETTER_AUTH_SECRET,
 		socialProviders: {
 			google: {
 				accessType: "offline",
@@ -56,6 +57,7 @@ export const createAuth = (ctx: GenericCtx<DataModel>) =>
 		},
 		trustedOrigins: [siteUrl as string],
 	} satisfies BetterAuthOptions);
+};
 
 export const getUser = query({
 	args: {},

@@ -1,4 +1,5 @@
 import { createAuth } from "../auth";
 
-// @ts-expect-error - TODO: fix this
-export const auth = createAuth({});
+// biome-ignore lint/suspicious/noExplicitAny: static instance for BetterAuth schema generation
+export const auth = createAuth({} as any);
+ 

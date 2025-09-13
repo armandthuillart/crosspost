@@ -1,6 +1,7 @@
 "use client";
 
 import { type HTMLMotionProps, motion } from "motion/react";
+import { memo } from "react";
 import { ArrowUpIcon, StopIcon } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 
@@ -48,7 +49,10 @@ function PromptInputTextarea({
 	);
 }
 
-function PromptInputSubmit({ className, ...props }: HTMLMotionProps<"button">) {
+function PurePromptInputSubmit({
+	className,
+	...props
+}: HTMLMotionProps<"button">) {
 	return (
 		<motion.button
 			className={cn(
@@ -65,6 +69,8 @@ function PromptInputSubmit({ className, ...props }: HTMLMotionProps<"button">) {
 		</motion.button>
 	);
 }
+
+const PromptInputSubmit = memo(PurePromptInputSubmit);
 
 function PromptInputStop({ className, ...props }: HTMLMotionProps<"button">) {
 	return (

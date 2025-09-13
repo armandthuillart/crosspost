@@ -40,7 +40,7 @@
 	"overrides": [
 		{
 			"formatter": { "enabled": false },
-			"includes": ["convex/_generated/**"],
+			"includes": ["convex/_generated/**", "convex/betterAuth/_generated/**"],
 			"linter": { "enabled": false }
 		}
 	],

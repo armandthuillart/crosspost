@@ -7,7 +7,7 @@ import { polarClient } from "../lib/polar";
 import type { Tier } from "../lib/types";
 import { components } from "./_generated/api";
 import type { DataModel } from "./_generated/dataModel";
-import { query } from "./betterAuth/_generated/server";
+import { query } from "./_generated/server";
 import authSchema from "./betterAuth/schema";
 
 const siteUrl = process.env.SITE_URL;
@@ -59,7 +59,6 @@ export const createAuth = (ctx: GenericCtx<DataModel>) =>
 export const getUser = query({
 	args: {},
 	handler: async (ctx) => {
-		// biome-ignore lint/suspicious/noExplicitAny: TODO: fix this
-		return authComponent.safeGetAuthUser(ctx as any);
+		return authComponent.safeGetAuthUser(ctx);
 	},
 });

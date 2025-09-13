@@ -4,12 +4,12 @@ import {
 	type GetRateLimitValueQuery,
 	useRateLimit,
 } from "@convex-dev/rate-limiter/react";
-import type { Id } from "@/convex/_generated/dataModel";
 import type { Tier } from "@/lib/types";
 import { api } from "../convex/_generated/api";
+import type { Id } from "../convex/betterAuth/_generated/dataModel";
 
 interface ChatStreamerProps {
-	userId: Id<"users">;
+	userId: Id<"user">;
 	userTier: Tier;
 }
 

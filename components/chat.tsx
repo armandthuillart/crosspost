@@ -8,10 +8,10 @@ import { ChatMessages } from "@/components/chat-messages";
 import { ChatStreamer } from "@/components/chat-streamer";
 import type { Tier } from "@/lib/types";
 import { attr } from "@/lib/utils";
-import type { Id } from "../convex/_generated/dataModel";
+import type { Id } from "../convex/betterAuth/_generated/dataModel";
 
 interface ChatProps {
-	userId: Id<"users">;
+	userId: Id<"user">;
 	userTier: Tier;
 	isAnonymous: boolean;
 	initialMessages: Array<UIMessage>;

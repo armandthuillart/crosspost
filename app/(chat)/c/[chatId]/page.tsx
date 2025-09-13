@@ -12,27 +12,25 @@ export default async function Page({ params }: PageProps<"/c/[chatId]">) {
 
 	const token = await getToken();
 
-	const user = await fetchQuery(api.auth.getUser, {}, { token });
-	const userId = user?.userId;
-	const isAnonymous = user?.isAnonymous ?? false;
+	const { userId, isAnonymous } = await fetchQuery(
+		api.auth.getUser,
+		{},
+		{ token },
+	);
 
 	if (!userId) {
 		return redirect("/api/auth/anonymous");
 	}
 
-	let tier: Tier = "anonymous";
+	let userTier: Tier = "anonymous";
 
 	if (!isAnonymous) {
-		tier = await fetchQuery(
-			api.customers.getTier,
-			{ userId: userId as Id<"users"> },
-			{ token },
-		);
+		userTier = await fetchQuery(api.customers.getTier, { userId }, { token });
 	}
 
 	const chat = await fetchQuery(api.chat.getChat, { chatId }, { token });
 
-	if (!chat || chat.userId !== user.userId) {
+	if (!chat || chat.userId !== userId) {
 		notFound();
 	}
 
@@ -44,8 +42,8 @@ export default async function Page({ params }: PageProps<"/c/[chatId]">) {
 		<Chat
 			initialMessages={toUIMessages(initialMessages ?? [])}
 			isAnonymous={isAnonymous}
-			userId={userId as Id<"users">}
-			userTier={tier}
+			userId={userId}
+			userTier={userTier}
 		/>
 	);
 }

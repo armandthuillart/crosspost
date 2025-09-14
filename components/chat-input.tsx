@@ -146,7 +146,7 @@ export function ChatInput({
 	});
 
 	const typewriter = useTypewriter({
-		enabled: !isChat,
+		enabled: !isChat && !isDirty,
 		loop: true,
 		pauseDuration: 2000,
 		texts: [

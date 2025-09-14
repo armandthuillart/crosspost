@@ -11,8 +11,8 @@ export function AppShader({ colors, className, ...props }: SwirlProps) {
 			colors={colors || ["rgb(51, 150, 255)"]}
 			noise={0}
 			noiseFrequency={0}
-			offsetX={-0.4}
-			offsetY={1}
+			offsetX={-1}
+			offsetY={-1}
 			rotation={0}
 			scale={1}
 			softness={3}

@@ -15,14 +15,14 @@ export const metadata: Metadata = {
 	keywords: [
 		"ai",
 		"ai chat",
-		"fragment",
+		"crosspost",
 		"marketing",
 		"broadcast",
 		"crosspost",
 		"social media",
 		"post scheduler",
 	],
-	title: "Fragment",
+	title: "Crosspost",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

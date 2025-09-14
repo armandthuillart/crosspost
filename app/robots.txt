@@ -2,4 +2,4 @@ User-Agent: *
 Allow: /
 Disallow: /t/
 
-Sitemap: https://fragment.ai/sitemap.xml
+Sitemap: https://crosspost.ai/sitemap.xml

@@ -1,7 +1,7 @@
 {
 	"description": "Create and post to social media by chatting with AI.",
-	"name": "Fragment",
-	"short_name": "Fragment",
+	"name": "Crosspost",
+	"short_name": "Crosspost",
 	"start_url": "/",
 	"theme_color": "#0385FF"
 }

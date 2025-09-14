@@ -28,6 +28,7 @@ export function ChatStreamer({ userId, userTier }: ChatStreamerProps) {
 			break;
 	}
 
+ // TODO: SHOULD NO PASS USERID FROM CLIENT NEVER TRUST IT
 	const { check, status } = useRateLimit(getRateLimitApi, {
 		key: userId,
 	});

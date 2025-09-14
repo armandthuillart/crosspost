@@ -7,6 +7,7 @@ import { Action, Actions } from "@/components/ai-elements/actions";
 import {
 	Conversation,
 	ConversationContent,
+	ConversationScrollButton,
 } from "@/components/ai-elements/conversation";
 import { Message, MessageContent } from "@/components/ai-elements/message";
 import { MessagePart } from "@/components/chat-message-part";
@@ -64,6 +65,7 @@ export function ChatMessages({ messages, hasSentMessage }: ChatMessagesProps) {
 					})}
 				</AnimatePresence>
 			</ConversationContent>
+			<ConversationScrollButton />
 		</Conversation>
 	);
 }

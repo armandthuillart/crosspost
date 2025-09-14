@@ -40,29 +40,19 @@ const bodySchema = z.object({
 
 http.route({
 	handler: httpAction(async (ctx, request) => {
-		console.log("we've hit the chat route");
-
 		const { message, optimisticId } = await bodySchema.parseAsync(
 			await request.json(),
 		);
 
-		console.log("message", message);
-		console.log("optimisticId", optimisticId);
-
 		const { userId, userTier } = await ctx.runQuery(
 			internal.chat.authorizeChat,
 		);
-
-		console.log("userId", userId);
-		console.log("userTier", userTier);
 
 		await rateLimiter.limit(ctx, userTier, { key: userId, throws: true });
 
 		const chat = await ctx.runQuery(api.chat.getChat, {
 			optimisticId,
 		});
-
-		console.log("chat", chat);
 
 		let chatId: Id<"chats">;
 
@@ -71,10 +61,8 @@ http.route({
 				optimisticId,
 				prompt: extract(message.parts),
 			});
-			console.log("no chat, creating chat", chatId);
 		} else {
 			chatId = chat._id;
-			console.log("found a chat, using its id", chatId);
 		}
 
 		const previousMessages = await ctx.runQuery(api.chat.loadChat, {
@@ -85,8 +73,6 @@ http.route({
 
 		const validatedMessages = await validateUIMessages({ messages });
 
-		console.log("messages", messages.length);
-
 		const result = streamText({
 			experimental_transform: smoothStream(),
 			messages: convertToModelMessages(validatedMessages),
@@ -95,8 +81,6 @@ http.route({
 			system: SYSTEM_PROMPT,
 			tools,
 		});
-
-		console.log("About to return stream response");
 
 		const uiResponse = result.toUIMessageStreamResponse({
 			onFinish: async ({ messages }) => {
@@ -108,7 +92,6 @@ http.route({
 			originalMessages: messages,
 		});
 
-		// Reflect CORS on the streaming response
 		const origin = request.headers.get("Origin") ?? "*";
 		const headers = new Headers(uiResponse.headers);
 		headers.set("Access-Control-Allow-Origin", origin);
@@ -135,8 +118,6 @@ http.route({
 
 http.route({
 	handler: httpAction(async (_, request) => {
-		console.log("we've hit the chat options route");
-
 		const origin = request.headers.get("Origin") ?? "*";
 		const reqMethod =
 			request.headers.get("Access-Control-Request-Method") ?? "POST";

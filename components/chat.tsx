@@ -32,9 +32,6 @@ export function Chat({
 	const { status, messages, sendMessage } = useChat({
 		id: optimisticId,
 		messages: initialMessages,
-		onError: (error) => {
-			console.error(error);
-		},
 		transport: new DefaultChatTransport({
 			api: `${process.env.NEXT_PUBLIC_CONVEX_SITE_URL}/api/chat`,
 			headers: { Authorization: `Bearer ${token}` },

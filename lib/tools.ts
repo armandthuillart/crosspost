@@ -1,4 +1,3 @@
-import { google } from "@ai-sdk/google";
 import type { InferUITools, ToolSet, UIDataTypes, UIMessage } from "ai";
 import { tool } from "ai";
 import { fetchMutation } from "convex/nextjs";
@@ -90,7 +89,6 @@ export const tools = {
 			),
 		inputSchema: postSchema,
 	}),
-	web_search: google.tools.googleSearch({}),
 } satisfies ToolSet;
 
 export type ChatTools = InferUITools<typeof tools>;

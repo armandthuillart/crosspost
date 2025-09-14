@@ -44,6 +44,8 @@ function PureConversationScrollButton({ className, ...props }: ButtonProps) {
 		scrollToBottom();
 	}, [scrollToBottom]);
 
+	console.log("isAtBottom", isAtBottom);
+
 	return (
 		<AnimatePresence>
 			{!isAtBottom && (

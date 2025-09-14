@@ -58,3 +58,9 @@ export const postSchema = z
 			}
 		},
 	);
+
+export const messageSchema = z.object({
+	id: z.string(),
+	parts: z.array(z.any()),
+	role: z.enum(["user", "assistant", "system"]),
+});

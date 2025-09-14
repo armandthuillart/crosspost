@@ -1,3 +1,4 @@
+import { generateId } from "ai";
 import { fetchQuery } from "convex/nextjs";
 import { redirect } from "next/navigation";
 import { Chat } from "@/components/chat";
@@ -12,7 +13,7 @@ export default async function Page() {
 	const userId = user?._id;
 	const isAnonymous = user?.isAnonymous ?? false;
 
-	if (!userId) {
+	if (!token || !userId) {
 		return redirect("/api/auth/anonymous");
 	}
 
@@ -22,10 +23,14 @@ export default async function Page() {
 		userTier = await fetchQuery(api.customers.getTier, { userId }, { token });
 	}
 
+	const optimisticId = generateId();
+
 	return (
 		<Chat
 			initialMessages={[]}
 			isAnonymous={isAnonymous}
+			optimisticId={optimisticId}
+			token={token}
 			userId={userId}
 			userTier={userTier}
 		/>

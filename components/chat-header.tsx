@@ -12,7 +12,7 @@ interface ChatHeaderProps {
 export function ChatHeader({ isAnonymous }: ChatHeaderProps) {
 	if (isAnonymous) {
 		return (
-			<header className="inset-0 bottom-auto z-50 flex w-full items-center justify-between p-2 group-not-data-messages/chat:absolute group-data-messages/chat:sticky @max-8xl/chat:group-data-messages/chat:bg-background">
+			<header className="inset-0 bottom-auto z-50 flex w-full items-center justify-between p-2 group-not-data-chat/chat:absolute group-data-chat/chat:sticky @max-8xl/chat:group-data-chat/chat:bg-background">
 				<Button size="icon" variant="ghost">
 					<AppIcon className="size-6 text-primary" />
 				</Button>
@@ -41,7 +41,7 @@ export function ChatHeader({ isAnonymous }: ChatHeaderProps) {
 	}
 
 	return (
-		<header className="inset-0 bottom-auto z-50 flex items-center justify-between p-2 group-not-data-messages/chat:absolute group-data-messages/chat:sticky @max-8xl/chat:group-data-messages/chat:bg-background">
+		<header className="inset-0 bottom-auto z-50 flex items-center justify-between p-2 group-not-data-chat/chat:absolute group-data-chat/chat:sticky @max-8xl/chat:group-data-chat/chat:bg-background">
 			<SidebarTrigger />
 		</header>
 	);

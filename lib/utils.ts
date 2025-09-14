@@ -11,14 +11,6 @@ export function attr(key: string, condition: boolean) {
 	return condition ? { [`data-${key}`]: true } : {};
 }
 
-export function buildTextFromParts(parts: UIMessage["parts"]) {
-	return parts
-		.filter((part) => part.type === "text")
-		.map((part) => part.text)
-		.join("\n")
-		.trim();
-}
-
 export function toUIMessages(
 	messages: Array<Doc<"messages">>,
 ): Array<UIMessage> {
@@ -27,4 +19,12 @@ export function toUIMessages(
 		parts: message.parts,
 		role: message.role,
 	}));
+}
+
+export function extract(parts: UIMessage["parts"]) {
+	return parts
+		.filter((part) => part.type === "text")
+		.map((part) => part.text)
+		.join("\n")
+		.trim();
 }

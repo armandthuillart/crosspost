@@ -22,17 +22,17 @@ const TEXTAREA_MIN_HEIGHT = 24;
 const TEXTAREA_EXPANDED_MIN_HEIGHT = 48;
 
 interface ChatInputProps {
-	chatId: string;
 	isChat: boolean;
 	chatStatus: ChatStatus;
 	sendMessage: UseChatHelpers<UIMessage>["sendMessage"];
+	optimisticId: string | null;
 }
 
 export function ChatInput({
 	isChat,
-	chatId,
 	chatStatus,
 	sendMessage,
+	optimisticId,
 }: ChatInputProps) {
 	const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -48,7 +48,7 @@ export function ChatInput({
 			event.preventDefault();
 			if (!isDirty) return;
 
-			window.history.replaceState({}, "", `/c/${chatId}`);
+			window.history.replaceState({}, "", `/c/${optimisticId}`);
 
 			sendMessage({
 				parts: [{ text: prompt, type: "text" }],

@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
 @theme inline {
 	--radius-sm: 0.5rem; /* 8px */

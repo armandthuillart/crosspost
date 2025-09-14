@@ -16,9 +16,12 @@ export const role = v.union(
 
 export default defineSchema({
 	chats: defineTable({
+		optimisticId: v.string(),
 		title: v.string(),
 		userId: v.string(),
-	}).index("by_user", ["userId"]),
+	})
+		.index("by_user", ["userId"])
+		.index("by_optimistic_id", ["optimisticId"]),
 	drafts: defineTable({
 		title: v.string(),
 		userId: v.string(),

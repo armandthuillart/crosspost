@@ -2,7 +2,7 @@
 
 import type { UIMessage } from "ai";
 import { AnimatePresence } from "motion/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Action, Actions } from "@/components/ai-elements/actions";
 import {
 	Conversation,
@@ -11,41 +11,23 @@ import {
 import { Message, MessageContent } from "@/components/ai-elements/message";
 import { MessagePart } from "@/components/chat-message-part";
 import { CopyIcon, TickIcon } from "@/components/ui/icons";
-import { attr, buildTextFromParts } from "@/lib/utils";
+import { attr, extract } from "@/lib/utils";
 
 interface ChatMessagesProps {
-	chatId: string;
 	messages: Array<UIMessage>;
-	isSubmitted: boolean;
+	hasSentMessage: boolean;
 }
 
-export function ChatMessages({
-	chatId,
-	messages,
-	isSubmitted,
-}: ChatMessagesProps) {
-	const [isCopied, setIsCopied] = useState(false);
-	const [hasSentMessage, setHasSentMessage] = useState(false);
-
-	useEffect(() => {
-		if (chatId) {
-			setHasSentMessage(false);
-		}
-	}, [chatId]);
-
-	useEffect(() => {
-		if (isSubmitted) {
-			setHasSentMessage(true);
-		}
-	}, [isSubmitted]);
+export function ChatMessages({ messages, hasSentMessage }: ChatMessagesProps) {
+	const [isCopied, setIsCopied] = useState<string | null>(null);
 
 	async function handleCopy(message: UIMessage) {
-		const text = buildTextFromParts(message.parts);
+		const text = extract(message.parts);
 		await navigator.clipboard.writeText(text);
-		setIsCopied(true);
+		setIsCopied(message.id);
 
 		setTimeout(() => {
-			setIsCopied(false);
+			setIsCopied(null);
 		}, 2000);
 	}
 
@@ -55,6 +37,7 @@ export function ChatMessages({
 				<AnimatePresence initial={false} mode="popLayout">
 					{messages.map((message, i) => {
 						const isLast = i === messages.length - 1;
+						const hasCopied = isCopied === message.id;
 						return (
 							<Message
 								{...attr("scroll-padding", isLast && hasSentMessage)}
@@ -72,7 +55,7 @@ export function ChatMessages({
 									))}
 									<Actions>
 										<Action onClick={() => handleCopy(message)} tooltip="Copy">
-											{isCopied ? <TickIcon /> : <CopyIcon />}
+											{hasCopied ? <TickIcon /> : <CopyIcon />}
 										</Action>
 									</Actions>
 								</MessageContent>

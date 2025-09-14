@@ -1,6 +1,8 @@
 "use client";
 
 import { type UIMessage, useChat } from "@ai-sdk/react";
+import { DefaultChatTransport } from "ai";
+import { useEffect, useState } from "react";
 import { ChatGreetings } from "@/components/chat-greetings";
 import { ChatHeader } from "@/components/chat-header";
 import { ChatInput } from "@/components/chat-input";
@@ -11,26 +13,58 @@ import { attr } from "@/lib/utils";
 import type { Id } from "../convex/betterAuth/_generated/dataModel";
 
 interface ChatProps {
+	token: string;
 	userId: Id<"user">;
 	userTier: Tier;
 	isAnonymous: boolean;
+	optimisticId: string;
 	initialMessages: Array<UIMessage>;
 }
 
 export function Chat({
+	token,
 	userId,
 	userTier,
 	isAnonymous,
+	optimisticId,
 	initialMessages,
 }: ChatProps) {
-	const {
-		id: chatId,
-		status,
-		messages,
-		sendMessage,
-	} = useChat({ messages: initialMessages });
+	const { status, messages, sendMessage } = useChat({
+		id: optimisticId,
+		messages: initialMessages,
+		onError: (error) => {
+			console.error(error);
+		},
+		transport: new DefaultChatTransport({
+			api: `${process.env.NEXT_PUBLIC_CONVEX_SITE_URL}/api/chat`,
+			headers: { Authorization: `Bearer ${token}` },
+			prepareSendMessagesRequest({ messages, id: optimisticId }) {
+				return {
+					body: {
+						message: messages.at(-1),
+						optimisticId,
+					},
+				};
+			},
+		}),
+	});
 
 	const isChat = messages.length > 0;
+	const hasSubmitted = status === "submitted";
+
+	const [hasSentMessage, setHasSentMessage] = useState(false);
+
+	useEffect(() => {
+		if (optimisticId) {
+			setHasSentMessage(false);
+		}
+	}, [optimisticId]);
+
+	useEffect(() => {
+		if (hasSubmitted) {
+			setHasSentMessage(true);
+		}
+	}, [hasSubmitted]);
 
 	return (
 		<main
@@ -43,18 +77,14 @@ export function Chat({
 					{!isChat ? (
 						<ChatGreetings />
 					) : (
-						<ChatMessages
-							chatId={chatId}
-							isSubmitted={status === "submitted"}
-							messages={messages}
-						/>
+						<ChatMessages hasSentMessage={hasSentMessage} messages={messages} />
 					)}
 					<div className="relative mx-auto flex w-full max-w-(--chat-content-max-width) flex-col gap-4 pb-4 @[34rem]:[--chat-content-max-width:40rem] @[64rem]:[--chat-content-max-width:48rem] [--chat-content-max-width:32rem] md:group-not-data-chat/chat:pb-0">
 						{isChat && <ChatStreamer userId={userId} userTier={userTier} />}
 						<ChatInput
-							chatId={chatId}
 							chatStatus={status}
 							isChat={isChat}
+							optimisticId={optimisticId}
 							sendMessage={sendMessage}
 						/>
 					</div>

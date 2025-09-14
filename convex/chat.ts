@@ -1,10 +1,14 @@
 import type { GatewayModelId } from "@ai-sdk/gateway";
 import { generateText } from "ai";
 import { v } from "convex/values";
+import { zodToConvex } from "convex-helpers/server/zod";
+import { z } from "zod/v3";
 import { ChatSDKError } from "../lib/errors";
+import { messageSchema } from "../lib/schema";
 import type { Tier } from "../lib/types";
 import { api, internal } from "./_generated/api";
 import {
+	internalAction,
 	internalMutation,
 	internalQuery,
 	mutation,
@@ -13,41 +17,55 @@ import {
 import type { Id } from "./betterAuth/_generated/dataModel";
 
 export const createChat = mutation({
-	args: { prompt: v.string() },
-	handler: async (ctx, { prompt }) => {
+	args: { optimisticId: v.string(), prompt: v.string() },
+	handler: async (ctx, { optimisticId, prompt }) => {
 		const identity = await ctx.auth.getUserIdentity();
 
 		if (!identity) {
 			throw new ChatSDKError("unauthorized:chat");
 		}
 
+		const userId = identity.subject as Id<"user">;
+
 		const chatId = await ctx.db.insert("chats", {
-			title: "b New Chat",
-			userId: identity.subject as Id<"user">,
+			optimisticId,
+			title: "New Chat",
+			userId,
 		});
 
-		await ctx.scheduler.runAfter(0, internal.chat.renameChat, {
+		await ctx.scheduler.runAfter(0, internal.chat.nameChat, {
 			chatId,
 			prompt,
+			userId,
 		});
+
+		return chatId;
 	},
 });
 
-export const renameChat = internalMutation({
-	args: { chatId: v.id("chats"), prompt: v.string() },
-	handler: async (ctx, { chatId, prompt }) => {
-		const { userId } = await ctx.runQuery(internal.chat.authorize);
-
-		const chat = await ctx.db.get(chatId);
-
-		if (!chat) {
-			throw new ChatSDKError("not_found:chat");
+export const saveChat = mutation({
+	args: {
+		chatId: v.id("chats"),
+		messages: zodToConvex(z.array(messageSchema)),
+	},
+	handler: async (ctx, { chatId, messages }) => {
+		for (const message of messages) {
+			await ctx.db.insert("messages", {
+				chatId,
+				parts: message.parts,
+				role: message.role,
+			});
 		}
+	},
+});
 
-		if (chat.userId !== userId) {
-			throw new ChatSDKError("forbidden:chat");
-		}
-
+export const nameChat = internalAction({
+	args: {
+		chatId: v.id("chats"),
+		prompt: v.string(),
+		userId: v.string(),
+	},
+	handler: async (ctx, { chatId, prompt, userId }) => {
 		const { text: title } = await generateText({
 			messages: [{ content: prompt, role: "user" }],
 			model: "google/gemini-2.5-flash-lite" as GatewayModelId,
@@ -59,6 +77,29 @@ export const renameChat = internalMutation({
 			- Casual greetings
 			- New AI SDK 5`,
 		});
+
+		await ctx.runMutation(internal.chat.renameChat, {
+			chatId,
+			title,
+			userId,
+		});
+
+		return title;
+	},
+});
+
+export const renameChat = internalMutation({
+	args: {
+		chatId: v.id("chats"),
+		title: v.string(),
+		userId: v.string(),
+	},
+	handler: async (ctx, { chatId, title, userId }) => {
+		const chat = await ctx.db.get(chatId);
+
+		if (!chat || chat.userId !== userId) {
+			throw new ChatSDKError("forbidden:chat");
+		}
 
 		await ctx.db.patch(chatId, { title });
 
@@ -82,14 +123,17 @@ export const abortStream = mutation({
 });
 
 export const getChat = query({
-	args: { chatId: v.id("chats") },
-	handler: async (ctx, { chatId }) => {
-		const { userId } = await ctx.runQuery(internal.chat.authorize);
+	args: { optimisticId: v.string() },
+	handler: async (ctx, { optimisticId }) => {
+		const { userId } = await ctx.runQuery(internal.chat.authorizeChat);
 
-		const chat = await ctx.db.get(chatId);
+		const chat = await ctx.db
+			.query("chats")
+			.withIndex("by_optimistic_id", (q) => q.eq("optimisticId", optimisticId))
+			.unique();
 
 		if (!chat) {
-			throw new ChatSDKError("not_found:chat");
+			return null;
 		}
 
 		if (chat.userId !== userId) {
@@ -105,9 +149,21 @@ export const listChats = query({
 	handler: async (ctx, { userId }) => {},
 });
 
-export const listMessages = query({
+export const loadChat = query({
 	args: { chatId: v.id("chats") },
-	handler: async (ctx, { chatId }) => {},
+	handler: async (ctx, { chatId }) => {
+		const messages = await ctx.db
+			.query("messages")
+			.withIndex("by_chat", (q) => q.eq("chatId", chatId))
+			.order("desc")
+			.take(10);
+
+		if (!messages) {
+			throw new ChatSDKError("not_found:chat");
+		}
+
+		return messages.reverse();
+	},
 });
 
 export const deleteMessages = mutation({
@@ -120,23 +176,23 @@ export const deleteChatsByUserId = internalMutation({
 	handler: async (ctx, { userId }) => {},
 });
 
-export const authorize = internalQuery({
+export const authorizeChat = internalQuery({
 	args: {},
 	handler: async (ctx): Promise<{ userId: Id<"user">; userTier: Tier }> => {
 		const user = await ctx.runQuery(api.auth.getUser);
+		const userId = user?._id;
+		const isAnonymous = user?.isAnonymous ?? false;
 
-		if (!user?.userId) {
+		if (!userId) {
 			throw new ChatSDKError("unauthorized:chat");
 		}
 
 		let userTier: Tier = "anonymous";
 
-		if (!user.isAnonymous) {
-			userTier = await ctx.runQuery(api.customers.getTier, {
-				userId: user.userId as Id<"user">,
-			});
+		if (!isAnonymous) {
+			userTier = await ctx.runQuery(api.customers.getTier, { userId });
 		}
 
-		return { userId: user.userId as Id<"user">, userTier };
+		return { userId, userTier };
 	},
 });

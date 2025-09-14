@@ -41,7 +41,7 @@ function TooltipContent({
 		<TooltipPrimitive.Portal>
 			<TooltipPrimitive.Content
 				className={cn(
-					"fade-in-0 zoom-in-95 data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 z-50 flex w-fit origin-(--radix-tooltip-content-transform-origin) animate-in items-center text-balance rounded-md rounded-smbg-popover border px-2 py-1 font-semibold text-popover-foreground text-xs data-[state=closed]:animate-out",
+					"fade-in-0 zoom-in-95 data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 z-50 flex w-fit origin-(--radix-tooltip-content-transform-origin) animate-in items-center text-balance rounded-sm bg-primary px-2 py-1 font-semibold text-primary-foreground text-xs data-[state=closed]:animate-out",
 					className,
 				)}
 				data-slot="tooltip-content"
@@ -50,7 +50,7 @@ function TooltipContent({
 			>
 				{children}
 				{showArrow && (
-					<TooltipPrimitive.Arrow className="z-50 size-2.5 translate-y-[calc(-50%_-_2px)] rotate-45 rounded-[2px] bg-primary fill-primary" />
+					<TooltipPrimitive.Arrow className="z-50 size-2.5 translate-y-[calc(-50%_-_2px)] rotate-45 bg-primary fill-primary" />
 				)}
 			</TooltipPrimitive.Content>
 		</TooltipPrimitive.Portal>

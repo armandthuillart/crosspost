@@ -82,7 +82,7 @@ http.route({
 			tools,
 		});
 
-		const uiResponse = result.toUIMessageStreamResponse({
+		return result.toUIMessageStreamResponse({
 			onFinish: async ({ messages }) => {
 				await ctx.runMutation(api.chat.saveChat, {
 					chatId,
@@ -91,65 +91,8 @@ http.route({
 			},
 			originalMessages: messages,
 		});
-
-		const origin = request.headers.get("Origin") ?? "*";
-		const headers = new Headers(uiResponse.headers);
-		headers.set("Access-Control-Allow-Origin", origin);
-		headers.set(
-			"Access-Control-Allow-Headers",
-			"Content-Type, Digest, Authorization",
-		);
-		headers.set("Access-Control-Allow-Methods", "POST, OPTIONS");
-		headers.set("Access-Control-Allow-Credentials", "true");
-		headers.set(
-			"Access-Control-Expose-Headers",
-			"X-Vercel-AI-Data-Stream, Content-Type",
-		);
-		headers.set("Vary", "Origin");
-
-		return new Response(uiResponse.body, {
-			headers,
-			status: uiResponse.status,
-		});
 	}),
 	method: "POST",
-	path: "/api/chat",
-});
-
-http.route({
-	handler: httpAction(async (_, request) => {
-		const origin = request.headers.get("Origin") ?? "*";
-		const reqMethod =
-			request.headers.get("Access-Control-Request-Method") ?? "POST";
-		const reqHeaders =
-			request.headers.get("Access-Control-Request-Headers") ??
-			"Content-Type, Digest, Authorization";
-
-		if (
-			request.headers.get("Origin") !== null &&
-			request.headers.get("Access-Control-Request-Method") !== null &&
-			request.headers.get("Access-Control-Request-Headers") !== null
-		) {
-			return new Response(null, {
-				headers: new Headers({
-					"Access-Control-Allow-Credentials": "true",
-					"Access-Control-Allow-Headers": reqHeaders,
-					"Access-Control-Allow-Methods": `${reqMethod}, OPTIONS`,
-					"Access-Control-Allow-Origin": origin,
-					"Access-Control-Max-Age": "86400",
-					Vary: "Origin",
-				}),
-			});
-		} else {
-			return new Response(null, {
-				headers: new Headers({
-					"Access-Control-Allow-Origin": origin,
-					Vary: "Origin",
-				}),
-			});
-		}
-	}),
-	method: "OPTIONS",
 	path: "/api/chat",
 });
 

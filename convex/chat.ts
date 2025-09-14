@@ -1,9 +1,9 @@
-import type { GatewayModelId } from "@ai-sdk/gateway";
 import { generateText } from "ai";
 import { v } from "convex/values";
 import { zodToConvex } from "convex-helpers/server/zod";
 import { z } from "zod/v3";
 import { ChatSDKError } from "../lib/errors";
+import { TITLE_MODEL } from "../lib/gateway";
 import { messageSchema } from "../lib/schema";
 import type { Tier } from "../lib/types";
 import { api, internal } from "./_generated/api";
@@ -68,7 +68,7 @@ export const nameChat = internalAction({
 	handler: async (ctx, { chatId, prompt, userId }) => {
 		const { text: title } = await generateText({
 			messages: [{ content: prompt, role: "user" }],
-			model: "google/gemini-2.5-flash-lite" as GatewayModelId,
+			model: TITLE_MODEL,
 			system: `Generate a title that are 3-6 words, descriptive, sentence case, sound like something a person would actually say that is relevant to the first message in the thread.
         
 			Good examples: 

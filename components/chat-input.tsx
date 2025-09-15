@@ -1,7 +1,8 @@
 "use client";
 
-import type { UIMessage, UseChatHelpers } from "@ai-sdk/react";
-import type { ChatStatus } from "ai";
+import type { ThreadDoc } from "@convex-dev/agent";
+import { optimisticallySendMessage } from "@convex-dev/agent/react";
+import { useMutation } from "convex/react";
 import {
 	type FormEvent,
 	type KeyboardEvent,
@@ -15,6 +16,7 @@ import {
 	PromptInputSubmit,
 	PromptInputTextarea,
 } from "@/components/ai-elements/prompt-input";
+import { api } from "@/convex/_generated/api";
 import { useAutoFocus } from "@/hooks/use-auto-focus";
 import { useTypewriter } from "@/hooks/use-typewriter";
 
@@ -22,17 +24,17 @@ const TEXTAREA_MIN_HEIGHT = 24;
 const TEXTAREA_EXPANDED_MIN_HEIGHT = 48;
 
 interface ChatInputProps {
+	userId: string;
 	isChat: boolean;
-	chatStatus: ChatStatus;
-	sendMessage: UseChatHelpers<UIMessage>["sendMessage"];
-	optimisticId: string | null;
+	threadId?: string;
+	isStreaming: boolean;
 }
 
 export function ChatInput({
 	isChat,
-	chatStatus,
-	sendMessage,
-	optimisticId,
+	userId,
+	threadId,
+	isStreaming,
 }: ChatInputProps) {
 	const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -42,18 +44,48 @@ export function ChatInput({
 
 	const isDirty = prompt.trim().length > 0;
 
+	const createChat = useMutation(api.chat.createChat).withOptimisticUpdate(
+		(localStore) => {
+			const optimisticId = crypto.randomUUID();
+			const existingChats = localStore.getQuery(api.chat.listChats, { userId });
+
+			if (existingChats) {
+				const now = Date.now();
+
+				const optimisticChat: ThreadDoc = {
+					_creationTime: now,
+					_id: optimisticId,
+					status: "active",
+					title: "New Chat",
+					userId,
+				};
+
+				localStore.setQuery(
+					api.chat.listChats,
+					{ userId },
+					{ ...existingChats, page: [...existingChats.page, optimisticChat] },
+				);
+
+				window.history.replaceState({}, "", `/c/${optimisticId}`);
+			}
+		},
+	);
+
+	const sendMessage = useMutation(api.chat.resumeChat).withOptimisticUpdate(
+		optimisticallySendMessage(api.chat.loadChat),
+	);
+
 	// biome-ignore lint/correctness/useExhaustiveDependencies: would loop
 	const handleSubmit = useCallback(
 		async (event: FormEvent<HTMLFormElement>) => {
 			event.preventDefault();
 			if (!isDirty) return;
 
-			window.history.replaceState({}, "", `/c/${optimisticId}`);
+			if (!threadId) {
+				threadId = await createChat();
+			}
 
-			sendMessage({
-				parts: [{ text: prompt, type: "text" }],
-				role: "user",
-			});
+			void sendMessage({ prompt, threadId });
 
 			setPrompt("");
 			resetHeight();
@@ -180,7 +212,7 @@ export function ChatInput({
 				ref={inputRef}
 				value={prompt}
 			/>
-			<PromptInputSubmit disabled={!isDirty || chatStatus === "streaming"} />
+			<PromptInputSubmit disabled={!isDirty || isStreaming} />
 		</PromptInput>
 	);
 }

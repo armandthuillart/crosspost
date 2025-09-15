@@ -1,61 +1,44 @@
 "use client";
 
-import { type UIMessage, useChat } from "@ai-sdk/react";
-import { DefaultChatTransport } from "ai";
+import { useUIMessages } from "@convex-dev/agent/react";
 import { useEffect, useState } from "react";
 import { ChatGreetings } from "@/components/chat-greetings";
 import { ChatHeader } from "@/components/chat-header";
 import { ChatInput } from "@/components/chat-input";
 import { ChatMessages } from "@/components/chat-messages";
 import { ChatStreamer } from "@/components/chat-streamer";
+import { api } from "@/convex/_generated/api";
 import type { Tier } from "@/lib/types";
 import { attr } from "@/lib/utils";
-import type { Id } from "../convex/betterAuth/_generated/dataModel";
 
 interface ChatProps {
-	token: string;
-	userId: Id<"user">;
+	userId: string;
 	userTier: Tier;
+	threadId?: string;
 	isAnonymous: boolean;
-	optimisticId: string;
-	initialMessages: Array<UIMessage>;
 }
 
-export function Chat({
-	token,
-	userId,
-	userTier,
-	isAnonymous,
-	optimisticId,
-	initialMessages,
-}: ChatProps) {
-	const { status, messages, sendMessage } = useChat({
-		id: optimisticId,
-		messages: initialMessages,
-		transport: new DefaultChatTransport({
-			api: `${process.env.NEXT_PUBLIC_CONVEX_SITE_URL}/api/chat`,
-			headers: { Authorization: `Bearer ${token}` },
-			prepareSendMessagesRequest({ messages, id: optimisticId }) {
-				return {
-					body: {
-						message: messages.at(-1),
-						optimisticId,
-					},
-				};
-			},
-		}),
+export function Chat({ userId, userTier, isAnonymous, threadId }: ChatProps) {
+	const {
+		status,
+		results: messages,
+		loadMore,
+	} = useUIMessages(api.chat.loadChat, threadId ? { threadId } : "skip", {
+		initialNumItems: 10,
+		stream: !!threadId,
 	});
 
 	const isChat = messages.length > 0;
-	const hasSubmitted = status === "submitted";
+	const isStreaming = messages.some((m) => m.status === "streaming");
+	const hasSubmitted = messages.some((m) => m.status === "pending");
 
 	const [hasSentMessage, setHasSentMessage] = useState(false);
 
 	useEffect(() => {
-		if (optimisticId) {
+		if (threadId) {
 			setHasSentMessage(false);
 		}
-	}, [optimisticId]);
+	}, [threadId]);
 
 	useEffect(() => {
 		if (hasSubmitted) {
@@ -74,15 +57,21 @@ export function Chat({
 					{!isChat ? (
 						<ChatGreetings />
 					) : (
-						<ChatMessages hasSentMessage={hasSentMessage} messages={messages} />
+						<ChatMessages
+							canLoadMore={status === "CanLoadMore"}
+							hasSentMessage={hasSentMessage}
+							isLoadingMore={status === "LoadingMore"}
+							loadMore={loadMore}
+							messages={messages}
+						/>
 					)}
 					<div className="relative mx-auto flex w-full max-w-(--chat-content-max-width) flex-col gap-4 pb-4 @[34rem]:[--chat-content-max-width:40rem] @[64rem]:[--chat-content-max-width:48rem] [--chat-content-max-width:32rem] md:group-not-data-chat/chat:pb-0">
 						{isChat && <ChatStreamer userId={userId} userTier={userTier} />}
 						<ChatInput
-							chatStatus={status}
 							isChat={isChat}
-							optimisticId={optimisticId}
-							sendMessage={sendMessage}
+							isStreaming={isStreaming}
+							threadId={threadId}
+							userId={userId}
 						/>
 					</div>
 				</div>

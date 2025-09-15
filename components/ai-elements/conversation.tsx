@@ -76,4 +76,39 @@ function PureConversationScrollButton({ className, ...props }: ButtonProps) {
 
 const ConversationScrollButton = memo(PureConversationScrollButton);
 
-export { Conversation, ConversationContent, ConversationScrollButton };
+interface ConversationLoadMoreButtonProps extends ButtonProps {
+	loadMore: (numItems: number) => void;
+	canLoadMore: boolean;
+	isLoadingMore: boolean;
+}
+
+function PureConversationLoadMoreButton({
+	isLoadingMore,
+	canLoadMore,
+	className,
+	loadMore,
+	...props
+}: ConversationLoadMoreButtonProps) {
+	return (
+		canLoadMore && (
+			<Button
+				className={cn("mx-auto rounded-full", className)}
+				isLoading={isLoadingMore}
+				onClick={() => loadMore(10)}
+				variant="outline"
+				{...props}
+			>
+				Load more
+			</Button>
+		)
+	);
+}
+
+const ConversationLoadMoreButton = memo(PureConversationLoadMoreButton);
+
+export {
+	Conversation,
+	ConversationContent,
+	ConversationScrollButton,
+	ConversationLoadMoreButton,
+};

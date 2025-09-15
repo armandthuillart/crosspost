@@ -1,6 +1,6 @@
 "use client";
 
-import type { UIMessage } from "ai";
+import type { UIMessage } from "@convex-dev/agent/react";
 import { Text } from "@/components/chat-message-part.text";
 
 interface MessagePartProps {

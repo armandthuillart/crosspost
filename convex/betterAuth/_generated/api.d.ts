@@ -10,6 +10,8 @@
 
 import type * as adapter from "../adapter.js";
 import type * as auth from "../auth.js";
+import type * as crons from "../crons.js";
+import type * as generatedSchema from "../generatedSchema.js";
 
 import type {
   ApiFromModules,
@@ -28,6 +30,8 @@ import type {
 declare const fullApi: ApiFromModules<{
   adapter: typeof adapter;
   auth: typeof auth;
+  crons: typeof crons;
+  generatedSchema: typeof generatedSchema;
 }>;
 export type Mounts = {
   adapter: {
@@ -959,6 +963,9 @@ export type Mounts = {
       },
       any
     >;
+  };
+  auth: {
+    signInAnonymous: FunctionReference<"mutation", "public", {}, any>;
   };
 };
 // For now fullApiWithMounts is only fullApi which provides

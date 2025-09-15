@@ -12,18 +12,17 @@ interface TextProps {
 }
 
 export function Text({ part, role }: TextProps) {
-	const [textPart] = useSmoothText(part.text, {
+	const [visibleText] = useSmoothText(part.text, {
 		startStreaming: part.state === "streaming",
 	});
 
-	switch (role) {
-		case "user":
-			return (
-				<MessageBubble {...attr("multiline", part.text.length > 55)}>
-					<Response>{textPart}</Response>
-				</MessageBubble>
-			);
-		default:
-			return <Response>{textPart}</Response>;
+	if (role === "user") {
+		return (
+			<MessageBubble {...attr("multiline", part.text.length > 55)}>
+				<Response>{visibleText}</Response>
+			</MessageBubble>
+		);
 	}
+
+	return <Response>{visibleText}</Response>;
 }

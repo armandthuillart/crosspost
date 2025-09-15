@@ -6,10 +6,9 @@ import {
 } from "@convex-dev/rate-limiter/react";
 import type { Tier } from "@/lib/types";
 import { api } from "../convex/_generated/api";
-import type { Id } from "../convex/betterAuth/_generated/dataModel";
 
 interface ChatStreamerProps {
-	userId: Id<"user">;
+	userId: string;
 	userTier: Tier;
 }
 
@@ -28,7 +27,7 @@ export function ChatStreamer({ userId, userTier }: ChatStreamerProps) {
 			break;
 	}
 
- // TODO: SHOULD NO PASS USERID FROM CLIENT NEVER TRUST IT
+	// TODO: SHOULD NO PASS USERID FROM CLIENT NEVER TRUST IT
 	const { check, status } = useRateLimit(getRateLimitApi, {
 		key: userId,
 	});

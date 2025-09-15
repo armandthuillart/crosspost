@@ -31,6 +31,7 @@ export const postSchema = z
 	.object({
 		content: z.string().describe("The content of the post"),
 		platform: convexToZod(platform).describe("Platform to publish the post to"),
+		title: z.string().describe("The title of the post"),
 	})
 	.refine(
 		({ content, platform }) => {

@@ -5,22 +5,18 @@ import { draftSchema } from "../lib/schema";
 import { api } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
 import { mutation } from "./_generated/server";
-import type { Id as BetterAuthId } from "./betterAuth/_generated/dataModel";
 import type { platform } from "./schema";
 
 export const createDraft = mutation({
 	args: zodToConvex(draftSchema),
 	handler: async (ctx, { title, versions }): Promise<Id<"drafts">> => {
-		const user = await ctx.runQuery(api.auth.getUser);
+		const { userId } = await ctx.runQuery(api.auth.getUser);
 
-		if (!user?.userId) {
+		if (!userId) {
 			throw new ChatSDKError("unauthorized:draft");
 		}
 
-		const draftId = await ctx.db.insert("drafts", {
-			title,
-			userId: user.userId as BetterAuthId<"user">,
-		});
+		const draftId = await ctx.db.insert("drafts", { title, userId });
 
 		for (const [key, content] of Object.entries(versions)) {
 			await ctx.db.insert("versions", {

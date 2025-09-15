@@ -1,30 +1,39 @@
 "use client";
 
-import type { UIMessage } from "ai";
+import type { UIMessage } from "@convex-dev/agent/react";
 import { AnimatePresence } from "motion/react";
 import { useState } from "react";
 import { Action, Actions } from "@/components/ai-elements/actions";
 import {
 	Conversation,
 	ConversationContent,
+	ConversationLoadMoreButton,
 	ConversationScrollButton,
 } from "@/components/ai-elements/conversation";
 import { Message, MessageContent } from "@/components/ai-elements/message";
 import { MessagePart } from "@/components/chat-message-part";
 import { CopyIcon, TickIcon } from "@/components/ui/icons";
-import { attr, extract } from "@/lib/utils";
+import { attr } from "@/lib/utils";
 
 interface ChatMessagesProps {
+	loadMore: (numItems: number) => void;
 	messages: Array<UIMessage>;
+	canLoadMore: boolean;
+	isLoadingMore: boolean;
 	hasSentMessage: boolean;
 }
 
-export function ChatMessages({ messages, hasSentMessage }: ChatMessagesProps) {
+export function ChatMessages({
+	messages,
+	loadMore,
+	canLoadMore,
+	isLoadingMore,
+	hasSentMessage,
+}: ChatMessagesProps) {
 	const [isCopied, setIsCopied] = useState<string | null>(null);
 
 	async function handleCopy(message: UIMessage) {
-		const text = extract(message.parts);
-		await navigator.clipboard.writeText(text);
+		await navigator.clipboard.writeText(message.text);
 		setIsCopied(message.id);
 
 		setTimeout(() => {
@@ -34,6 +43,11 @@ export function ChatMessages({ messages, hasSentMessage }: ChatMessagesProps) {
 
 	return (
 		<Conversation>
+			<ConversationLoadMoreButton
+				canLoadMore={canLoadMore}
+				isLoadingMore={isLoadingMore}
+				loadMore={loadMore}
+			/>
 			<ConversationContent>
 				<AnimatePresence initial={false} mode="popLayout">
 					{messages.map((message, i) => {

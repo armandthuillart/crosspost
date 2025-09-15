@@ -3,9 +3,10 @@ import { convex } from "@convex-dev/better-auth/plugins";
 import { checkout, polar, portal } from "@polar-sh/better-auth";
 import { type BetterAuthOptions, betterAuth } from "better-auth";
 import { anonymous } from "better-auth/plugins";
+import { Effect } from "effect";
 import { polarClient } from "../lib/polar";
 import type { Tier } from "../lib/types";
-import { components } from "./_generated/api";
+import { api, components } from "./_generated/api";
 import type { DataModel } from "./_generated/dataModel";
 import { query } from "./_generated/server";
 import authSchema from "./betterAuth/schema";
@@ -20,9 +21,25 @@ export const authComponent = createClient<DataModel, typeof authSchema>(
 		},
 		triggers: {
 			user: {
-				onCreate: async (ctx, authUser) => {},
-				onDelete: async (ctx, authUser) => {},
-				onUpdate: async (ctx, oldUser, newUser) => {},
+				onCreate: async (_, { _id: externalId, email, isAnonymous }) =>
+					Effect.runPromise(
+						Effect.gen(function* () {
+							if (!isAnonymous) {
+								const customerState = yield* Effect.promise(() =>
+									polarClient.customers.getStateExternal({ externalId }),
+								);
+
+								if (!customerState) {
+									yield* Effect.promise(() =>
+										polarClient.customers.create({ email, externalId }),
+									);
+								}
+							}
+						}),
+					),
+				onDelete: async (ctx, { _id: userId }) => {
+					// Cleanup database, chats, etc.
+				},
 			},
 		},
 		verbose: false,
@@ -68,7 +85,26 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
 
 export const getUser = query({
 	args: {},
-	handler: async (ctx) => {
-		return await authComponent.safeGetAuthUser(ctx);
+	handler: async (
+		ctx,
+	): Promise<{
+		isAnonymous: boolean;
+		userId: string;
+		userTier: Tier;
+	}> => {
+		const user = await authComponent.safeGetAuthUser(ctx);
+
+		const userId = user?._id;
+		const isAnonymous = user?.isAnonymous ?? false;
+
+		let userTier: Tier = "anonymous";
+
+		if (!isAnonymous) {
+			userTier = await ctx.runQuery(api.customers.getTier, {
+				userId: userId as string,
+			});
+		}
+
+		return { isAnonymous, userId: userId as string, userTier };
 	},
 });

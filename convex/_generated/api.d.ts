@@ -3832,9 +3832,6 @@ export declare const components: {
         any
       >;
     };
-    auth: {
-      signInAnonymous: FunctionReference<"mutation", "internal", {}, any>;
-    };
   };
   rateLimiter: {
     lib: {

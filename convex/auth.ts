@@ -8,7 +8,7 @@ import { polarClient } from "../lib/polar";
 import type { Tier } from "../lib/types";
 import { api, components } from "./_generated/api";
 import type { DataModel } from "./_generated/dataModel";
-import { query } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
 import authSchema from "./betterAuth/schema";
 
 const siteUrl = process.env.SITE_URL;
@@ -45,6 +45,8 @@ export const authComponent = createClient<DataModel, typeof authSchema>(
 		verbose: false,
 	},
 );
+
+export const { onCreate, onUpdate, onDelete } = authComponent.triggersApi();
 
 export const createAuth = (
 	ctx: GenericCtx<DataModel>,
@@ -86,6 +88,15 @@ export const createAuth = (
 		trustedOrigins: [siteUrl as string],
 	} satisfies BetterAuthOptions);
 };
+
+export const signInAnonymous = mutation({
+	args: {},
+	handler: async (ctx) => {
+		return await createAuth(ctx).api.signInAnonymous({
+			headers: await authComponent.getHeaders(ctx),
+		});
+	},
+});
 
 export const getUser = query({
 	args: {},

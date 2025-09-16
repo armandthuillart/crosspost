@@ -1,22 +1,13 @@
 import { getStaticAuth } from "@convex-dev/better-auth";
 import { v } from "convex/values";
 import { subDays } from "date-fns";
-import { authComponent, createAuth } from "../auth";
-import { internal } from "./_generated/api";
-import { internalMutation, mutation } from "./_generated/server";
+import { createAuth } from "../auth";
+import { api, internal } from "./_generated/api";
+import { internalMutation } from "./_generated/server";
 
 export const auth = getStaticAuth(createAuth);
 
-export const signInAnonymous = mutation({
-	args: {},
-	handler: async (ctx) => {
-		return await createAuth(ctx).api.signInAnonymous({
-			headers: await authComponent.getHeaders(ctx),
-		});
-	},
-});
-
-export const deleteAnonymousUsers = internalMutation({
+export const deleteInactiveAnonymousUsers = internalMutation({
 	args: { cursor: v.optional(v.string()) },
 	handler: async (ctx, { cursor }) => {
 		const twentyFourHoursAgo = subDays(new Date(), 1).getTime();
@@ -28,17 +19,25 @@ export const deleteAnonymousUsers = internalMutation({
 			.paginate({ cursor: cursor ?? null, numItems: 100 });
 
 		await Promise.all(
-			batch.page.map(async (user) => {
-				// await ctx.runMutation(components.agent.users.deleteAllForUserIdAsync, {
-				// 	userId: user._id,
-				// });
+			batch.page.map(async ({ _id: userId }) => {
+				await ctx.runMutation(api.adapter.deleteOne, {
+					input: {
+						model: "user",
+						where: [
+							{ field: "id", operator: "eq", value: userId },
+							{ field: "isAnonymous", operator: "eq", value: true },
+						],
+					},
+				});
 			}),
 		);
 
 		if (!batch.isDone) {
-			await ctx.scheduler.runAfter(0, internal.auth.deleteAnonymousUsers, {
-				cursor: batch.continueCursor,
-			});
+			await ctx.scheduler.runAfter(
+				0,
+				internal.auth.deleteInactiveAnonymousUsers,
+				{ cursor: batch.continueCursor },
+			);
 		}
 	},
 });

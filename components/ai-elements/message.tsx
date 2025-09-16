@@ -1,6 +1,6 @@
 "use client";
 
-import type { UIMessage } from "ai";
+import type { UIMessage } from "@convex-dev/agent/react";
 import { type HTMLMotionProps, motion, type Variants } from "motion/react";
 import type { HTMLAttributes } from "react";
 import { cn } from "@/lib/utils";

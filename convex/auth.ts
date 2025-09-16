@@ -46,10 +46,14 @@ export const authComponent = createClient<DataModel, typeof authSchema>(
 	},
 );
 
-export const createAuth = (ctx: GenericCtx<DataModel>) => {
+export const createAuth = (
+	ctx: GenericCtx<DataModel>,
+	{ optionsOnly } = { optionsOnly: false },
+) => {
 	return betterAuth({
 		baseURL: siteUrl,
 		database: authComponent.adapter(ctx),
+		logger: { disabled: optionsOnly },
 		plugins: [
 			anonymous(),
 			polar({

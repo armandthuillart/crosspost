@@ -66,7 +66,7 @@ export function Chat({ userId, userTier, isAnonymous, threadId }: ChatProps) {
 						/>
 					)}
 					<div className="relative mx-auto flex w-full max-w-(--chat-content-max-width) flex-col gap-4 pb-4 @[34rem]:[--chat-content-max-width:40rem] @[64rem]:[--chat-content-max-width:48rem] [--chat-content-max-width:32rem] md:group-not-data-chat/chat:pb-0">
-						{isChat && <ChatStreamer userId={userId} userTier={userTier} />}
+						{isChat && <ChatStreamer userTier={userTier} />}
 						<ChatInput
 							isChat={isChat}
 							isStreaming={isStreaming}

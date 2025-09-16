@@ -8,11 +8,10 @@ import type { Tier } from "@/lib/types";
 import { api } from "../convex/_generated/api";
 
 interface ChatStreamerProps {
-	userId: string;
 	userTier: Tier;
 }
 
-export function ChatStreamer({ userId, userTier }: ChatStreamerProps) {
+export function ChatStreamer({ userTier }: ChatStreamerProps) {
 	let getRateLimitApi: GetRateLimitValueQuery;
 
 	switch (userTier) {
@@ -27,10 +26,7 @@ export function ChatStreamer({ userId, userTier }: ChatStreamerProps) {
 			break;
 	}
 
-	// TODO: SHOULD NO PASS USERID FROM CLIENT NEVER TRUST IT
-	const { check, status } = useRateLimit(getRateLimitApi, {
-		key: userId,
-	});
+	const { check, status } = useRateLimit(getRateLimitApi);
 
 	const now = Date.now();
 	const checked = check(now, 0);

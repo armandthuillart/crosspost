@@ -1,12 +1,11 @@
+import { getStaticAuth } from "@convex-dev/better-auth";
 import { v } from "convex/values";
 import { subDays } from "date-fns";
-import { components } from "../_generated/api";
 import { authComponent, createAuth } from "../auth";
 import { internal } from "./_generated/api";
 import { internalMutation, mutation } from "./_generated/server";
 
-// biome-ignore lint/suspicious/noExplicitAny: static instance for BetterAuth schema generation
-export const auth = createAuth({} as any);
+export const auth = getStaticAuth(createAuth);
 
 export const signInAnonymous = mutation({
 	args: {},
@@ -30,9 +29,9 @@ export const deleteAnonymousUsers = internalMutation({
 
 		await Promise.all(
 			batch.page.map(async (user) => {
-				await ctx.runMutation(components.agent.users.deleteAllForUserIdAsync, {
-					userId: user._id,
-				});
+				// await ctx.runMutation(components.agent.users.deleteAllForUserIdAsync, {
+				// 	userId: user._id,
+				// });
 			}),
 		);
 

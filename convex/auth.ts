@@ -3,12 +3,12 @@ import { convex } from "@convex-dev/better-auth/plugins";
 import { checkout, polar, portal } from "@polar-sh/better-auth";
 import { type BetterAuthOptions, betterAuth } from "better-auth";
 import { anonymous } from "better-auth/plugins";
-import { Effect } from "effect";
+import { v } from "convex/values";
 import { polarClient } from "../lib/polar";
 import type { Tier } from "../lib/types";
-import { api, components } from "./_generated/api";
+import { api, components, internal } from "./_generated/api";
 import type { DataModel } from "./_generated/dataModel";
-import { mutation, query } from "./_generated/server";
+import { internalMutation, mutation, query } from "./_generated/server";
 import authSchema from "./betterAuth/schema";
 
 const siteUrl = process.env.SITE_URL;
@@ -21,24 +21,23 @@ export const authComponent = createClient<DataModel, typeof authSchema>(
 		},
 		triggers: {
 			user: {
-				onCreate: async (_, { _id: externalId, email, isAnonymous }) =>
-					Effect.runPromise(
-						Effect.gen(function* () {
-							if (!isAnonymous) {
-								const customerState = yield* Effect.promise(() =>
-									polarClient.customers.getStateExternal({ externalId }),
-								);
+				onCreate: async (_, { _id: externalId, email, isAnonymous }) => {
+					if (!isAnonymous) {
+						const customerState = await polarClient.customers.getStateExternal({
+							externalId,
+						});
 
-								if (!customerState) {
-									yield* Effect.promise(() =>
-										polarClient.customers.create({ email, externalId }),
-									);
-								}
-							}
-						}),
-					),
+						if (!customerState) {
+							await polarClient.customers.create({ email, externalId });
+						}
+					}
+				},
 				onDelete: async (ctx, { _id: userId }) => {
-					// Cleanup database, chats, etc.
+					await ctx.scheduler.runAfter(
+						0,
+						internal.auth.deleteAllForUserIdAsync,
+						{ userId },
+					);
 				},
 			},
 		},
@@ -122,4 +121,26 @@ export const getUser = query({
 
 		return { isAnonymous, userId: userId as string, userTier };
 	},
+});
+
+export const deleteAllForUserIdAsync = internalMutation({
+	args: { userId: v.string() },
+	handler: async (ctx, { userId }) => {
+		for await (const { _id: draftId } of ctx.db
+			.query("drafts")
+			.withIndex("by_user", (q) => q.eq("userId", userId))) {
+			for await (const { _id: versionId } of ctx.db
+				.query("versions")
+				.withIndex("by_draft_platform", (q) => q.eq("draftId", draftId))) {
+				await ctx.db.delete(versionId);
+			}
+
+			await ctx.db.delete(draftId);
+		}
+
+		await ctx.runMutation(components.agent.users.deleteAllForUserIdAsync, {
+			userId,
+		});
+	},
+	returns: v.null(),
 });

@@ -6,30 +6,39 @@ import {
 } from "@convex-dev/agent";
 import { paginationOptsValidator } from "convex/server";
 import { v } from "convex/values";
+import { TITLE_MODEL } from "../lib/gateway";
+import { TITLE_SYSTEM_PROMPT } from "../lib/prompts";
 import { components, internal } from "./_generated/api";
 import { internalAction, mutation, query } from "./_generated/server";
 import { myAgent } from "./agents";
 
 export const createChat = mutation({
-	args: {},
-	handler: async (ctx) => {
-		return await createThread(ctx, components.agent, {
+	args: { prompt: v.string() },
+	handler: async (ctx, { prompt }) => {
+		const threadId = await createThread(ctx, components.agent, {
 			title: "New Chat",
 		});
+
+		await ctx.scheduler.runAfter(0, internal.chat.renameChat, {
+			prompt,
+			threadId,
+		});
+
+		return threadId;
 	},
 });
 
-export const resumeChat = mutation({
+export const sendMessage = mutation({
 	args: { prompt: v.string(), threadId: v.string() },
 	handler: async (ctx, { prompt, threadId }) => {
-		const { messageId } = await myAgent.saveMessage(ctx, {
+		const { messageId: promptMessageId } = await myAgent.saveMessage(ctx, {
 			prompt,
-			skipEmbeddings: true, // Will be generated lazily when streaming text.
+			skipEmbeddings: true, // We're in a mutation, so we'll create the embeddings lazily when streaming text.
 			threadId,
 		});
 
 		await ctx.scheduler.runAfter(0, internal.chat.streamChat, {
-			promptMessageId: messageId,
+			promptMessageId,
 			threadId,
 		});
 	},
@@ -50,12 +59,12 @@ export const streamChat = internalAction({
 });
 
 export const renameChat = internalAction({
-	args: { promptMessageId: v.string(), threadId: v.string() },
-	handler: async (ctx, { threadId, promptMessageId }) => {
+	args: { prompt: v.string(), threadId: v.string() },
+	handler: async (ctx, { prompt, threadId }) => {
 		const { text } = await myAgent.generateText(
 			ctx,
 			{ threadId },
-			{ promptMessageId },
+			{ model: TITLE_MODEL, prompt, system: TITLE_SYSTEM_PROMPT },
 		);
 
 		await myAgent.updateThreadMetadata(ctx, {

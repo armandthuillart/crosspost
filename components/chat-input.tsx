@@ -71,7 +71,7 @@ export function ChatInput({
 		},
 	);
 
-	const sendMessage = useMutation(api.chat.resumeChat).withOptimisticUpdate(
+	const sendMessage = useMutation(api.chat.sendMessage).withOptimisticUpdate(
 		optimisticallySendMessage(api.chat.loadChat),
 	);
 
@@ -82,7 +82,7 @@ export function ChatInput({
 			if (!isDirty) return;
 
 			if (!threadId) {
-				threadId = await createChat();
+				threadId = await createChat({ prompt });
 			}
 
 			void sendMessage({ prompt, threadId });

@@ -1,7 +1,9 @@
 "use client";
 
 import { optimisticallySendMessage } from "@convex-dev/agent/react";
+import { isRateLimitError } from "@convex-dev/rate-limiter";
 import { useMutation } from "convex/react";
+import { useAtom } from "jotai";
 import {
 	type FormEvent,
 	type KeyboardEvent,
@@ -19,6 +21,7 @@ import {
 import { api } from "@/convex/_generated/api";
 import { useAutoFocus } from "@/hooks/use-auto-focus";
 import { useTypewriter } from "@/hooks/use-typewriter";
+import { showStreamerAtom } from "@/lib/atoms";
 
 const TEXTAREA_MIN_HEIGHT = 24;
 const TEXTAREA_EXPANDED_MIN_HEIGHT = 48;
@@ -28,6 +31,7 @@ interface ChatInputProps {
 	isChat: boolean;
 	threadId: string;
 	isStreaming: boolean;
+	hasSubmitted: boolean;
 }
 
 export function ChatInput({
@@ -35,9 +39,11 @@ export function ChatInput({
 	isChat,
 	threadId,
 	isStreaming,
+	hasSubmitted,
 }: ChatInputProps) {
 	const inputRef = useRef<HTMLTextAreaElement>(null);
 
+	const [, showStreamer] = useAtom(showStreamerAtom);
 	const [prompt, setPrompt] = useState("");
 	const [threshold, setThreshold] = useState<number | null>(null);
 	const [isExpanded, setIsExpanded] = useState(false);
@@ -65,6 +71,10 @@ export function ChatInput({
 			void sendMessage({
 				prompt,
 				threadId,
+			}).catch((e) => {
+				if (isRateLimitError(e)) {
+					showStreamer(true);
+				}
 			});
 
 			window.history.replaceState(null, "", `/c/${threadId}`);
@@ -72,7 +82,7 @@ export function ChatInput({
 			setPrompt("");
 			resetHeight();
 		},
-		[prompt, isDirty, threadId, sendMessage, resetHeight],
+		[prompt, isDirty, threadId, sendMessage, resetHeight, showStreamer],
 	);
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: intentionally depend only on prompt to avoid feedback loops from setState
@@ -192,7 +202,7 @@ export function ChatInput({
 					onClick={() => abortStreamByOrder({ order, threadId })}
 				/>
 			) : (
-				<PromptInputSubmit disabled={!isDirty || isStreaming} />
+				<PromptInputSubmit disabled={!isDirty || hasSubmitted} />
 			)}
 		</PromptInput>
 	);

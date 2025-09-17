@@ -73,6 +73,7 @@ export function Chat({ threadId, userTier, isAnonymous }: ChatProps) {
 								/>
 							)}
 							<ChatInput
+								hasSubmitted={hasSubmitted}
 								isChat={isChat}
 								isStreaming={isStreaming}
 								order={order}

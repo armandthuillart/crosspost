@@ -82,7 +82,9 @@ export function useSmoothText(
 			}
 		}
 
-		state.tick = Math.max(state.tick, Date.now() - MS_PER_FRAME);
+		// Ensure the first immediate update has at least one frame of delta so
+		// very short, fast-finishing replies render at least one character.
+		state.tick = Math.min(state.tick, Date.now() - MS_PER_FRAME);
 		state.lastUpdate = Date.now();
 		state.lastUpdateLength = text.length;
 
@@ -90,6 +92,20 @@ export function useSmoothText(
 		const interval = setInterval(updateText, MS_PER_FRAME);
 		return () => clearInterval(interval);
 	}, [text, isStreaming, updateText]);
+
+	// Finalization flush: when streaming ends or streaming was never started,
+	// immediately show the full text and synchronize the internal cursor.
+	useEffect(() => {
+		if (startStreaming) return;
+		const state = stateRef.current;
+		if (state.cursor !== text.length || visibleText !== text) {
+			state.cursor = text.length;
+			state.lastUpdate = Date.now();
+			state.lastUpdateLength = text.length;
+			state.tick = Date.now();
+			setVisibleText(text || "");
+		}
+	}, [startStreaming, text, visibleText]);
 
 	return [
 		visibleText,

@@ -6,6 +6,17 @@ import { components } from "./_generated/api";
 import { createDraft, createPostIntent } from "./tools";
 
 export const chatAgent = new Agent(components.agent, {
+	contextOptions: {
+		recentMessages: 40,
+		searchOptions: {
+			limit: 20,
+			messageRange: { after: 2, before: 3 },
+			textSearch: true,
+			vectorScoreThreshold: 0.25,
+			vectorSearch: true,
+		},
+		searchOtherThreads: true,
+	},
 	instructions: CHAT_SYSTEM_PROMPT,
 	languageModel: CHAT_MODEL,
 	name: appName,

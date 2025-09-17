@@ -9,7 +9,7 @@ import { useAtom } from "jotai";
 import { AnimatePresence, motion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { CloseIcon } from "@/components/ui/icons";
-import { chatStreamerAtom } from "@/lib/atoms";
+import { showStreamerAtom } from "@/lib/atoms";
 import { authClient } from "@/lib/auth-client";
 import { api } from "../convex/_generated/api";
 
@@ -24,7 +24,7 @@ export function ChatStreamer({
 	isFree,
 	isAnonymous,
 }: ChatStreamerProps) {
-	const [isHidden, setIsHidden] = useAtom(chatStreamerAtom);
+	const [isVisible, setIsVisible] = useAtom(showStreamerAtom);
 
 	let getRateLimitApi: GetRateLimitValueQuery =
 		api.rateLimiting.getAnonymousRateLimit;
@@ -42,18 +42,15 @@ export function ChatStreamer({
 	const now = Date.now();
 	const count = check(now, 0);
 
-	if (!status || !count || !count.value) {
+	const remainingCount = count && Math.max(0, count.value);
+
+	if (remainingCount === undefined) {
 		return null;
 	}
 
-	const remainingCount = Math.max(0, count.value);
-
-	// When 10 or less remaining, show a banner.
-	const isVisible = !isHidden && remainingCount <= 10;
-
 	const description = (() => {
-		if (!status.retryAt) return null;
-		const date = new Date(status.retryAt);
+		if (!status?.retryAt) return null;
+		const date = new Date(status?.retryAt);
 
 		if (isPro) {
 			return `Will reset on ${format(date, "LLLL, d yyyy")}.`;
@@ -87,7 +84,7 @@ export function ChatStreamer({
 							initial={{ opacity: 0, y: 8 }}
 							transition={{ bounce: 0.1, duration: 0.35, type: "spring" }}
 						>
-							<div className="flex items-center justify-between gap-3 rounded-xl border bg-material p-3 shadow-2xs">
+							<div className="flex items-center justify-between gap-3 rounded-xl border bg-material p-3 pl-4 shadow-2xs">
 								<div className="flex flex-col text-sm">
 									<span className="font-medium">
 										{remainingCount === 0
@@ -96,7 +93,7 @@ export function ChatStreamer({
 									</span>
 									<span className="text-muted-foreground">
 										{remainingCount === 0 && description
-											? description
+											? `${description} ${isAnonymous ? "Sign up to get more." : ""}`
 											: isAnonymous
 												? `You have ${remainingCount} ${remainingCount === 1 ? "message" : "messages"} left. Sign up to get more.`
 												: `You have ${remainingCount} ${remainingCount === 1 ? "message" : "messages"} left.`}
@@ -104,24 +101,23 @@ export function ChatStreamer({
 								</div>
 
 								<div className="flex items-center gap-3">
-									{isVisible &&
-										(isAnonymous ? (
-											<Button
-												className="rounded-full"
-												onClick={handleSignIn}
-												size="sm"
-											>
-												Sign up for free
-											</Button>
-										) : (
-											<Button className="rounded-full" size="sm">
-												Upgrade
-											</Button>
-										))}
+									{isAnonymous ? (
+										<Button
+											className="rounded-full"
+											onClick={handleSignIn}
+											size="sm"
+										>
+											Sign up for free
+										</Button>
+									) : (
+										<Button className="rounded-full" size="sm">
+											Upgrade
+										</Button>
+									)}
 
 									<Button
 										className="size-8 rounded-full"
-										onClick={() => setIsHidden(true)}
+										onClick={() => setIsVisible(false)}
 										size="icon"
 										variant="ghost"
 									>

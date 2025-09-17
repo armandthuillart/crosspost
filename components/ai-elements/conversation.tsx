@@ -6,7 +6,7 @@ import { type ComponentProps, memo, useCallback } from "react";
 import { StickToBottom, useStickToBottomContext } from "use-stick-to-bottom";
 import { Button, type ButtonProps } from "@/components/ui/button";
 import { ArrowDownIcon } from "@/components/ui/icons";
-import { chatStreamerAtom } from "@/lib/atoms";
+import { showStreamerAtom } from "@/lib/atoms";
 import { cn } from "@/lib/utils";
 
 function Conversation({
@@ -45,7 +45,7 @@ function ConversationContent({
 function PureConversationScrollButton({ className, ...props }: ButtonProps) {
 	const { isAtBottom, scrollToBottom } = useStickToBottomContext();
 
-	const [isHidden] = useAtom(chatStreamerAtom);
+	const [isHidden] = useAtom(showStreamerAtom);
 
 	const handleScroll = useCallback(() => {
 		scrollToBottom();

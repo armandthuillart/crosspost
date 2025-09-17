@@ -3,6 +3,7 @@ import { v } from "convex/values";
 import { subDays } from "date-fns";
 import { createAuth } from "../auth";
 import { api, internal } from "./_generated/api";
+import type { Id } from "./_generated/dataModel";
 import { internalMutation } from "./_generated/server";
 
 export const auth = getStaticAuth(createAuth);
@@ -40,4 +41,17 @@ export const deleteInactiveAnonymousUsers = internalMutation({
 			);
 		}
 	},
+});
+
+export const saveTier = internalMutation({
+	args: {
+		tier: v.union(v.literal("anonymous"), v.literal("free"), v.literal("pro")),
+		userId: v.string(),
+	},
+	handler: async (ctx, { tier, userId }) => {
+		console.log("saveTier in the saveTier mutation", tier, userId);
+
+		await ctx.db.patch(userId as Id<"user">, { tier });
+	},
+	returns: v.null(),
 });

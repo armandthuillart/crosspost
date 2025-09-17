@@ -10,7 +10,7 @@ import { anonymous } from "better-auth/plugins";
 import { v } from "convex/values";
 import { polarClient } from "../lib/polar";
 import type { Tier } from "../lib/types";
-import { api, components, internal } from "./_generated/api";
+import { components, internal } from "./_generated/api";
 import type { DataModel } from "./_generated/dataModel";
 import { internalMutation, query } from "./_generated/server";
 import authSchema from "./betterAuth/schema";
@@ -28,14 +28,12 @@ export const authComponent = createClient<DataModel, typeof authSchema>(
 		},
 		triggers: {
 			user: {
-				onCreate: async (ctx, { _id: userId, isAnonymous }) => {
-					if (isAnonymous) {
-						await ctx.runMutation(api.betterAuth.adapter.updateOne, {
-							input: {
-								model: "user",
-								update: { tier: "anonymous" satisfies Tier },
-								where: [{ field: "id", operator: "eq", value: userId }],
-							},
+				onCreate: async (ctx, newUser) => {
+					console.log("newUser in the onCreate trigger", newUser);
+					if (newUser.isAnonymous) {
+						await ctx.scheduler.runAfter(0, internal.betterAuth.auth.saveTier, {
+							tier: "anonymous" satisfies Tier,
+							userId: newUser._id,
 						});
 					}
 				},

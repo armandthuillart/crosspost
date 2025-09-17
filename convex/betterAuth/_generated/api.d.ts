@@ -85,6 +85,7 @@ export type Mounts = {
                 image?: null | string;
                 isAnonymous?: null | boolean;
                 name: string;
+                tier?: null | string;
                 updatedAt: number;
                 userId?: null | string;
               };
@@ -217,6 +218,7 @@ export type Mounts = {
                   | "image"
                   | "isAnonymous"
                   | "name"
+                  | "tier"
                   | "updatedAt"
                   | "userId"
                   | "id";
@@ -395,6 +397,7 @@ export type Mounts = {
                   | "image"
                   | "isAnonymous"
                   | "name"
+                  | "tier"
                   | "updatedAt"
                   | "userId"
                   | "id";
@@ -663,6 +666,7 @@ export type Mounts = {
                 image?: null | string;
                 isAnonymous?: null | boolean;
                 name?: string;
+                tier?: null | string;
                 updatedAt?: number;
                 userId?: null | string;
               };
@@ -675,6 +679,7 @@ export type Mounts = {
                   | "image"
                   | "isAnonymous"
                   | "name"
+                  | "tier"
                   | "updatedAt"
                   | "userId"
                   | "id";
@@ -886,6 +891,7 @@ export type Mounts = {
                 image?: null | string;
                 isAnonymous?: null | boolean;
                 name?: string;
+                tier?: null | string;
                 updatedAt?: number;
                 userId?: null | string;
               };
@@ -898,6 +904,7 @@ export type Mounts = {
                   | "image"
                   | "isAnonymous"
                   | "name"
+                  | "tier"
                   | "updatedAt"
                   | "userId"
                   | "id";

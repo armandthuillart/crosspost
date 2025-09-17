@@ -17,7 +17,6 @@ import type * as betterAuth_auth from "../betterAuth/auth.js";
 import type * as betterAuth_crons from "../betterAuth/crons.js";
 import type * as betterAuth_generatedSchema from "../betterAuth/generatedSchema.js";
 import type * as chat from "../chat.js";
-import type * as customers from "../customers.js";
 import type * as drafts from "../drafts.js";
 import type * as http from "../http.js";
 import type * as posts from "../posts.js";
@@ -48,7 +47,6 @@ declare const fullApi: ApiFromModules<{
   "betterAuth/crons": typeof betterAuth_crons;
   "betterAuth/generatedSchema": typeof betterAuth_generatedSchema;
   chat: typeof chat;
-  customers: typeof customers;
   drafts: typeof drafts;
   http: typeof http;
   posts: typeof posts;
@@ -2953,6 +2951,7 @@ export declare const components: {
                   image?: null | string;
                   isAnonymous?: null | boolean;
                   name: string;
+                  tier?: null | string;
                   updatedAt: number;
                   userId?: null | string;
                 };
@@ -3085,6 +3084,7 @@ export declare const components: {
                     | "image"
                     | "isAnonymous"
                     | "name"
+                    | "tier"
                     | "updatedAt"
                     | "userId"
                     | "id";
@@ -3263,6 +3263,7 @@ export declare const components: {
                     | "image"
                     | "isAnonymous"
                     | "name"
+                    | "tier"
                     | "updatedAt"
                     | "userId"
                     | "id";
@@ -3531,6 +3532,7 @@ export declare const components: {
                   image?: null | string;
                   isAnonymous?: null | boolean;
                   name?: string;
+                  tier?: null | string;
                   updatedAt?: number;
                   userId?: null | string;
                 };
@@ -3543,6 +3545,7 @@ export declare const components: {
                     | "image"
                     | "isAnonymous"
                     | "name"
+                    | "tier"
                     | "updatedAt"
                     | "userId"
                     | "id";
@@ -3754,6 +3757,7 @@ export declare const components: {
                   image?: null | string;
                   isAnonymous?: null | boolean;
                   name?: string;
+                  tier?: null | string;
                   updatedAt?: number;
                   userId?: null | string;
                 };
@@ -3766,6 +3770,7 @@ export declare const components: {
                     | "image"
                     | "isAnonymous"
                     | "name"
+                    | "tier"
                     | "updatedAt"
                     | "userId"
                     | "id";

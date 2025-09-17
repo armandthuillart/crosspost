@@ -53,8 +53,12 @@ export function ChatMessages({ messages, hasSentMessage }: ChatMessagesProps) {
 								key={message.id}
 							>
 								<MessageContent>
-									{message.parts.map((part) => (
-										<MessagePart part={part} role={message.role} />
+									{message.parts.map((part, i) => (
+										<MessagePart
+											key={`${message.id}-${i}`}
+											part={part}
+											role={message.role}
+										/>
 									))}
 									<Actions>
 										<Action

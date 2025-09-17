@@ -60,7 +60,7 @@ export function Chat({ threadId, userTier, isAnonymous }: ChatProps) {
 			<ChatHeader isAnonymous={isAnonymous} isPro={userTier === "pro"} />
 
 			<div className="flex h-full flex-col overflow-y-scroll group-data-chat/chat:gap-32">
-				<div className="flex h-full flex-col overflow-hidden px-4 group-data-chat/chat:h-full group-data-chat/chat:justify-center max-md:shrink-0 group-not-data-chat/chat:md:gap-6 group-not-data-chat/chat:md:pt-24 group-not-data-chat/chat:lg:pt-[30dvh]">
+				<div className="flex h-full flex-col overflow-hidden group-data-chat/chat:h-full group-data-chat/chat:justify-center max-md:shrink-0 group-not-data-chat/chat:md:gap-6 group-not-data-chat/chat:md:pt-24 group-not-data-chat/chat:lg:pt-[30dvh]">
 					{!isChat ? (
 						<ChatGreetings />
 					) : (

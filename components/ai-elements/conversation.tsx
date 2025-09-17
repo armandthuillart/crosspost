@@ -33,7 +33,10 @@ function ConversationContent({
 }: StickToBottom.ContentProps) {
 	return (
 		<StickToBottom.Content
-			className={cn("flex w-full flex-col overflow-hidden pb-34", className)}
+			className={cn(
+				"flex w-full flex-col overflow-hidden @7xl/chat:pt-26 pb-34",
+				className,
+			)}
 			{...props}
 		/>
 	);

@@ -21,7 +21,7 @@ export function ChatHeader({ isPro, isAnonymous }: ChatHeaderProps) {
 
 	if (isAnonymous) {
 		return (
-			<header className="inset-0 bottom-auto z-50 flex w-full items-center justify-between p-2 group-not-data-chat/chat:absolute group-data-chat/chat:sticky @max-8xl/chat:group-data-chat/chat:bg-background">
+			<header className="absolute @max-8xl/chat:sticky inset-0 bottom-auto z-50 flex w-full items-center justify-between p-2 @max-8xl/chat:group-data-chat/chat:bg-background">
 				<Button
 					className="group/trigger"
 					onClick={() => router.push("/")}

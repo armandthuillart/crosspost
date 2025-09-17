@@ -13,18 +13,19 @@ const variants: Variants = {
 
 interface MessageProps extends HTMLMotionProps<"div"> {
 	from: UIMessage["role"];
+	animate?: boolean;
 }
 
-function Message({ from, className, ...props }: MessageProps) {
+function Message({ from, animate = false, className, ...props }: MessageProps) {
 	return (
 		<motion.div
-			animate={from === "user" && "animate"}
+			animate={animate ? "animate" : undefined}
 			className={cn(
 				"group/message px-4 data-user:pt-3 not-first:data-user:pt-12",
 				className,
 			)}
-			exit={from === "user" ? "exit" : undefined}
-			initial={from === "user" && "initial"}
+			exit={animate ? "exit" : undefined}
+			initial={animate ? "initial" : undefined}
 			transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
 			variants={variants}
 			{...props}

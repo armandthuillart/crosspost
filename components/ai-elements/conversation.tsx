@@ -101,6 +101,7 @@ function PureConversationLoadMoreButton({
 				className={cn("mx-auto rounded-full", className)}
 				isLoading={isLoadingMore}
 				onClick={() => loadMore(10)}
+				size="sm"
 				variant="outline"
 				{...props}
 			>

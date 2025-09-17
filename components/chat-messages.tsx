@@ -7,7 +7,6 @@ import { Action, Actions } from "@/components/ai-elements/actions";
 import {
 	Conversation,
 	ConversationContent,
-	ConversationLoadMoreButton,
 	ConversationScrollButton,
 } from "@/components/ai-elements/conversation";
 import { Message, MessageContent } from "@/components/ai-elements/message";
@@ -17,20 +16,11 @@ import { ShiningText } from "@/components/ui/shining-text";
 import { attr } from "@/lib/utils";
 
 interface ChatMessagesProps {
-	loadMore: (numItems: number) => void;
 	messages: Array<UIMessage>;
-	canLoadMore: boolean;
-	isLoadingMore: boolean;
 	hasSentMessage: boolean;
 }
 
-export function ChatMessages({
-	messages,
-	loadMore,
-	canLoadMore,
-	isLoadingMore,
-	hasSentMessage,
-}: ChatMessagesProps) {
+export function ChatMessages({ messages, hasSentMessage }: ChatMessagesProps) {
 	const [isCopied, setIsCopied] = useState<string | null>(null);
 
 	async function handleCopy(message: UIMessage) {
@@ -42,34 +32,29 @@ export function ChatMessages({
 		}, 2000);
 	}
 
-	const isLastFromUser = messages.at(-1)?.role === "user";
+	const isLast = messages.at(-1)?.role === "user";
 
 	return (
 		<Conversation>
-			<ConversationLoadMoreButton
-				canLoadMore={canLoadMore}
-				isLoadingMore={isLoadingMore}
-				loadMore={loadMore}
-			/>
 			<ConversationContent>
 				<AnimatePresence initial={false} mode="popLayout">
 					{messages.map((message, i) => {
 						const isLast = i === messages.length - 1;
+						const fromUser = message.role === "user";
 						const hasCopied = isCopied === message.id;
+						const isPending = message.status === "pending";
+
 						return (
 							<Message
 								{...attr("scroll-padding", isLast && hasSentMessage)}
 								{...attr("user", message.role === "user")}
+								animate={fromUser && isPending}
 								from={message.role}
 								key={message.id}
 							>
 								<MessageContent>
-									{message.parts.map((part, i) => (
-										<MessagePart
-											key={`${message.id}-${i}`}
-											part={part}
-											role={message.role}
-										/>
+									{message.parts.map((part) => (
+										<MessagePart part={part} role={message.role} />
 									))}
 									<Actions>
 										<Action
@@ -84,7 +69,7 @@ export function ChatMessages({
 						);
 					})}
 
-					{isLastFromUser && hasSentMessage && (
+					{isLast && hasSentMessage && (
 						<Message from="assistant">
 							<MessageContent>
 								<ShiningText text="Thinking..." />

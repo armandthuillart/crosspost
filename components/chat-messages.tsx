@@ -13,6 +13,7 @@ import {
 import { Message, MessageContent } from "@/components/ai-elements/message";
 import { MessagePart } from "@/components/chat-message-part";
 import { CopyIcon, TickIcon } from "@/components/ui/icons";
+import { ShiningText } from "@/components/ui/shining-text";
 import { attr } from "@/lib/utils";
 
 interface ChatMessagesProps {
@@ -40,6 +41,8 @@ export function ChatMessages({
 			setIsCopied(null);
 		}, 2000);
 	}
+
+	const isLastFromUser = messages.at(-1)?.role === "user";
 
 	return (
 		<Conversation>
@@ -80,6 +83,14 @@ export function ChatMessages({
 							</Message>
 						);
 					})}
+
+					{isLastFromUser && hasSentMessage && (
+						<Message from="assistant">
+							<MessageContent>
+								<ShiningText text="Thinking..." />
+							</MessageContent>
+						</Message>
+					)}
 				</AnimatePresence>
 			</ConversationContent>
 			<ConversationScrollButton />

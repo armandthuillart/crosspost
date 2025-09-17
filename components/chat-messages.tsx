@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Action, Actions } from "@/components/ai-elements/actions";
 import {
 	Conversation,
+	ConversationAutoLoadOnTop,
 	ConversationContent,
 	ConversationScrollButton,
 } from "@/components/ai-elements/conversation";
@@ -17,10 +18,19 @@ import { attr } from "@/lib/utils";
 
 interface ChatMessagesProps {
 	messages: Array<UIMessage>;
+	loadMore: (numItems: number) => void;
+	canLoadMore: boolean;
+	isLoadingMore: boolean;
 	hasSentMessage: boolean;
 }
 
-export function ChatMessages({ messages, hasSentMessage }: ChatMessagesProps) {
+export function ChatMessages({
+	loadMore,
+	messages,
+	canLoadMore,
+	isLoadingMore,
+	hasSentMessage,
+}: ChatMessagesProps) {
 	const [isCopied, setIsCopied] = useState<string | null>(null);
 
 	async function handleCopy(message: UIMessage) {
@@ -36,6 +46,11 @@ export function ChatMessages({ messages, hasSentMessage }: ChatMessagesProps) {
 
 	return (
 		<Conversation>
+			<ConversationAutoLoadOnTop
+				canLoadMore={canLoadMore}
+				isLoadingMore={isLoadingMore}
+				loadMore={loadMore}
+			/>
 			<ConversationContent>
 				<AnimatePresence initial={false} mode="popLayout">
 					{messages.map((message, i) => {

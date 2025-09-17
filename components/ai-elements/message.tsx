@@ -1,14 +1,26 @@
 "use client";
 
 import type { UIMessage } from "@convex-dev/agent/react";
-import { type HTMLMotionProps, motion, type Variants } from "motion/react";
+import {
+	type HTMLMotionProps,
+	motion,
+	type Transition,
+	type Variants,
+} from "motion/react";
 import type { HTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
 
 const variants: Variants = {
-	animate: { filter: "blur(0px)", opacity: 1, y: 0 },
-	exit: { filter: "blur(12px)", opacity: 0, y: "80dvh" },
-	initial: { filter: "blur(12px)", opacity: 0, y: "80dvh" },
+	animate: { filter: "blur(0px)", opacity: 1, scale: 1, y: 0 },
+	exit: { filter: "blur(12px)", opacity: 0, scale: 0.9, y: "80dvh" },
+	initial: { filter: "blur(12px)", opacity: 0, scale: 0.9, y: "80dvh" },
+};
+
+const transition: Transition = {
+	default: { duration: 0.15 },
+	duration: 0.5,
+	ease: [0.32, 0.72, 0, 1],
+	layout: { bounce: 0.4, duration: 1, type: "spring" },
 };
 
 interface MessageProps extends HTMLMotionProps<"div"> {
@@ -26,7 +38,7 @@ function Message({ from, animate = false, className, ...props }: MessageProps) {
 			)}
 			exit={animate ? "exit" : undefined}
 			initial={animate ? "initial" : undefined}
-			transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
+			transition={transition}
 			variants={variants}
 			{...props}
 		/>

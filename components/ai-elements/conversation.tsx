@@ -2,7 +2,13 @@
 
 import { useAtom } from "jotai";
 import { AnimatePresence, motion } from "motion/react";
-import { type ComponentProps, memo, useCallback } from "react";
+import {
+	type ComponentProps,
+	memo,
+	useCallback,
+	useEffect,
+	useRef,
+} from "react";
 import { StickToBottom, useStickToBottomContext } from "use-stick-to-bottom";
 import { Button, type ButtonProps } from "@/components/ui/button";
 import { ArrowDownIcon } from "@/components/ui/icons";
@@ -18,7 +24,7 @@ function Conversation({
 		<div className="-mb-7 flex h-full overflow-hidden" {...props}>
 			<StickToBottom
 				className={cn("relative flex-1 overflow-y-auto", className)}
-				initial="smooth"
+				initial="instant"
 				resize="smooth"
 			>
 				{children}
@@ -45,7 +51,7 @@ function ConversationContent({
 function PureConversationScrollButton({ className, ...props }: ButtonProps) {
 	const { isAtBottom, scrollToBottom } = useStickToBottomContext();
 
-	const [isHidden] = useAtom(showStreamerAtom);
+	const [isVisible] = useAtom(showStreamerAtom);
 
 	const handleScroll = useCallback(() => {
 		scrollToBottom();
@@ -64,7 +70,7 @@ function PureConversationScrollButton({ className, ...props }: ButtonProps) {
 					<Button
 						className={cn(
 							"-translate-x-1/2 absolute bottom-12 left-1/2 z-20 rounded-full hover:bg-muted",
-							!isHidden && "bottom-32",
+							isVisible && "bottom-32",
 							className,
 						)}
 						onClick={handleScroll}
@@ -82,40 +88,75 @@ function PureConversationScrollButton({ className, ...props }: ButtonProps) {
 
 const ConversationScrollButton = memo(PureConversationScrollButton);
 
-interface ConversationLoadMoreButtonProps extends ButtonProps {
+interface ConversationLoadMoreButtonProps {
 	loadMore: (numItems: number) => void;
 	canLoadMore: boolean;
 	isLoadingMore: boolean;
 }
 
-function PureConversationLoadMoreButton({
+function ConversationAutoLoadOnTop({
 	isLoadingMore,
 	canLoadMore,
-	className,
 	loadMore,
-	...props
 }: ConversationLoadMoreButtonProps) {
-	return (
-		canLoadMore && (
-			<Button
-				className={cn("mx-auto rounded-full", className)}
-				isLoading={isLoadingMore}
-				onClick={() => loadMore(10)}
-				size="sm"
-				variant="outline"
-				{...props}
-			>
-				Load more
-			</Button>
-		)
-	);
-}
+	const { scrollRef } = useStickToBottomContext();
+	const loadingRef = useRef(false);
 
-const ConversationLoadMoreButton = memo(PureConversationLoadMoreButton);
+	console.log(
+		"ConversationAutoLoadOnTop - canLoadMore:",
+		canLoadMore,
+		"isLoadingMore:",
+		isLoadingMore,
+	);
+
+	useEffect(() => {
+		if (!isLoadingMore) {
+			console.log("ConversationAutoLoadOnTop - resetting loadingRef to false");
+			loadingRef.current = false;
+		}
+	}, [isLoadingMore]);
+
+	useEffect(() => {
+		const el = scrollRef?.current;
+		if (!el) {
+			console.log("ConversationAutoLoadOnTop - scrollRef not available");
+			return;
+		}
+
+		console.log("ConversationAutoLoadOnTop - setting up scroll listener");
+
+		const onScroll = () => {
+			const scrollTop = el.scrollTop;
+			console.log("ConversationAutoLoadOnTop - scroll event:", {
+				canLoadMore,
+				isLoadingMore,
+				loadingRef: loadingRef.current,
+				scrollTop,
+				shouldTrigger: scrollTop <= 24 && canLoadMore && !loadingRef.current,
+				threshold: 24,
+			});
+
+			// tweak threshold as you prefer
+			if (scrollTop <= 24 && canLoadMore && !loadingRef.current) {
+				console.log("ConversationAutoLoadOnTop - triggering loadMore!");
+				loadingRef.current = true;
+				loadMore(10);
+			}
+		};
+
+		el.addEventListener("scroll", onScroll, { passive: true });
+		return () => {
+			console.log("ConversationAutoLoadOnTop - removing scroll listener");
+			el.removeEventListener("scroll", onScroll);
+		};
+	}, [canLoadMore, loadMore, scrollRef]);
+
+	return null;
+}
 
 export {
 	Conversation,
 	ConversationContent,
 	ConversationScrollButton,
-	ConversationLoadMoreButton,
+	ConversationAutoLoadOnTop,
 };

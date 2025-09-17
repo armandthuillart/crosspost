@@ -22,10 +22,28 @@ interface ChatProps {
 export function Chat({ threadId, userTier, isAnonymous }: ChatProps) {
 	const pathname = usePathname();
 
-	const { results: messages } = useUIMessages(
+	const {
+		status,
+		results: messages,
+		loadMore,
+	} = useUIMessages(
 		api.chat.loadChat,
 		{ threadId },
 		{ initialNumItems: 10, stream: true },
+	);
+
+	const canLoadMore = status === "CanLoadMore";
+	const isLoadingMore = status === "LoadingMore";
+
+	console.log(
+		"Chat - status:",
+		status,
+		"canLoadMore:",
+		canLoadMore,
+		"isLoadingMore:",
+		isLoadingMore,
+		"messages.length:",
+		messages.length,
 	);
 
 	const isChat = messages.length > 0 || pathname.includes("/c/");
@@ -60,7 +78,13 @@ export function Chat({ threadId, userTier, isAnonymous }: ChatProps) {
 					{!isChat ? (
 						<ChatGreetings />
 					) : (
-						<ChatMessages hasSentMessage={hasSentMessage} messages={messages} />
+						<ChatMessages
+							canLoadMore={canLoadMore}
+							hasSentMessage={hasSentMessage}
+							isLoadingMore={isLoadingMore}
+							loadMore={loadMore}
+							messages={messages}
+						/>
 					)}
 
 					<LayoutGroup>

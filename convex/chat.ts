@@ -1,4 +1,5 @@
 import {
+	abortStream,
 	createThread,
 	getThreadMetadata,
 	listUIMessages,
@@ -43,7 +44,7 @@ export const sendMessage = mutation({
 		const { userId, userTier } = await verifyOwnership(ctx, threadId);
 
 		await rateLimiter.limit(ctx, userTier, { key: userId, throws: true });
- 
+
 		const { messageId } = await chatAgent.saveMessage(ctx, {
 			prompt,
 			skipEmbeddings: true,
@@ -73,6 +74,25 @@ export const streamChat = internalAction({
 				console.error("chat.tsx: streamChat: error:", error);
 			},
 		});
+	},
+});
+
+export const abortStreamByOrder = mutation({
+	args: { order: v.number(), threadId: v.string() },
+	handler: async (ctx, { order, threadId }) => {
+		await verifyOwnership(ctx, threadId);
+
+		if (
+			await abortStream(ctx, components.agent, {
+				order,
+				reason: "Aborting explicitly",
+				threadId,
+			})
+		) {
+			console.log("Aborted stream", threadId, order);
+		} else {
+			console.log("No stream found", threadId, order);
+		}
 	},
 });
 

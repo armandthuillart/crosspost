@@ -12,6 +12,7 @@ import {
 } from "react";
 import {
 	PromptInput,
+	PromptInputStop,
 	PromptInputSubmit,
 	PromptInputTextarea,
 } from "@/components/ai-elements/prompt-input";
@@ -23,12 +24,18 @@ const TEXTAREA_MIN_HEIGHT = 24;
 const TEXTAREA_EXPANDED_MIN_HEIGHT = 48;
 
 interface ChatInputProps {
+	order: number;
 	isChat: boolean;
 	threadId: string;
 	isStreaming: boolean;
 }
 
-export function ChatInput({ isChat, threadId, isStreaming }: ChatInputProps) {
+export function ChatInput({
+	order,
+	isChat,
+	threadId,
+	isStreaming,
+}: ChatInputProps) {
 	const inputRef = useRef<HTMLTextAreaElement>(null);
 
 	const [prompt, setPrompt] = useState("");
@@ -40,6 +47,8 @@ export function ChatInput({ isChat, threadId, isStreaming }: ChatInputProps) {
 	const sendMessage = useMutation(api.chat.sendMessage).withOptimisticUpdate(
 		optimisticallySendMessage(api.chat.loadChat),
 	);
+
+	const abortStreamByOrder = useMutation(api.chat.abortStreamByOrder);
 
 	const resetHeight = useCallback(() => {
 		if (inputRef.current) {
@@ -178,7 +187,13 @@ export function ChatInput({ isChat, threadId, isStreaming }: ChatInputProps) {
 				ref={inputRef}
 				value={prompt}
 			/>
-			<PromptInputSubmit disabled={!isDirty || isStreaming} />
+			{isStreaming ? (
+				<PromptInputStop
+					onClick={() => abortStreamByOrder({ order, threadId })}
+				/>
+			) : (
+				<PromptInputSubmit disabled={!isDirty || isStreaming} />
+			)}
 		</PromptInput>
 	);
 }

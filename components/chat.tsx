@@ -34,6 +34,7 @@ export function Chat({ threadId, userTier, isAnonymous }: ChatProps) {
 
 	const isChat = messages.length > 0 || pathname.includes("/c/");
 
+	const order = messages.find((m) => m.status === "streaming")?.order ?? 0;
 	const isStreaming = messages.some((m) => m.status === "streaming");
 	const hasSubmitted = messages.some((m) => m.status === "pending");
 
@@ -84,6 +85,7 @@ export function Chat({ threadId, userTier, isAnonymous }: ChatProps) {
 							<ChatInput
 								isChat={isChat}
 								isStreaming={isStreaming}
+								order={order}
 								threadId={threadId}
 							/>
 						</div>

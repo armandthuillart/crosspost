@@ -22,5 +22,8 @@ export const chatAgent = new Agent(components.agent, {
 	name: appName,
 	stopWhen: stepCountIs(3),
 	textEmbeddingModel: TEXT_EMBEDDING_MODEL,
-	tools: { createDraft, createPostIntent },
+	tools: {
+		"create-draft": createDraft,
+		"create-post-intent": createPostIntent,
+	},
 });

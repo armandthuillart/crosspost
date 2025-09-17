@@ -35,17 +35,6 @@ export function Chat({ threadId, userTier, isAnonymous }: ChatProps) {
 	const canLoadMore = status === "CanLoadMore";
 	const isLoadingMore = status === "LoadingMore";
 
-	console.log(
-		"Chat - status:",
-		status,
-		"canLoadMore:",
-		canLoadMore,
-		"isLoadingMore:",
-		isLoadingMore,
-		"messages.length:",
-		messages.length,
-	);
-
 	const isChat = messages.length > 0 || pathname.includes("/c/");
 
 	const order = messages.find((m) => m.status === "streaming")?.order ?? 0;

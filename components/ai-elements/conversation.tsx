@@ -102,51 +102,31 @@ function ConversationAutoLoadOnTop({
 	const { scrollRef } = useStickToBottomContext();
 	const loadingRef = useRef(false);
 
-	console.log(
-		"ConversationAutoLoadOnTop - canLoadMore:",
-		canLoadMore,
-		"isLoadingMore:",
-		isLoadingMore,
-	);
-
 	useEffect(() => {
 		if (!isLoadingMore) {
-			console.log("ConversationAutoLoadOnTop - resetting loadingRef to false");
 			loadingRef.current = false;
 		}
 	}, [isLoadingMore]);
 
 	useEffect(() => {
 		const el = scrollRef?.current;
+
 		if (!el) {
-			console.log("ConversationAutoLoadOnTop - scrollRef not available");
 			return;
 		}
 
-		console.log("ConversationAutoLoadOnTop - setting up scroll listener");
-
 		const onScroll = () => {
 			const scrollTop = el.scrollTop;
-			console.log("ConversationAutoLoadOnTop - scroll event:", {
-				canLoadMore,
-				isLoadingMore,
-				loadingRef: loadingRef.current,
-				scrollTop,
-				shouldTrigger: scrollTop <= 24 && canLoadMore && !loadingRef.current,
-				threshold: 24,
-			});
 
-			// tweak threshold as you prefer
 			if (scrollTop <= 24 && canLoadMore && !loadingRef.current) {
-				console.log("ConversationAutoLoadOnTop - triggering loadMore!");
 				loadingRef.current = true;
 				loadMore(10);
 			}
 		};
 
 		el.addEventListener("scroll", onScroll, { passive: true });
+
 		return () => {
-			console.log("ConversationAutoLoadOnTop - removing scroll listener");
 			el.removeEventListener("scroll", onScroll);
 		};
 	}, [canLoadMore, loadMore, scrollRef]);

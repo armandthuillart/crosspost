@@ -30,10 +30,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
 		<html className="h-full" lang="en" suppressHydrationWarning>
 			{isDevelopment && (
 				<head>
-					<script
+					{/* <script
 						crossOrigin="anonymous"
 						src="//unpkg.com/react-scan/dist/auto.global.js"
-					/>
+					/> */}
 				</head>
 			)}
 			<body

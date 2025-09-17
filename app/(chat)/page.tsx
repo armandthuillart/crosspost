@@ -1,4 +1,4 @@
-import { fetchQuery } from "convex/nextjs";
+import { fetchMutation, fetchQuery } from "convex/nextjs";
 import { redirect } from "next/navigation";
 import { Chat } from "@/components/chat";
 import { getToken } from "@/lib/auth-server";
@@ -8,14 +8,20 @@ export default async function Page() {
 	const token = await getToken();
 
 	if (!token) {
+		// Redirect to our proxy, not directly to "/sign-in/anonymous".
+		// The proxy converts this GET into the required POST and propagates cookies.
 		return redirect("/api/auth/anonymous");
 	}
 
-	const { userId, userTier, isAnonymous } = await fetchQuery(
+	const { userTier, isAnonymous } = await fetchQuery(
 		api.auth.getUser,
 		{},
 		{ token },
 	);
 
-	return <Chat isAnonymous={isAnonymous} userId={userId} userTier={userTier} />;
+	const threadId = await fetchMutation(api.chat.createChat, {}, { token });
+
+	return (
+		<Chat isAnonymous={isAnonymous} threadId={threadId} userTier={userTier} />
+	);
 }

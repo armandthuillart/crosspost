@@ -69,7 +69,10 @@ export function ChatMessages({
 										/>
 									))}
 									<Actions>
-										<Action onClick={() => handleCopy(message)} tooltip="Copy">
+										<Action
+											onClick={() => handleCopy(message)}
+											tooltip={hasCopied ? "Copied" : "Copy"}
+										>
 											{hasCopied ? <TickIcon /> : <CopyIcon />}
 										</Action>
 									</Actions>

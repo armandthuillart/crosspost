@@ -8,12 +8,10 @@ export const createDraft = createTool({
 	args: draftSchema,
 	description: "Create a new draft of a post",
 	handler: async (ctx, { title, versions }): Promise<Id<"drafts">> => {
-		const draftId = await ctx.runMutation(api.drafts.createDraft, {
+		return await ctx.runMutation(api.drafts.createDraft, {
 			title,
 			versions,
 		});
-
-		return draftId;
 	},
 });
 

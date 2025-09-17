@@ -1,6 +1,5 @@
 "use client";
 
-import type { ThreadDoc } from "@convex-dev/agent";
 import { optimisticallySendMessage } from "@convex-dev/agent/react";
 import { useMutation } from "convex/react";
 import {
@@ -24,18 +23,12 @@ const TEXTAREA_MIN_HEIGHT = 24;
 const TEXTAREA_EXPANDED_MIN_HEIGHT = 48;
 
 interface ChatInputProps {
-	userId: string;
 	isChat: boolean;
-	threadId?: string;
+	threadId: string;
 	isStreaming: boolean;
 }
 
-export function ChatInput({
-	isChat,
-	userId,
-	threadId,
-	isStreaming,
-}: ChatInputProps) {
+export function ChatInput({ isChat, threadId, isStreaming }: ChatInputProps) {
 	const inputRef = useRef<HTMLTextAreaElement>(null);
 
 	const [prompt, setPrompt] = useState("");
@@ -44,53 +37,8 @@ export function ChatInput({
 
 	const isDirty = prompt.trim().length > 0;
 
-	const createChat = useMutation(api.chat.createChat).withOptimisticUpdate(
-		(localStore) => {
-			const optimisticId = crypto.randomUUID();
-			const existingChats = localStore.getQuery(api.chat.listChats, { userId });
-
-			if (existingChats) {
-				const now = Date.now();
-
-				const optimisticChat: ThreadDoc = {
-					_creationTime: now,
-					_id: optimisticId,
-					status: "active",
-					title: "New Chat",
-					userId,
-				};
-
-				localStore.setQuery(
-					api.chat.listChats,
-					{ userId },
-					{ ...existingChats, page: [...existingChats.page, optimisticChat] },
-				);
-
-				window.history.replaceState({}, "", `/c/${optimisticId}`);
-			}
-		},
-	);
-
 	const sendMessage = useMutation(api.chat.sendMessage).withOptimisticUpdate(
 		optimisticallySendMessage(api.chat.loadChat),
-	);
-
-	// biome-ignore lint/correctness/useExhaustiveDependencies: would loop
-	const handleSubmit = useCallback(
-		async (event: FormEvent<HTMLFormElement>) => {
-			event.preventDefault();
-			if (!isDirty) return;
-
-			if (!threadId) {
-				threadId = await createChat({ prompt });
-			}
-
-			void sendMessage({ prompt, threadId });
-
-			setPrompt("");
-			resetHeight();
-		},
-		[prompt, sendMessage],
 	);
 
 	const resetHeight = useCallback(() => {
@@ -99,6 +47,24 @@ export function ChatInput({
 			inputRef.current.style.height = "24px";
 		}
 	}, []);
+
+	const handleSubmit = useCallback(
+		(event: FormEvent<HTMLFormElement>) => {
+			event.preventDefault();
+			if (!isDirty) return;
+
+			void sendMessage({
+				prompt,
+				threadId,
+			});
+
+			window.history.replaceState(null, "", `/c/${threadId}`);
+
+			setPrompt("");
+			resetHeight();
+		},
+		[prompt, isDirty, threadId, sendMessage, resetHeight],
+	);
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: intentionally depend only on prompt to avoid feedback loops from setState
 	useLayoutEffect(() => {

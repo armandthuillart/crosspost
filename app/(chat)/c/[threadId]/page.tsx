@@ -8,10 +8,12 @@ export default async function Page({ params }: PageProps<"/c/[threadId]">) {
 	const token = await getToken();
 
 	if (!token) {
+		// Redirect to our proxy, not directly to "/sign-in/anonymous".
+		// The proxy converts this GET into the required POST and propagates cookies.
 		return redirect("/api/auth/anonymous");
 	}
 
-	const { userId, isAnonymous, userTier } = await fetchQuery(
+	const { userTier, isAnonymous } = await fetchQuery(
 		api.auth.getUser,
 		{},
 		{ token },
@@ -30,11 +32,6 @@ export default async function Page({ params }: PageProps<"/c/[threadId]">) {
 	);
 
 	return (
-		<Chat
-			isAnonymous={isAnonymous}
-			threadId={threadId}
-			userId={userId}
-			userTier={userTier}
-		/>
+		<Chat isAnonymous={isAnonymous} threadId={threadId} userTier={userTier} />
 	);
 }

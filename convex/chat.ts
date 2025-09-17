@@ -1,27 +1,36 @@
 import {
 	createThread,
+	getThreadMetadata,
 	listUIMessages,
 	syncStreams,
+	type ThreadDoc,
 	vStreamArgs,
 } from "@convex-dev/agent";
-import { paginationOptsValidator } from "convex/server";
+import { type PaginationResult, paginationOptsValidator } from "convex/server";
 import { v } from "convex/values";
+import { ChatSDKError } from "../lib/errors";
 import { TITLE_MODEL } from "../lib/gateway";
 import { TITLE_SYSTEM_PROMPT } from "../lib/prompts";
-import { components, internal } from "./_generated/api";
-import { internalAction, mutation, query } from "./_generated/server";
-import { myAgent } from "./agents";
+import { api, components, internal } from "./_generated/api";
+import {
+	type ActionCtx,
+	internalAction,
+	type MutationCtx,
+	mutation,
+	type QueryCtx,
+	query,
+} from "./_generated/server";
+import { chatAgent } from "./agents";
+import { rateLimiter } from "./rateLimiting";
 
 export const createChat = mutation({
-	args: { prompt: v.string() },
-	handler: async (ctx, { prompt }) => {
+	args: {},
+	handler: async (ctx) => {
+		const { userId } = await ctx.runQuery(api.auth.getUser, {});
+
 		const threadId = await createThread(ctx, components.agent, {
 			title: "New Chat",
-		});
-
-		await ctx.scheduler.runAfter(0, internal.chat.renameChat, {
-			prompt,
-			threadId,
+			userId,
 		});
 
 		return threadId;
@@ -31,14 +40,19 @@ export const createChat = mutation({
 export const sendMessage = mutation({
 	args: { prompt: v.string(), threadId: v.string() },
 	handler: async (ctx, { prompt, threadId }) => {
-		const { messageId: promptMessageId } = await myAgent.saveMessage(ctx, {
+		const { userId, userTier } = await verifyOwnership(ctx, threadId);
+
+		await rateLimiter.limit(ctx, userTier, { key: userId, throws: true });
+ 
+		const { messageId } = await chatAgent.saveMessage(ctx, {
 			prompt,
-			skipEmbeddings: true, // We're in a mutation, so we'll create the embeddings lazily when streaming text.
+			skipEmbeddings: true,
 			threadId,
+			userId,
 		});
 
 		await ctx.scheduler.runAfter(0, internal.chat.streamChat, {
-			promptMessageId,
+			promptMessageId: messageId,
 			threadId,
 		});
 	},
@@ -47,28 +61,32 @@ export const sendMessage = mutation({
 export const streamChat = internalAction({
 	args: { promptMessageId: v.string(), threadId: v.string() },
 	handler: async (ctx, { threadId, promptMessageId }) => {
-		const { consumeStream } = await myAgent.streamText(
+		const { consumeStream } = await chatAgent.streamText(
 			ctx,
 			{ threadId },
 			{ promptMessageId },
 			{ saveStreamDeltas: { chunking: "word", throttleMs: 100 } },
 		);
 
-		return consumeStream();
+		await consumeStream({
+			onError: (error) => {
+				console.error("chat.tsx: streamChat: error:", error);
+			},
+		});
 	},
 });
 
 export const renameChat = internalAction({
 	args: { prompt: v.string(), threadId: v.string() },
 	handler: async (ctx, { prompt, threadId }) => {
-		const { text } = await myAgent.generateText(
+		const result = await chatAgent.generateText(
 			ctx,
 			{ threadId },
 			{ model: TITLE_MODEL, prompt, system: TITLE_SYSTEM_PROMPT },
 		);
 
-		await myAgent.updateThreadMetadata(ctx, {
-			patch: { title: text },
+		await chatAgent.updateThreadMetadata(ctx, {
+			patch: { title: result.text },
 			threadId,
 		});
 	},
@@ -81,6 +99,8 @@ export const loadChat = query({
 		threadId: v.string(),
 	},
 	handler: async (ctx, { threadId, streamArgs, paginationOpts }) => {
+		await verifyOwnership(ctx, threadId);
+
 		const streams = await syncStreams(ctx, components.agent, {
 			streamArgs,
 			threadId,
@@ -99,10 +119,41 @@ export const loadChat = query({
 });
 
 export const listChats = query({
-	args: { userId: v.string() },
-	handler: async (ctx, { userId }) => {
-		return await ctx.runQuery(components.agent.threads.listThreadsByUserId, {
-			userId,
-		});
+	args: { paginationOpts: paginationOptsValidator },
+	handler: async (
+		ctx,
+		{ paginationOpts },
+	): Promise<PaginationResult<ThreadDoc>> => {
+		const { userId } = await ctx.runQuery(api.auth.getUser, {});
+
+		const threads = await ctx.runQuery(
+			components.agent.threads.listThreadsByUserId,
+			{ paginationOpts, userId },
+		);
+
+		return threads;
 	},
 });
+
+export async function verifyOwnership(
+	ctx: QueryCtx | MutationCtx | ActionCtx,
+	threadId: string,
+) {
+	const { userId, userTier } = await ctx.runQuery(api.auth.getUser, {});
+
+	if (!userId) {
+		throw new ChatSDKError("unauthorized:auth");
+	}
+
+	const { userId: threadUserId } = await getThreadMetadata(
+		ctx,
+		components.agent,
+		{ threadId },
+	);
+
+	if (threadUserId !== userId) {
+		throw new ChatSDKError("unauthorized:auth");
+	}
+
+	return { userId, userTier };
+}

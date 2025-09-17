@@ -1,4 +1,4 @@
-import { type Infer } from "convex/values";
+import type { Infer } from "convex/values";
 import { zodToConvex } from "convex-helpers/server/zod";
 import { ChatSDKError } from "../lib/errors";
 import { draftSchema } from "../lib/schema";

@@ -41,7 +41,7 @@ function TooltipContent({
 		<TooltipPrimitive.Portal>
 			<TooltipPrimitive.Content
 				className={cn(
-					"fade-in-0 zoom-in-95 data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 z-50 flex w-fit origin-(--radix-tooltip-content-transform-origin) animate-in items-center text-balance rounded-sm bg-primary px-2 py-1 font-semibold text-primary-foreground text-xs data-[state=closed]:animate-out",
+					"fade-in-0 zoom-in-95 data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 z-50 flex w-fit origin-(--radix-tooltip-content-transform-origin) animate-in items-center text-balance rounded-sm border bg-popover px-2 py-1 font-semibold text-foreground text-xs data-[state=closed]:animate-out",
 					className,
 				)}
 				data-slot="tooltip-content"

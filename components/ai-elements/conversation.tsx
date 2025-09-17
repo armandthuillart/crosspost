@@ -1,10 +1,12 @@
 "use client";
 
+import { useAtom } from "jotai";
 import { AnimatePresence, motion } from "motion/react";
 import { type ComponentProps, memo, useCallback } from "react";
 import { StickToBottom, useStickToBottomContext } from "use-stick-to-bottom";
 import { Button, type ButtonProps } from "@/components/ui/button";
 import { ArrowDownIcon } from "@/components/ui/icons";
+import { chatStreamerAtom } from "@/lib/atoms";
 import { cn } from "@/lib/utils";
 
 function Conversation({
@@ -40,11 +42,11 @@ function ConversationContent({
 function PureConversationScrollButton({ className, ...props }: ButtonProps) {
 	const { isAtBottom, scrollToBottom } = useStickToBottomContext();
 
+	const [isHidden] = useAtom(chatStreamerAtom);
+
 	const handleScroll = useCallback(() => {
 		scrollToBottom();
 	}, [scrollToBottom]);
-
-	console.log("isAtBottom", isAtBottom);
 
 	return (
 		<AnimatePresence>
@@ -58,7 +60,8 @@ function PureConversationScrollButton({ className, ...props }: ButtonProps) {
 				>
 					<Button
 						className={cn(
-							"-translate-x-1/2 absolute bottom-12 left-1/2 z-20 rounded-full",
+							"-translate-x-1/2 absolute bottom-12 left-1/2 z-20 rounded-full hover:bg-muted",
+							!isHidden && "bottom-32",
 							className,
 						)}
 						onClick={handleScroll}

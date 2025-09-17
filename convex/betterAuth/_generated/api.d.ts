@@ -55,7 +55,7 @@ export type Mounts = {
                 updatedAt: number;
                 userId: string;
               };
-              model: "account";
+              model: "accounts";
             }
           | {
               data: {
@@ -75,7 +75,7 @@ export type Mounts = {
                 userAgent?: null | string;
                 userId: string;
               };
-              model: "session";
+              model: "sessions";
             }
           | {
               data: {
@@ -89,7 +89,7 @@ export type Mounts = {
                 updatedAt: number;
                 userId?: null | string;
               };
-              model: "user";
+              model: "users";
             }
           | {
               data: {
@@ -99,7 +99,7 @@ export type Mounts = {
                 updatedAt: number;
                 value: string;
               };
-              model: "verification";
+              model: "verifications";
             };
         onCreateHandle?: string;
         select?: Array<string>;
@@ -112,7 +112,7 @@ export type Mounts = {
       {
         input:
           | {
-              model: "account";
+              model: "accounts";
               where?: Array<{
                 connector?: "AND" | "OR";
                 field:
@@ -175,7 +175,7 @@ export type Mounts = {
               }>;
             }
           | {
-              model: "session";
+              model: "sessions";
               where?: Array<{
                 connector?: "AND" | "OR";
                 field:
@@ -208,7 +208,7 @@ export type Mounts = {
               }>;
             }
           | {
-              model: "user";
+              model: "users";
               where?: Array<{
                 connector?: "AND" | "OR";
                 field:
@@ -243,7 +243,7 @@ export type Mounts = {
               }>;
             }
           | {
-              model: "verification";
+              model: "verifications";
               where?: Array<{
                 connector?: "AND" | "OR";
                 field:
@@ -291,7 +291,7 @@ export type Mounts = {
       {
         input:
           | {
-              model: "account";
+              model: "accounts";
               where?: Array<{
                 connector?: "AND" | "OR";
                 field:
@@ -354,7 +354,7 @@ export type Mounts = {
               }>;
             }
           | {
-              model: "session";
+              model: "sessions";
               where?: Array<{
                 connector?: "AND" | "OR";
                 field:
@@ -387,7 +387,7 @@ export type Mounts = {
               }>;
             }
           | {
-              model: "user";
+              model: "users";
               where?: Array<{
                 connector?: "AND" | "OR";
                 field:
@@ -422,7 +422,7 @@ export type Mounts = {
               }>;
             }
           | {
-              model: "verification";
+              model: "verifications";
               where?: Array<{
                 connector?: "AND" | "OR";
                 field:
@@ -461,7 +461,7 @@ export type Mounts = {
       "public",
       {
         limit?: number;
-        model: "account" | "jwks" | "session" | "user" | "verification";
+        model: "accounts" | "jwks" | "sessions" | "users" | "verifications";
         offset?: number;
         paginationOpts: {
           cursor: string | null;
@@ -501,7 +501,7 @@ export type Mounts = {
       "query",
       "public",
       {
-        model: "account" | "jwks" | "session" | "user" | "verification";
+        model: "accounts" | "jwks" | "sessions" | "users" | "verifications";
         select?: Array<string>;
         where?: Array<{
           connector?: "AND" | "OR";
@@ -534,7 +534,7 @@ export type Mounts = {
       {
         input:
           | {
-              model: "account";
+              model: "accounts";
               update: {
                 accessToken?: null | string;
                 accessTokenExpiresAt?: null | number;
@@ -616,7 +616,7 @@ export type Mounts = {
               }>;
             }
           | {
-              model: "session";
+              model: "sessions";
               update: {
                 createdAt?: number;
                 expiresAt?: number;
@@ -658,7 +658,7 @@ export type Mounts = {
               }>;
             }
           | {
-              model: "user";
+              model: "users";
               update: {
                 createdAt?: number;
                 email?: string;
@@ -704,7 +704,7 @@ export type Mounts = {
               }>;
             }
           | {
-              model: "verification";
+              model: "verifications";
               update: {
                 createdAt?: number;
                 expiresAt?: number;
@@ -759,7 +759,7 @@ export type Mounts = {
       {
         input:
           | {
-              model: "account";
+              model: "accounts";
               update: {
                 accessToken?: null | string;
                 accessTokenExpiresAt?: null | number;
@@ -841,7 +841,7 @@ export type Mounts = {
               }>;
             }
           | {
-              model: "session";
+              model: "sessions";
               update: {
                 createdAt?: number;
                 expiresAt?: number;
@@ -883,7 +883,7 @@ export type Mounts = {
               }>;
             }
           | {
-              model: "user";
+              model: "users";
               update: {
                 createdAt?: number;
                 email?: string;
@@ -929,7 +929,7 @@ export type Mounts = {
               }>;
             }
           | {
-              model: "verification";
+              model: "verifications";
               update: {
                 createdAt?: number;
                 expiresAt?: number;
@@ -970,6 +970,9 @@ export type Mounts = {
       },
       any
     >;
+  };
+  auth: {
+    getCurrentUser: FunctionReference<"query", "public", {}, any>;
   };
 };
 // For now fullApiWithMounts is only fullApi which provides

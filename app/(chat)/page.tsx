@@ -2,6 +2,7 @@ import { fetchMutation, fetchQuery } from "convex/nextjs";
 import { redirect } from "next/navigation";
 import { Chat } from "@/components/chat";
 import { getToken } from "@/lib/auth-server";
+import type { Tier } from "@/lib/types";
 import { api } from "../../convex/_generated/api";
 
 export default async function Page() {
@@ -14,7 +15,7 @@ export default async function Page() {
 	}
 
 	const { userTier, isAnonymous } = await fetchQuery(
-		api.auth.getUser,
+		api.betterAuth.auth.getCurrentUser,
 		{},
 		{ token },
 	);
@@ -22,6 +23,10 @@ export default async function Page() {
 	const threadId = await fetchMutation(api.chat.createChat, {}, { token });
 
 	return (
-		<Chat isAnonymous={isAnonymous} threadId={threadId} userTier={userTier} />
+		<Chat
+			isAnonymous={isAnonymous ?? false}
+			threadId={threadId}
+			userTier={userTier as Tier}
+		/>
 	);
 }

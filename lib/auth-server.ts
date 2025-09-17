@@ -4,6 +4,5 @@ import { createAuth } from "@/convex/auth";
 
 export const getToken = () => {
 	getStaticAuth(createAuth);
-	// @ts-expect-error - static auth isn't typed
 	return getTokenNextjs(createAuth);
 };

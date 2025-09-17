@@ -2,7 +2,7 @@
 	"dependencies": {
 		"@ai-sdk/gateway": "^1.0.23",
 		"@convex-dev/agent": "^0.2.8",
-		"@convex-dev/better-auth": "^0.8.3",
+		"@convex-dev/better-auth": "^0.8.4",
 		"@convex-dev/rate-limiter": "^0.2.12",
 		"@paper-design/shaders-react": "^0.0.52",
 		"@polar-sh/better-auth": "^1.1.4",
@@ -16,7 +16,7 @@
 		"convex-helpers": "^0.1.104",
 		"date-fns": "^4.1.0",
 		"jotai": "^2.14.0",
-		"motion": "^12.23.13",
+		"motion": "^12.23.14",
 		"next": "^15.5.3",
 		"radix-ui": "^1.4.3",
 		"react": "^19.1.1",

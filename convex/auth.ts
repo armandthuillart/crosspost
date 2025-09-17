@@ -7,59 +7,54 @@ import { convex } from "@convex-dev/better-auth/plugins";
 import { checkout, polar, portal, webhooks } from "@polar-sh/better-auth";
 import { type BetterAuthOptions, betterAuth } from "better-auth";
 import { anonymous } from "better-auth/plugins";
-import { v } from "convex/values";
 import { polarClient } from "../lib/polar";
 import type { Tier } from "../lib/types";
 import { components, internal } from "./_generated/api";
 import type { DataModel } from "./_generated/dataModel";
-import { internalMutation, query } from "./_generated/server";
 import authSchema from "./betterAuth/schema";
 
 const siteUrl = process.env.SITE_URL;
 
 const authFunctions: AuthFunctions = internal.auth;
 
-export const authComponent = createClient<DataModel, typeof authSchema>(
-	components.betterAuth,
-	{
-		authFunctions,
-		local: {
-			schema: authSchema,
-		},
-		triggers: {
-			user: {
-				onCreate: async (ctx, newUser) => {
-					console.log("newUser in the onCreate trigger", newUser);
-					if (newUser.isAnonymous) {
-						await ctx.scheduler.runAfter(0, internal.betterAuth.auth.saveTier, {
-							tier: "anonymous" satisfies Tier,
-							userId: newUser._id,
-						});
-					}
-				},
-				onDelete: async (ctx, { _id: userId }) => {
-					await ctx.scheduler.runAfter(
-						0,
-						internal.auth.deleteAllForUserIdAsync,
-						{ userId },
+export const { adapter, getAuthUser, registerRoutes } = createClient<
+	DataModel,
+	typeof authSchema
+>(components.betterAuth, {
+	authFunctions,
+	local: {
+		schema: authSchema,
+	},
+	triggers: {
+		users: {
+			onCreate: async (_, { isAnonymous }) => {
+				if (isAnonymous) {
+					console.log(
+						"TRIGGER: An anonymous user was created, we should set his tier to anonymous",
 					);
-				},
+				}
+			},
+			onUpdate: async () => {
+				console.log("TRIGGER: A user has been updated");
 			},
 		},
-		verbose: false,
 	},
-);
-
-export const { onCreate, onUpdate, onDelete } = authComponent.triggersApi();
+	verbose: false,
+});
 
 export const createAuth = (
 	ctx: GenericCtx<DataModel>,
 	{ optionsOnly } = { optionsOnly: false },
 ) => {
 	return betterAuth({
+		account: {
+			modelName: "accounts",
+		},
 		baseURL: siteUrl,
-		database: authComponent.adapter(ctx),
-		logger: { disabled: optionsOnly },
+		database: adapter(ctx),
+		logger: {
+			disabled: optionsOnly,
+		},
 		plugins: [
 			anonymous({
 				onLinkAccount: async ({ newUser }) => {
@@ -77,13 +72,9 @@ export const createAuth = (
 						});
 					}
 
-					const adapter = authComponent.adapter(ctx);
-
-					await adapter({}).update({
-						model: "user",
-						update: { tier: "free" satisfies Tier },
-						where: [{ field: "id", operator: "eq", value: newUser.user.id }],
-					});
+					console.log(
+						"onLinkAccount: A user has been linked to a customer, we should update set his tier to free",
+					);
 				},
 			}),
 			polar({
@@ -108,20 +99,14 @@ export const createAuth = (
 								(s) => s.status === "active",
 							);
 
-							const adapter = authComponent.adapter(ctx);
-
 							if (isPro) {
-								await adapter({}).update({
-									model: "user",
-									update: { tier: "pro" satisfies Tier },
-									where: [{ field: "id", operator: "eq", value: externalId }],
-								});
+								console.log(
+									"onCustomerStateChanged: A user is now pro, we should update his tier to pro",
+								);
 							} else {
-								await adapter({}).update({
-									model: "user",
-									update: { tier: "free" satisfies Tier },
-									where: [{ field: "id", operator: "eq", value: externalId }],
-								});
+								console.log(
+									"onCustomerStateChanged: A user is not longer pro, we should downgrade his tier to free",
+								);
 							}
 						},
 						secret: process.env.POLAR_WEBHOOK_SECRET as string,
@@ -130,7 +115,9 @@ export const createAuth = (
 			}),
 			convex(),
 		],
-		secret: process.env.BETTER_AUTH_SECRET,
+		session: {
+			modelName: "sessions",
+		},
 		socialProviders: {
 			google: {
 				accessType: "offline",
@@ -139,7 +126,6 @@ export const createAuth = (
 				prompt: "select_account consent",
 			},
 		},
-		trustedOrigins: [siteUrl as string],
 		user: {
 			additionalFields: {
 				tier: {
@@ -147,45 +133,10 @@ export const createAuth = (
 					type: "string",
 				},
 			},
+			modelName: "users",
+		},
+		verification: {
+			modelName: "verifications",
 		},
 	} satisfies BetterAuthOptions);
 };
-
-export const getUser = query({
-	args: {},
-	handler: async (ctx) => {
-		const user = await authComponent.safeGetAuthUser(ctx);
-
-		const userId = user?._id;
-		const userTier = user?.tier;
-		const isAnonymous = user?.isAnonymous ?? false;
-
-		return {
-			isAnonymous,
-			userId: userId as string,
-			userTier: userTier as Tier,
-		};
-	},
-});
-
-export const deleteAllForUserIdAsync = internalMutation({
-	args: { userId: v.string() },
-	handler: async (ctx, { userId }) => {
-		for await (const { _id: draftId } of ctx.db
-			.query("drafts")
-			.withIndex("by_user", (q) => q.eq("userId", userId))) {
-			for await (const { _id: versionId } of ctx.db
-				.query("versions")
-				.withIndex("by_draft_platform", (q) => q.eq("draftId", draftId))) {
-				await ctx.db.delete(versionId);
-			}
-
-			await ctx.db.delete(draftId);
-		}
-
-		await ctx.runMutation(components.agent.users.deleteAllForUserIdAsync, {
-			userId,
-		});
-	},
-	returns: v.null(),
-});

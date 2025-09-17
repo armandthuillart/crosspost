@@ -1,8 +1,8 @@
 import { httpRouter } from "convex/server";
-import { authComponent, createAuth } from "./auth";
+import { createAuth, registerRoutes } from "./auth";
 
 const http = httpRouter();
 
-authComponent.registerRoutes(http, createAuth, { cors: true });
+registerRoutes(http, createAuth);
 
 export default http;

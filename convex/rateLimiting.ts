@@ -6,7 +6,6 @@ import {
 import type { Tier } from "../lib/types";
 import { components } from "./_generated/api";
 import type { DataModel } from "./_generated/dataModel";
-import { authComponent } from "./auth";
 
 const HOUR = 60 * MINUTE;
 const DAY = 24 * HOUR;
@@ -41,14 +40,14 @@ export const rateLimiter = new RateLimiter(
 export const { getRateLimit: getAnonymousRateLimit } =
 	rateLimiter.hookAPI<DataModel>("anonymous", {
 		async key(ctx) {
-			return authComponent.getAuthUser(ctx).then(({ _id }) => _id);
+			return "123";
 		},
 	});
 
 export const { getRateLimit: getFreeRateLimit } =
 	rateLimiter.hookAPI<DataModel>("free", {
 		async key(ctx) {
-			return authComponent.getAuthUser(ctx).then(({ _id }) => _id);
+			return "123";
 		},
 	});
 
@@ -56,7 +55,7 @@ export const { getRateLimit: getProRateLimit } = rateLimiter.hookAPI<DataModel>(
 	"pro",
 	{
 		async key(ctx) {
-			return authComponent.getAuthUser(ctx).then(({ _id }) => _id);
+			return "123";
 		},
 	},
 );

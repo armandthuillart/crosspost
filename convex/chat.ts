@@ -27,7 +27,10 @@ import { rateLimiter } from "./rateLimiting";
 export const createChat = mutation({
 	args: {},
 	handler: async (ctx) => {
-		const { userId } = await ctx.runQuery(api.auth.getUser, {});
+		const { userId } = await ctx.runQuery(
+			api.betterAuth.auth.getCurrentUser,
+			{},
+		);
 
 		const threadId = await createThread(ctx, components.agent, {
 			title: "New Chat",
@@ -43,11 +46,14 @@ export const sendMessage = mutation({
 	handler: async (ctx, { prompt, threadId }) => {
 		const { userId, userTier } = await verifyOwnership(ctx, threadId);
 
-		await rateLimiter.limit(ctx, userTier, { key: userId, throws: true });
+		await rateLimiter.limit(ctx, userTier, {
+			key: userId,
+			throws: true,
+		});
 
 		const { messageId } = await chatAgent.saveMessage(ctx, {
 			prompt,
-			skipEmbeddings: true,
+			skipEmbeddings: true, // We're in a mutation (no access to fetch), so they'll be lazily generated when streaming.
 			threadId,
 			userId,
 		});
@@ -60,7 +66,10 @@ export const sendMessage = mutation({
 });
 
 export const streamChat = internalAction({
-	args: { promptMessageId: v.string(), threadId: v.string() },
+	args: {
+		promptMessageId: v.string(),
+		threadId: v.string(),
+	},
 	handler: async (ctx, { threadId, promptMessageId }) => {
 		const { consumeStream } = await chatAgent.streamText(
 			ctx,
@@ -78,7 +87,10 @@ export const streamChat = internalAction({
 });
 
 export const abortStreamByOrder = mutation({
-	args: { order: v.number(), threadId: v.string() },
+	args: {
+		order: v.number(),
+		threadId: v.string(),
+	},
 	handler: async (ctx, { order, threadId }) => {
 		await verifyOwnership(ctx, threadId);
 
@@ -97,7 +109,10 @@ export const abortStreamByOrder = mutation({
 });
 
 export const renameChat = internalAction({
-	args: { prompt: v.string(), threadId: v.string() },
+	args: {
+		prompt: v.string(),
+		threadId: v.string(),
+	},
 	handler: async (ctx, { prompt, threadId }) => {
 		const result = await chatAgent.generateText(
 			ctx,
@@ -139,12 +154,17 @@ export const loadChat = query({
 });
 
 export const listChats = query({
-	args: { paginationOpts: paginationOptsValidator },
+	args: {
+		paginationOpts: paginationOptsValidator,
+	},
 	handler: async (
 		ctx,
 		{ paginationOpts },
 	): Promise<PaginationResult<ThreadDoc>> => {
-		const { userId } = await ctx.runQuery(api.auth.getUser, {});
+		const { userId } = await ctx.runQuery(
+			api.betterAuth.auth.getCurrentUser,
+			{},
+		);
 
 		const threads = await ctx.runQuery(
 			components.agent.threads.listThreadsByUserId,
@@ -159,7 +179,10 @@ export async function verifyOwnership(
 	ctx: QueryCtx | MutationCtx | ActionCtx,
 	threadId: string,
 ) {
-	const { userId, userTier } = await ctx.runQuery(api.auth.getUser, {});
+	const { userId, userTier } = await ctx.runQuery(
+		api.betterAuth.auth.getCurrentUser,
+		{},
+	);
 
 	if (!userId) {
 		throw new ChatSDKError("unauthorized:auth");

@@ -22,6 +22,7 @@ import type * as http from "../http.js";
 import type * as posts from "../posts.js";
 import type * as rateLimiting from "../rateLimiting.js";
 import type * as tools from "../tools.js";
+import type * as users from "../users.js";
 
 import type {
   ApiFromModules,
@@ -52,6 +53,7 @@ declare const fullApi: ApiFromModules<{
   posts: typeof posts;
   rateLimiting: typeof rateLimiting;
   tools: typeof tools;
+  users: typeof users;
 }>;
 declare const fullApiWithMounts: typeof fullApi;
 
@@ -2921,7 +2923,7 @@ export declare const components: {
                   updatedAt: number;
                   userId: string;
                 };
-                model: "account";
+                model: "accounts";
               }
             | {
                 data: {
@@ -2941,7 +2943,7 @@ export declare const components: {
                   userAgent?: null | string;
                   userId: string;
                 };
-                model: "session";
+                model: "sessions";
               }
             | {
                 data: {
@@ -2955,7 +2957,7 @@ export declare const components: {
                   updatedAt: number;
                   userId?: null | string;
                 };
-                model: "user";
+                model: "users";
               }
             | {
                 data: {
@@ -2965,7 +2967,7 @@ export declare const components: {
                   updatedAt: number;
                   value: string;
                 };
-                model: "verification";
+                model: "verifications";
               };
           onCreateHandle?: string;
           select?: Array<string>;
@@ -2978,7 +2980,7 @@ export declare const components: {
         {
           input:
             | {
-                model: "account";
+                model: "accounts";
                 where?: Array<{
                   connector?: "AND" | "OR";
                   field:
@@ -3041,7 +3043,7 @@ export declare const components: {
                 }>;
               }
             | {
-                model: "session";
+                model: "sessions";
                 where?: Array<{
                   connector?: "AND" | "OR";
                   field:
@@ -3074,7 +3076,7 @@ export declare const components: {
                 }>;
               }
             | {
-                model: "user";
+                model: "users";
                 where?: Array<{
                   connector?: "AND" | "OR";
                   field:
@@ -3109,7 +3111,7 @@ export declare const components: {
                 }>;
               }
             | {
-                model: "verification";
+                model: "verifications";
                 where?: Array<{
                   connector?: "AND" | "OR";
                   field:
@@ -3157,7 +3159,7 @@ export declare const components: {
         {
           input:
             | {
-                model: "account";
+                model: "accounts";
                 where?: Array<{
                   connector?: "AND" | "OR";
                   field:
@@ -3220,7 +3222,7 @@ export declare const components: {
                 }>;
               }
             | {
-                model: "session";
+                model: "sessions";
                 where?: Array<{
                   connector?: "AND" | "OR";
                   field:
@@ -3253,7 +3255,7 @@ export declare const components: {
                 }>;
               }
             | {
-                model: "user";
+                model: "users";
                 where?: Array<{
                   connector?: "AND" | "OR";
                   field:
@@ -3288,7 +3290,7 @@ export declare const components: {
                 }>;
               }
             | {
-                model: "verification";
+                model: "verifications";
                 where?: Array<{
                   connector?: "AND" | "OR";
                   field:
@@ -3327,7 +3329,7 @@ export declare const components: {
         "internal",
         {
           limit?: number;
-          model: "account" | "jwks" | "session" | "user" | "verification";
+          model: "accounts" | "jwks" | "sessions" | "users" | "verifications";
           offset?: number;
           paginationOpts: {
             cursor: string | null;
@@ -3367,7 +3369,7 @@ export declare const components: {
         "query",
         "internal",
         {
-          model: "account" | "jwks" | "session" | "user" | "verification";
+          model: "accounts" | "jwks" | "sessions" | "users" | "verifications";
           select?: Array<string>;
           where?: Array<{
             connector?: "AND" | "OR";
@@ -3400,7 +3402,7 @@ export declare const components: {
         {
           input:
             | {
-                model: "account";
+                model: "accounts";
                 update: {
                   accessToken?: null | string;
                   accessTokenExpiresAt?: null | number;
@@ -3482,7 +3484,7 @@ export declare const components: {
                 }>;
               }
             | {
-                model: "session";
+                model: "sessions";
                 update: {
                   createdAt?: number;
                   expiresAt?: number;
@@ -3524,7 +3526,7 @@ export declare const components: {
                 }>;
               }
             | {
-                model: "user";
+                model: "users";
                 update: {
                   createdAt?: number;
                   email?: string;
@@ -3570,7 +3572,7 @@ export declare const components: {
                 }>;
               }
             | {
-                model: "verification";
+                model: "verifications";
                 update: {
                   createdAt?: number;
                   expiresAt?: number;
@@ -3625,7 +3627,7 @@ export declare const components: {
         {
           input:
             | {
-                model: "account";
+                model: "accounts";
                 update: {
                   accessToken?: null | string;
                   accessTokenExpiresAt?: null | number;
@@ -3707,7 +3709,7 @@ export declare const components: {
                 }>;
               }
             | {
-                model: "session";
+                model: "sessions";
                 update: {
                   createdAt?: number;
                   expiresAt?: number;
@@ -3749,7 +3751,7 @@ export declare const components: {
                 }>;
               }
             | {
-                model: "user";
+                model: "users";
                 update: {
                   createdAt?: number;
                   email?: string;
@@ -3795,7 +3797,7 @@ export declare const components: {
                 }>;
               }
             | {
-                model: "verification";
+                model: "verifications";
                 update: {
                   createdAt?: number;
                   expiresAt?: number;
@@ -3836,6 +3838,9 @@ export declare const components: {
         },
         any
       >;
+    };
+    auth: {
+      getCurrentUser: FunctionReference<"query", "internal", {}, any>;
     };
   };
   rateLimiter: {

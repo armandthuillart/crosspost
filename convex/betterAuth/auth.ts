@@ -1,57 +1,51 @@
 import { getStaticAuth } from "@convex-dev/better-auth";
 import { v } from "convex/values";
 import { subDays } from "date-fns";
+import type { Tier } from "../../lib/types";
 import { createAuth } from "../auth";
-import { api, internal } from "./_generated/api";
+import { internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
-import { internalMutation } from "./_generated/server";
+import { internalMutation, query } from "./_generated/server";
 
 export const auth = getStaticAuth(createAuth);
 
-export const deleteInactiveAnonymousUsers = internalMutation({
-	args: { cursor: v.optional(v.string()) },
-	handler: async (ctx, { cursor }) => {
-		const twentyFourHoursAgo = subDays(new Date(), 1).getTime();
+export const getCurrentUser = query({
+	args: {},
+	handler: async (ctx) => {
+		const identity = await ctx.auth.getUserIdentity();
+		const user = await ctx.db.get(identity?.subject as Id<"users">);
 
-		const batch = await ctx.db
-			.query("user")
-			.withIndex("by_is_anonymous", (q) => q.eq("isAnonymous", true))
-			.filter((q) => q.lt(q.field("createdAt"), twentyFourHoursAgo))
-			.paginate({ cursor: cursor ?? null, numItems: 100 });
-
-		await Promise.all(
-			batch.page.map(async ({ _id: userId }) => {
-				await ctx.runMutation(api.adapter.deleteOne, {
-					input: {
-						model: "user",
-						where: [
-							{ field: "id", operator: "eq", value: userId },
-							{ field: "isAnonymous", operator: "eq", value: true },
-						],
-					},
-				});
-			}),
-		);
-
-		if (!batch.isDone) {
-			await ctx.scheduler.runAfter(
-				0,
-				internal.auth.deleteInactiveAnonymousUsers,
-				{ cursor: batch.continueCursor },
-			);
-		}
+		return {
+			email: user?.email,
+			isAnonymous: user?.isAnonymous,
+			name: user?.name,
+			userId: user?._id,
+			userTier: user?.tier as Tier,
+		};
 	},
 });
 
-export const saveTier = internalMutation({
+export const tidyUpAnonymousUsers = internalMutation({
 	args: {
-		tier: v.union(v.literal("anonymous"), v.literal("free"), v.literal("pro")),
-		userId: v.string(),
+		cursor: v.optional(v.string()),
 	},
-	handler: async (ctx, { tier, userId }) => {
-		console.log("saveTier in the saveTier mutation", tier, userId);
+	handler: async (ctx, { cursor }) => {
+		const twentyFourHoursAgo = subDays(new Date(), 1).getTime();
 
-		await ctx.db.patch(userId as Id<"user">, { tier });
+		const { page, isDone, continueCursor } = await ctx.db
+			.query("users")
+			.withIndex("by_is_anonymous", (q) => q.eq("isAnonymous", true))
+			.filter((q) => q.lt(q.field("_creationTime"), twentyFourHoursAgo))
+			.paginate({ cursor: cursor ?? null, numItems: 100 });
+
+		for (const { _id: userId } of page) {
+			await ctx.db.delete(userId);
+		}
+
+		if (!isDone) {
+			await ctx.scheduler.runAfter(0, internal.auth.tidyUpAnonymousUsers, {
+				cursor: continueCursor,
+			});
+		}
 	},
-	returns: v.null(),
 });

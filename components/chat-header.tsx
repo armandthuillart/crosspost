@@ -1,11 +1,12 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { AppMenu } from "@/components/app-menu";
+import { CTA } from "@/components/chat-header.upgrade";
 import { Button } from "@/components/ui/button";
 import { AppIcon } from "@/components/ui/icons";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { authClient } from "@/lib/auth-client";
-import { CTA } from "./chat-header.upgrade";
 
 interface ChatHeaderProps {
 	isPro: boolean;
@@ -55,6 +56,7 @@ export function ChatHeader({ isPro, isAnonymous }: ChatHeaderProps) {
 	return (
 		<header className="inset-0 bottom-auto z-50 flex items-center justify-between p-2 group-not-data-chat/chat:absolute group-data-chat/chat:sticky @max-8xl/chat:group-data-chat/chat:bg-background">
 			<SidebarTrigger />
+			<AppMenu />
 		</header>
 	);
 }

@@ -1,6 +1,6 @@
 import { Provider as JotaiProvider } from "jotai";
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
+import { Inter } from "next/font/google";
 import "@/app/globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -8,7 +8,7 @@ import { ConvexClientProvider } from "@/app/convex-client-provider";
 import { isDevelopment } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
-const geist = Geist({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
 	description: "Create and post to social media by chatting with AI.",
@@ -37,7 +37,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
 				</head>
 			)}
 			<body
-				className={cn("h-full bg-background text-foreground", geist.className)}
+				className={cn("h-full bg-background text-foreground", inter.className)}
 			>
 				<JotaiProvider>
 					<ConvexClientProvider>{children}</ConvexClientProvider>

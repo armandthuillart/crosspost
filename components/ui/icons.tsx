@@ -377,3 +377,153 @@ export const CloseIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
 		</svg>
 	);
 };
+
+export const ArrowRightIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
+	return (
+		<svg
+			fill="none"
+			viewBox="0 0 24 24"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<title>Arrow Right</title>
+			<path
+				d="M9.00005 6C9.00005 6 15 10.4189 15 12C15 13.5812 9 18 9 18"
+				stroke="currentColor"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="2"
+			/>
+		</svg>
+	);
+};
+
+export const LifeBuoyIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
+	return (
+		<svg
+			fill="none"
+			viewBox="0 0 24 24"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<title>Life Buoy</title>
+			<path
+				d="M4.93 4.93L9.17 9.17M14.83 9.17L19.07 4.93M14.83 14.83L19.07 19.07M9.17 14.83L4.93 19.07M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12ZM16 12C16 14.2091 14.2091 16 12 16C9.79086 16 8 14.2091 8 12C8 9.79086 9.79086 8 12 8C14.2091 8 16 9.79086 16 12Z"
+				stroke="currentColor"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="2"
+			/>
+		</svg>
+	);
+};
+
+export const SignatureIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
+	return (
+		<svg
+			fill="none"
+			viewBox="0 0 24 24"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<title>Signature</title>
+			<path
+				d="M22 12.6344C18 16.1465 17.4279 10.621 15.3496 11.0165C13 11.4637 11.5 16.4445 13 16.4445C14.5 16.4445 12.5 10.5 10.5 12.5556C8.5 14.6111 7.85936 17.2946 6.23526 15.3025C-1.5 5.81446 4.99998 -1.14994 8.16322 3.45685C10.1653 6.37256 6.5 16.9769 2 22"
+				stroke="currentColor"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="2"
+			/>
+			<path
+				d="M9 21H19"
+				stroke="currentColor"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="2"
+			/>
+		</svg>
+	);
+};
+
+export const LogOutIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
+	return (
+		<svg
+			fill="none"
+			viewBox="0 0 24 24"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<title>Logout</title>
+			<path
+				d="M7.00003 3C6.07006 3 5.60507 3 5.22357 3.10222C4.1883 3.37962 3.37966 4.18827 3.10225 5.22354C3.00003 5.60504 3.00003 6.07003 3.00003 7L3.00003 17C3.00003 17.93 3.00003 18.395 3.10225 18.7765C3.37965 19.8117 4.1883 20.6204 5.22357 20.8978C5.60507 21 6.07006 21 7.00003 21"
+				stroke="currentColor"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="2"
+			/>
+			<path
+				d="M16.5001 16.5C16.5001 16.5 21 13.1858 21 12C21 10.8141 16.5 7.5 16.5 7.5M20 12L8.00003 12"
+				stroke="currentColor"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="2"
+			/>
+		</svg>
+	);
+};
+
+export const KeyIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
+	return (
+		<svg
+			fill="none"
+			viewBox="0 0 24 24"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<title>Key</title>
+			<path
+				d="M3 12C3 7.75736 3 5.63604 4.31802 4.31802C5.63604 3 7.75736 3 12 3C16.2426 3 18.364 3 19.682 4.31802C21 5.63604 21 7.75736 21 12C21 16.2426 21 18.364 19.682 19.682C18.364 21 16.2426 21 12 21C7.75736 21 5.63604 21 4.31802 19.682C3 18.364 3 16.2426 3 12Z"
+				stroke="currentColor"
+				strokeLinejoin="round"
+				strokeWidth="2"
+			/>
+			<path
+				d="M9.92501 12.3742H9.64257C8.72951 12.3742 8.27297 12.3742 8.07837 12.1024C7.88378 11.8307 8.06919 11.4521 8.44002 10.6949L9.55488 8.41846C9.89204 7.73 10.0606 7.38577 10.3877 7.19288C10.7147 7 11.1298 7 11.96 7H13.2458C14.2543 7 14.7585 7 14.9487 7.29742C15.1389 7.59483 14.8887 7.99215 14.3884 8.78679L13.7287 9.83437C13.48 10.2294 13.3556 10.4269 13.3573 10.5886C13.3596 10.7987 13.4834 10.9923 13.6833 11.0983C13.8372 11.1799 14.0878 11.1799 14.5892 11.1799C15.2229 11.1799 15.5399 11.1799 15.7049 11.279C15.9193 11.4077 16.0316 11.6379 15.9922 11.8684C15.962 12.0459 15.7488 12.2587 15.3225 12.6843L11.9162 16.0846C11.2472 16.7525 10.9127 17.0864 10.688 16.9808C10.4634 16.875 10.5713 16.4345 10.787 15.5534L11.2097 13.8275C11.3739 13.1567 11.4561 12.8212 11.2585 12.5977C11.061 12.3742 10.6823 12.3742 9.92501 12.3742Z"
+				stroke="currentColor"
+				strokeLinejoin="round"
+				strokeWidth="2"
+			/>
+		</svg>
+	);
+};
+
+export const LegalDocumentIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
+	return (
+		<svg
+			fill="none"
+			viewBox="0 0 24 24"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<title>Favorite Square</title>
+			<path
+				d="M3 14V10C3 6.22876 3 4.34315 4.17157 3.17157C5.34315 2 7.22876 2 11 2H13C16.7712 2 18.6569 2 19.8284 3.17157C21 4.34315 21 6.22876 21 10V14C21 17.7712 21 19.6569 19.8284 20.8284C18.6569 22 16.7712 22 13 22H11C7.22876 22 5.34315 22 4.17157 20.8284C3 19.6569 3 17.7712 3 14Z"
+				stroke="currentColor"
+				strokeWidth="2"
+			/>
+			<path
+				d="M11.3333 10.6667C12.3883 11.7216 13.7778 12.7937 13.7778 12.7937L15.6825 10.8889C15.6825 10.8889 14.6105 9.49939 13.5556 8.44444C12.5006 7.3895 11.1111 6.31746 11.1111 6.31746L9.20635 8.22222C9.20635 8.22222 10.2784 9.61172 11.3333 10.6667ZM11.3333 10.6667L8 14M16 10.5714L13.4603 13.1111M11.4286 6L8.88889 8.53968"
+				stroke="currentColor"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="2"
+			/>
+			<path
+				d="M8 18H16"
+				stroke="currentColor"
+				strokeLinejoin="round"
+				strokeWidth="2"
+			/>
+		</svg>
+	);
+};

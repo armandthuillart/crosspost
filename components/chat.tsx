@@ -83,24 +83,26 @@ export function Chat({ threadId, userTier, isAnonymous }: ChatProps) {
 						/>
 					)}
 
-					<LayoutGroup>
-						<div className="relative mx-auto flex w-full max-w-(--chat-content-max-width) flex-col gap-4 pb-4 @[34rem]:[--chat-content-max-width:40rem] @[64rem]:[--chat-content-max-width:48rem] [--chat-content-max-width:32rem] md:group-not-data-chat/chat:pb-0">
-							{isChat && (
-								<ChatStreamer
-									isAnonymous={userTier === "anonymous"}
-									isFree={userTier === "free"}
-									isPro={userTier === "pro"}
+					<div className="px-2">
+						<LayoutGroup>
+							<div className="relative mx-auto flex w-full max-w-(--chat-content-max-width) flex-col gap-4 pb-2 @[34rem]:[--chat-content-max-width:40rem] @[64rem]:[--chat-content-max-width:48rem] [--chat-content-max-width:32rem] md:group-not-data-chat/chat:pb-0">
+								{isChat && (
+									<ChatStreamer
+										isAnonymous={userTier === "anonymous"}
+										isFree={userTier === "free"}
+										isPro={userTier === "pro"}
+									/>
+								)}
+								<ChatInput
+									hasSubmitted={hasSubmitted}
+									isChat={isChat}
+									isStreaming={isStreaming}
+									order={order}
+									threadId={threadId}
 								/>
-							)}
-							<ChatInput
-								hasSubmitted={hasSubmitted}
-								isChat={isChat}
-								isStreaming={isStreaming}
-								order={order}
-								threadId={threadId}
-							/>
-						</div>
-					</LayoutGroup>
+							</div>
+						</LayoutGroup>
+					</div>
 				</div>
 			</div>
 		</main>

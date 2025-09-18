@@ -527,3 +527,23 @@ export const LegalDocumentIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
 		</svg>
 	);
 };
+
+export const ChevronRightIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
+	return (
+		<svg
+			fill="none"
+			viewBox="0 0 24 24"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<title>Chevron Right</title>
+			<path
+				d="M9 18L15 12L9 6"
+				stroke="currentColor"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="2"
+			/>
+		</svg>
+	);
+};

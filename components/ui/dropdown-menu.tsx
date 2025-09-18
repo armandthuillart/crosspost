@@ -2,7 +2,7 @@
 
 import { DropdownMenu as DropdownMenuPrimitive } from "radix-ui";
 import type { ComponentProps } from "react";
-import { ArrowRightIcon, TickIcon } from "@/components/ui/icons";
+import { ChevronRightIcon, TickIcon } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 
 function DropdownMenu({ ...props }: DropdownMenuPrimitive.DropdownMenuProps) {
@@ -212,7 +212,7 @@ function DropdownMenuSubTrigger({
 			{...props}
 		>
 			{children}
-			<ArrowRightIcon className="ml-auto size-4" />
+			<ChevronRightIcon className="ml-auto size-4" />
 		</DropdownMenuPrimitive.SubTrigger>
 	);
 }

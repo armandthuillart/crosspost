@@ -16,7 +16,7 @@ interface ChatHeaderProps {
 export function ChatHeader({ isPro, isAnonymous }: ChatHeaderProps) {
 	const router = useRouter();
 
-	async function handleSignIn() {
+	async function handleSignInWithGoogle() {
 		await authClient.signIn.social({
 			callbackURL: "/api/auth/proxy/oauth",
 			provider: "google",
@@ -40,12 +40,12 @@ export function ChatHeader({ isPro, isAnonymous }: ChatHeaderProps) {
 				<div className="flex items-center gap-2">
 					<Button
 						className="rounded-full"
-						onClick={handleSignIn}
+						onClick={handleSignInWithGoogle}
 						variant="outline"
 					>
 						Sign in
 					</Button>
-					<Button className="rounded-full" onClick={handleSignIn}>
+					<Button className="rounded-full" onClick={handleSignInWithGoogle}>
 						Sign up for free
 					</Button>
 				</div>

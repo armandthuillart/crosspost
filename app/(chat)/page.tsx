@@ -5,7 +5,6 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { Chat } from "@/components/chat";
 import { getToken } from "@/lib/auth-server";
-import type { Tier } from "@/lib/types";
 import { api } from "../../convex/_generated/api";
 
 export default async function Page() {
@@ -31,10 +30,6 @@ export default async function Page() {
 	}
 
 	return (
-		<Chat
-			isAnonymous={isAnonymous ?? false}
-			threadId={threadId}
-			userTier={userTier as Tier}
-		/>
+		<Chat isAnonymous={isAnonymous} threadId={threadId} userTier={userTier} />
 	);
 }

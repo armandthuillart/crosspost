@@ -1,19 +1,26 @@
-import { createClient, type GenericCtx } from "@convex-dev/better-auth";
+import {
+	type AuthFunctions,
+	createClient,
+	type GenericCtx,
+} from "@convex-dev/better-auth";
 import { convex } from "@convex-dev/better-auth/plugins";
 import { checkout, polar, portal, webhooks } from "@polar-sh/better-auth";
 import { type BetterAuthOptions, betterAuth } from "better-auth";
 import { anonymous } from "better-auth/plugins";
 import { polarClient } from "../lib/polar";
 import type { Tier } from "../lib/types";
-import { components } from "./_generated/api";
+import { components, internal } from "./_generated/api";
 import type { DataModel } from "./_generated/dataModel";
 import { query } from "./_generated/server";
 import authSchema from "./betterAuth/schema";
 
 const siteUrl = process.env.SITE_URL;
 
-export const { adapter, getHeaders, getAuthUser, registerRoutes } =
+const authFunctions: AuthFunctions = internal.auth;
+
+export const { adapter, triggersApi, getHeaders, getAuthUser, registerRoutes } =
 	createClient<DataModel, typeof authSchema>(components.betterAuth, {
+		authFunctions,
 		local: {
 			schema: authSchema,
 		},
@@ -34,6 +41,8 @@ export const { adapter, getHeaders, getAuthUser, registerRoutes } =
 		verbose: false,
 	});
 
+export const { onCreate, onUpdate, onDelete } = triggersApi();
+
 export const createAuth = (
 	ctx: GenericCtx<DataModel>,
 	{ optionsOnly } = { optionsOnly: false },
@@ -47,18 +56,28 @@ export const createAuth = (
 		plugins: [
 			anonymous({
 				onLinkAccount: async ({ newUser }) => {
+					console.log(
+						"onLinkAccount: An anonymous user linked his google account",
+					);
+
 					const paginated = await polarClient.customers.list({
 						email: newUser.user.email,
 						limit: 1,
 					});
 
+					console.log("onLinkAccount: Paginated", paginated);
+
 					const customer = paginated.result.items[0];
 
+					console.log("onLinkAccount: Customer", customer);
+
 					if (!customer) {
-						await polarClient.customers.create({
+						const newCustomer = await polarClient.customers.create({
 							email: newUser.user.email,
 							externalId: newUser.user.id,
 						});
+
+						console.log("onLinkAccount: New customer", newCustomer);
 					}
 
 					console.log(

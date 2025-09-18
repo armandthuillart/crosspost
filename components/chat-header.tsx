@@ -11,11 +11,11 @@ import type { User } from "@/lib/types";
 
 interface ChatHeaderProps {
 	user: User;
-	isPro: boolean;
+	isFree: boolean;
 	isAnonymous: boolean;
 }
 
-export function ChatHeader({ user, isPro, isAnonymous }: ChatHeaderProps) {
+export function ChatHeader({ user, isFree, isAnonymous }: ChatHeaderProps) {
 	const router = useRouter();
 
 	async function handleSignInWithGoogle() {
@@ -37,7 +37,7 @@ export function ChatHeader({ user, isPro, isAnonymous }: ChatHeaderProps) {
 					<AppIcon className="size-6 text-primary" />
 				</Button>
 
-				{!isPro && <CTA />}
+				{isFree && <CTA />}
 
 				<div className="flex items-center gap-2">
 					<Button

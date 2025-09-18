@@ -132,7 +132,7 @@ export const createAuth = (
 		user: {
 			additionalFields: {
 				tier: {
-					required: false,
+					required: true,
 					type: "string",
 				},
 			},
@@ -149,7 +149,7 @@ export const getUser = query({
 			email: user.email,
 			id: user._id,
 			name: user.name,
-			tier: user.tier as Tier,
+			tier: user.tier as "anonymous" | "free" | "pro",
 		};
 	},
 	returns: v.object({

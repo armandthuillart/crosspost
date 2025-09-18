@@ -21,7 +21,6 @@ interface ChatProps {
 
 export function Chat({ threadId, preloadedUser }: ChatProps) {
 	const pathname = usePathname();
-
 	const user = usePreloadedQuery(preloadedUser);
 
 	const {
@@ -68,7 +67,7 @@ export function Chat({ threadId, preloadedUser }: ChatProps) {
 		>
 			<ChatHeader
 				isAnonymous={user.tier === "anonymous"}
-				isPro={user.tier === "pro"}
+				isFree={user.tier === "free"}
 				user={user}
 			/>
 

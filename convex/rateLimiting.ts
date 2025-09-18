@@ -41,19 +41,19 @@ export const { getRateLimit: getAnonymousRateLimit } = hookAPI<DataModel>(
 	"anonymous",
 	{
 		async key(ctx) {
-			return "123";
+			return ctx.auth.getUserIdentity().then((identity) => identity!.subject);
 		},
 	},
 );
 
 export const { getRateLimit: getFreeRateLimit } = hookAPI<DataModel>("free", {
 	async key(ctx) {
-		return "123";
+		return ctx.auth.getUserIdentity().then((identity) => identity!.subject);
 	},
 });
 
 export const { getRateLimit: getProRateLimit } = hookAPI<DataModel>("pro", {
 	async key(ctx) {
-		return "123";
+		return ctx.auth.getUserIdentity().then((identity) => identity!.subject);
 	},
 });

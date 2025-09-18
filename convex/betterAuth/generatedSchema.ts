@@ -49,7 +49,7 @@ export const tables = {
 		image: v.optional(v.union(v.null(), v.string())),
 		isAnonymous: v.optional(v.union(v.null(), v.boolean())),
 		name: v.string(),
-		tier: v.optional(v.union(v.null(), v.string())),
+		tier: v.string(),
 		updatedAt: v.number(),
 		userId: v.optional(v.union(v.null(), v.string())),
 	})

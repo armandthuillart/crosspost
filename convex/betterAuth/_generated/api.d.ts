@@ -972,7 +972,7 @@ export type Mounts = {
     >;
   };
   auth: {
-    getCurrentUser: FunctionReference<"query", "public", {}, any>;
+    getUser: FunctionReference<"query", "public", {}, any>;
   };
 };
 // For now fullApiWithMounts is only fullApi which provides

@@ -1,46 +1,37 @@
-import {
-	type AuthFunctions,
-	createClient,
-	type GenericCtx,
-} from "@convex-dev/better-auth";
+import { createClient, type GenericCtx } from "@convex-dev/better-auth";
 import { convex } from "@convex-dev/better-auth/plugins";
 import { checkout, polar, portal, webhooks } from "@polar-sh/better-auth";
 import { type BetterAuthOptions, betterAuth } from "better-auth";
 import { anonymous } from "better-auth/plugins";
 import { polarClient } from "../lib/polar";
 import type { Tier } from "../lib/types";
-import { components, internal } from "./_generated/api";
+import { components } from "./_generated/api";
 import type { DataModel } from "./_generated/dataModel";
 import authSchema from "./betterAuth/schema";
 
 const siteUrl = process.env.SITE_URL;
 
-const authFunctions: AuthFunctions = internal.auth;
-
-export const { adapter, getAuthUser, registerRoutes } = createClient<
-	DataModel,
-	typeof authSchema
->(components.betterAuth, {
-	authFunctions,
-	local: {
-		schema: authSchema,
-	},
-	triggers: {
-		users: {
-			onCreate: async (_, { isAnonymous }) => {
-				if (isAnonymous) {
-					console.log(
-						"TRIGGER: An anonymous user was created, we should set his tier to anonymous",
-					);
-				}
-			},
-			onUpdate: async () => {
-				console.log("TRIGGER: A user has been updated");
+export const { adapter, getHeaders, getAuthUser, registerRoutes } =
+	createClient<DataModel, typeof authSchema>(components.betterAuth, {
+		local: {
+			schema: authSchema,
+		},
+		triggers: {
+			users: {
+				onCreate: async (ctx, { isAnonymous }) => {
+					if (isAnonymous) {
+						console.log(
+							"TRIGGER: An anonymous user was created, we should set his tier to anonymous",
+						);
+					}
+				},
+				onUpdate: async (ctx) => {
+					console.log("TRIGGER: A user has been updated");
+				},
 			},
 		},
-	},
-	verbose: false,
-});
+		verbose: true,
+	});
 
 export const createAuth = (
 	ctx: GenericCtx<DataModel>,

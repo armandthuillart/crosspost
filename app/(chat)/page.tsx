@@ -15,7 +15,7 @@ export default async function Page() {
 	}
 
 	const { userTier, isAnonymous } = await fetchQuery(
-		api.betterAuth.auth.getCurrentUser,
+		api.betterAuth.auth.getUser,
 		{},
 		{ token },
 	);

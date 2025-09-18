@@ -3840,7 +3840,7 @@ export declare const components: {
       >;
     };
     auth: {
-      getCurrentUser: FunctionReference<"query", "internal", {}, any>;
+      getUser: FunctionReference<"query", "internal", {}, any>;
     };
   };
   rateLimiter: {

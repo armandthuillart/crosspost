@@ -9,18 +9,25 @@ import { internalMutation, query } from "./_generated/server";
 
 export const auth = getStaticAuth(createAuth);
 
-export const getCurrentUser = query({
+export const getUser = query({
 	args: {},
 	handler: async (ctx) => {
 		const identity = await ctx.auth.getUserIdentity();
-		const user = await ctx.db.get(identity?.subject as Id<"users">);
+
+		if (!identity) {
+			throw new Error("User not found");
+		}
+
+		const user = await ctx.db.get(identity.subject as Id<"users">);
+
+		if (!user) {
+			throw new Error("User not found");
+		}
 
 		return {
-			email: user?.email,
-			isAnonymous: user?.isAnonymous,
-			name: user?.name,
-			userId: user?._id,
-			userTier: user?.tier as Tier,
+			isAnonymous: user.isAnonymous ?? false,
+			userId: user._id,
+			userTier: user.tier as Tier,
 		};
 	},
 });

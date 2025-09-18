@@ -18,8 +18,9 @@ export const tidyUpAnonymousUsers = internalMutation({
 
 		const { page, isDone, continueCursor } = await ctx.db
 			.query("user")
-			.withIndex("by_is_anonymous", (q) => q.eq("isAnonymous", true))
-			.filter((q) => q.lt(q.field("_creationTime"), twentyFourHoursAgo))
+			.withIndex("by_is_anonymous", (q) =>
+				q.eq("isAnonymous", true).lt("_creationTime", twentyFourHoursAgo),
+			)
 			.paginate({ cursor: cursor ?? null, numItems: 100 });
 
 		for (const { _id: userId } of page) {

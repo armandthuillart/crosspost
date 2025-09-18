@@ -2923,7 +2923,7 @@ export declare const components: {
                   updatedAt: number;
                   userId: string;
                 };
-                model: "accounts";
+                model: "account";
               }
             | {
                 data: {
@@ -2943,7 +2943,7 @@ export declare const components: {
                   userAgent?: null | string;
                   userId: string;
                 };
-                model: "sessions";
+                model: "session";
               }
             | {
                 data: {
@@ -2957,7 +2957,7 @@ export declare const components: {
                   updatedAt: number;
                   userId?: null | string;
                 };
-                model: "users";
+                model: "user";
               }
             | {
                 data: {
@@ -2967,7 +2967,7 @@ export declare const components: {
                   updatedAt: number;
                   value: string;
                 };
-                model: "verifications";
+                model: "verification";
               };
           onCreateHandle?: string;
           select?: Array<string>;
@@ -2980,7 +2980,7 @@ export declare const components: {
         {
           input:
             | {
-                model: "accounts";
+                model: "account";
                 where?: Array<{
                   connector?: "AND" | "OR";
                   field:
@@ -3043,7 +3043,7 @@ export declare const components: {
                 }>;
               }
             | {
-                model: "sessions";
+                model: "session";
                 where?: Array<{
                   connector?: "AND" | "OR";
                   field:
@@ -3076,7 +3076,7 @@ export declare const components: {
                 }>;
               }
             | {
-                model: "users";
+                model: "user";
                 where?: Array<{
                   connector?: "AND" | "OR";
                   field:
@@ -3111,7 +3111,7 @@ export declare const components: {
                 }>;
               }
             | {
-                model: "verifications";
+                model: "verification";
                 where?: Array<{
                   connector?: "AND" | "OR";
                   field:
@@ -3159,7 +3159,7 @@ export declare const components: {
         {
           input:
             | {
-                model: "accounts";
+                model: "account";
                 where?: Array<{
                   connector?: "AND" | "OR";
                   field:
@@ -3222,7 +3222,7 @@ export declare const components: {
                 }>;
               }
             | {
-                model: "sessions";
+                model: "session";
                 where?: Array<{
                   connector?: "AND" | "OR";
                   field:
@@ -3255,7 +3255,7 @@ export declare const components: {
                 }>;
               }
             | {
-                model: "users";
+                model: "user";
                 where?: Array<{
                   connector?: "AND" | "OR";
                   field:
@@ -3290,7 +3290,7 @@ export declare const components: {
                 }>;
               }
             | {
-                model: "verifications";
+                model: "verification";
                 where?: Array<{
                   connector?: "AND" | "OR";
                   field:
@@ -3329,7 +3329,7 @@ export declare const components: {
         "internal",
         {
           limit?: number;
-          model: "accounts" | "jwks" | "sessions" | "users" | "verifications";
+          model: "account" | "jwks" | "session" | "user" | "verification";
           offset?: number;
           paginationOpts: {
             cursor: string | null;
@@ -3369,7 +3369,7 @@ export declare const components: {
         "query",
         "internal",
         {
-          model: "accounts" | "jwks" | "sessions" | "users" | "verifications";
+          model: "account" | "jwks" | "session" | "user" | "verification";
           select?: Array<string>;
           where?: Array<{
             connector?: "AND" | "OR";
@@ -3402,7 +3402,7 @@ export declare const components: {
         {
           input:
             | {
-                model: "accounts";
+                model: "account";
                 update: {
                   accessToken?: null | string;
                   accessTokenExpiresAt?: null | number;
@@ -3484,7 +3484,7 @@ export declare const components: {
                 }>;
               }
             | {
-                model: "sessions";
+                model: "session";
                 update: {
                   createdAt?: number;
                   expiresAt?: number;
@@ -3526,7 +3526,7 @@ export declare const components: {
                 }>;
               }
             | {
-                model: "users";
+                model: "user";
                 update: {
                   createdAt?: number;
                   email?: string;
@@ -3572,7 +3572,7 @@ export declare const components: {
                 }>;
               }
             | {
-                model: "verifications";
+                model: "verification";
                 update: {
                   createdAt?: number;
                   expiresAt?: number;
@@ -3627,7 +3627,7 @@ export declare const components: {
         {
           input:
             | {
-                model: "accounts";
+                model: "account";
                 update: {
                   accessToken?: null | string;
                   accessTokenExpiresAt?: null | number;
@@ -3709,7 +3709,7 @@ export declare const components: {
                 }>;
               }
             | {
-                model: "sessions";
+                model: "session";
                 update: {
                   createdAt?: number;
                   expiresAt?: number;
@@ -3751,7 +3751,7 @@ export declare const components: {
                 }>;
               }
             | {
-                model: "users";
+                model: "user";
                 update: {
                   createdAt?: number;
                   email?: string;
@@ -3797,7 +3797,7 @@ export declare const components: {
                 }>;
               }
             | {
-                model: "verifications";
+                model: "verification";
                 update: {
                   createdAt?: number;
                   expiresAt?: number;
@@ -3838,9 +3838,6 @@ export declare const components: {
         },
         any
       >;
-    };
-    auth: {
-      getUser: FunctionReference<"query", "internal", {}, any>;
     };
   };
   rateLimiter: {

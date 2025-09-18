@@ -27,7 +27,7 @@ import { rateLimiter } from "./rateLimiting";
 export const createChat = mutation({
 	args: {},
 	handler: async (ctx) => {
-		const { userId } = await ctx.runQuery(api.betterAuth.auth.getUser, {});
+		const { userId } = await ctx.runQuery(api.auth.getUser, {});
 
 		const threadId = await createThread(ctx, components.agent, {
 			title: "New Chat",
@@ -158,7 +158,7 @@ export const listChats = query({
 		ctx,
 		{ paginationOpts },
 	): Promise<PaginationResult<ThreadDoc>> => {
-		const { userId } = await ctx.runQuery(api.betterAuth.auth.getUser, {});
+		const { userId } = await ctx.runQuery(api.auth.getUser, {});
 
 		const threads = await ctx.runQuery(
 			components.agent.threads.listThreadsByUserId,
@@ -173,10 +173,7 @@ export async function verifyOwnership(
 	ctx: QueryCtx | MutationCtx | ActionCtx,
 	threadId: string,
 ) {
-	const { userId, userTier } = await ctx.runQuery(
-		api.betterAuth.auth.getUser,
-		{},
-	);
+	const { userId, userTier } = await ctx.runQuery(api.auth.getUser, {});
 
 	if (!userId) {
 		throw new ChatSDKError("unauthorized:auth");

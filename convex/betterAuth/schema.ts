@@ -10,7 +10,7 @@ export const tier = v.union(
 
 const schema = defineSchema({
 	...tables,
-	users: tables.users.index("by_is_anonymous", ["isAnonymous"]),
+	user: tables.user.index("by_is_anonymous", ["isAnonymous"]),
 });
 
 export default schema;

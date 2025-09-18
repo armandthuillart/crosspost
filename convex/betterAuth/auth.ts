@@ -1,36 +1,11 @@
 import { getStaticAuth } from "@convex-dev/better-auth";
 import { v } from "convex/values";
 import { subDays } from "date-fns";
-import type { Tier } from "../../lib/types";
 import { createAuth } from "../auth";
 import { internal } from "./_generated/api";
-import type { Id } from "./_generated/dataModel";
-import { internalMutation, query } from "./_generated/server";
+import { internalMutation } from "./_generated/server";
 
 export const auth = getStaticAuth(createAuth);
-
-export const getUser = query({
-	args: {},
-	handler: async (ctx) => {
-		const identity = await ctx.auth.getUserIdentity();
-
-		if (!identity) {
-			throw new Error("User not found");
-		}
-
-		const user = await ctx.db.get(identity.subject as Id<"users">);
-
-		if (!user) {
-			throw new Error("User not found");
-		}
-
-		return {
-			isAnonymous: user.isAnonymous ?? false,
-			userId: user._id,
-			userTier: user.tier as Tier,
-		};
-	},
-});
 
 export const tidyUpAnonymousUsers = internalMutation({
 	args: {
@@ -40,7 +15,7 @@ export const tidyUpAnonymousUsers = internalMutation({
 		const twentyFourHoursAgo = subDays(new Date(), 1).getTime();
 
 		const { page, isDone, continueCursor } = await ctx.db
-			.query("users")
+			.query("user")
 			.withIndex("by_is_anonymous", (q) => q.eq("isAnonymous", true))
 			.filter((q) => q.lt(q.field("_creationTime"), twentyFourHoursAgo))
 			.paginate({ cursor: cursor ?? null, numItems: 100 });

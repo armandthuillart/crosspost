@@ -9,7 +9,7 @@ import type { platform } from "./schema";
 export const createDraft = mutation({
 	args: zodToConvex(draftSchema),
 	handler: async (ctx, { title, versions }): Promise<Id<"drafts">> => {
-		const { userId } = await ctx.runQuery(api.betterAuth.auth.getUser, {});
+		const { userId } = await ctx.runQuery(api.auth.getUser, {});
 
 		const draftId = await ctx.db.insert("drafts", {
 			title,

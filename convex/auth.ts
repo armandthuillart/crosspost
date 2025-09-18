@@ -7,6 +7,7 @@ import { polarClient } from "../lib/polar";
 import type { Tier } from "../lib/types";
 import { components } from "./_generated/api";
 import type { DataModel } from "./_generated/dataModel";
+import { query } from "./_generated/server";
 import authSchema from "./betterAuth/schema";
 
 const siteUrl = process.env.SITE_URL;
@@ -17,7 +18,7 @@ export const { adapter, getHeaders, getAuthUser, registerRoutes } =
 			schema: authSchema,
 		},
 		triggers: {
-			users: {
+			user: {
 				onCreate: async (ctx, { isAnonymous }) => {
 					if (isAnonymous) {
 						console.log(
@@ -30,7 +31,7 @@ export const { adapter, getHeaders, getAuthUser, registerRoutes } =
 				},
 			},
 		},
-		verbose: true,
+		verbose: false,
 	});
 
 export const createAuth = (
@@ -38,9 +39,6 @@ export const createAuth = (
 	{ optionsOnly } = { optionsOnly: false },
 ) => {
 	return betterAuth({
-		account: {
-			modelName: "accounts",
-		},
 		baseURL: siteUrl,
 		database: adapter(ctx),
 		logger: {
@@ -106,9 +104,6 @@ export const createAuth = (
 			}),
 			convex(),
 		],
-		session: {
-			modelName: "sessions",
-		},
 		socialProviders: {
 			google: {
 				accessType: "offline",
@@ -124,10 +119,19 @@ export const createAuth = (
 					type: "string",
 				},
 			},
-			modelName: "users",
-		},
-		verification: {
-			modelName: "verifications",
 		},
 	} satisfies BetterAuthOptions);
 };
+
+export const getUser = query({
+	args: {},
+	handler: async (ctx) => {
+		const user = await getAuthUser(ctx);
+
+		return {
+			isAnonymous: user.isAnonymous ?? false,
+			userId: user._id,
+			userTier: user.tier as Tier,
+		};
+	},
+});

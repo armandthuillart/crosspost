@@ -1,6 +1,7 @@
 "use client";
 
 import { useUIMessages } from "@convex-dev/agent/react";
+import { type Preloaded, usePreloadedQuery } from "convex/react";
 import { LayoutGroup } from "motion/react";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -11,17 +12,18 @@ import { ChatInput } from "@/components/chat-input";
 import { ChatMessages } from "@/components/chat-messages";
 import { ChatStreamer } from "@/components/chat-streamer";
 import { api } from "@/convex/_generated/api";
-import type { Tier } from "@/lib/types";
 import { attr } from "@/lib/utils";
 
 interface ChatProps {
-	userTier: Tier;
 	threadId: string;
-	isAnonymous: boolean;
+	preloadedUser: Preloaded<typeof api.auth.getUser>;
 }
 
-export function Chat({ threadId, userTier, isAnonymous }: ChatProps) {
+export function Chat({ threadId, preloadedUser }: ChatProps) {
 	const pathname = usePathname();
+
+	const { email, initial, userTier, isAnonymous } =
+		usePreloadedQuery(preloadedUser);
 
 	const {
 		status,
@@ -33,14 +35,12 @@ export function Chat({ threadId, userTier, isAnonymous }: ChatProps) {
 		{ initialNumItems: 10, stream: true },
 	);
 
-	const canLoadMore = status === "CanLoadMore";
-	const isLoadingMore = status === "LoadingMore";
-
-	const isChat = messages.length > 0 || pathname.includes("/c/");
-
 	const order = messages.find((m) => m.status === "streaming")?.order ?? 0;
+	const isChat = messages.length > 0 || pathname.includes("/c/");
+	const canLoadMore = status === "CanLoadMore";
 	const isStreaming = messages.some((m) => m.status === "streaming");
 	const hasSubmitted = messages.some((m) => m.status === "pending");
+	const isLoadingMore = status === "LoadingMore";
 
 	const [hasSentMessage, setHasSentMessage] = useState(false);
 
@@ -67,7 +67,12 @@ export function Chat({ threadId, userTier, isAnonymous }: ChatProps) {
 			className="group/chat @container/chat relative flex size-full flex-col"
 			{...attr("chat", isChat)}
 		>
-			<ChatHeader isAnonymous={isAnonymous} isPro={userTier === "pro"} />
+			<ChatHeader
+				email={email}
+				initial={initial}
+				isAnonymous={isAnonymous}
+				isPro={userTier === "pro"}
+			/>
 
 			<div className="flex h-full flex-col overflow-y-scroll group-data-chat/chat:gap-32">
 				<div className="flex h-full flex-col overflow-hidden group-data-chat/chat:h-full group-data-chat/chat:justify-center max-md:shrink-0 group-not-data-chat/chat:md:gap-6 group-not-data-chat/chat:md:pt-24 group-not-data-chat/chat:lg:pt-[30dvh]">

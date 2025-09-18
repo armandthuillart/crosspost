@@ -1,6 +1,6 @@
 import "server-only";
 
-import { fetchMutation, fetchQuery } from "convex/nextjs";
+import { fetchMutation, preloadQuery } from "convex/nextjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { Chat } from "@/components/chat";
@@ -17,11 +17,7 @@ export default async function Page() {
 		return redirect("/api/auth/proxy/anonymous");
 	}
 
-	const { userTier, isAnonymous } = await fetchQuery(
-		api.auth.getUser,
-		{},
-		{ token },
-	);
+	const preloadedUser = await preloadQuery(api.auth.getUser, {}, { token });
 
 	let threadId = cookieStore.get("chat")?.value;
 
@@ -29,7 +25,5 @@ export default async function Page() {
 		threadId = await fetchMutation(api.chat.createChat, {}, { token });
 	}
 
-	return (
-		<Chat isAnonymous={isAnonymous} threadId={threadId} userTier={userTier} />
-	);
+	return <Chat preloadedUser={preloadedUser} threadId={threadId} />;
 }

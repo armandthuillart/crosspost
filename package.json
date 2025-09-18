@@ -2,7 +2,7 @@
 	"dependencies": {
 		"@ai-sdk/gateway": "^1.0.23",
 		"@convex-dev/agent": "^0.2.8",
-		"@convex-dev/better-auth": "^0.8.4",
+		"@convex-dev/better-auth": "^0.8.6",
 		"@convex-dev/rate-limiter": "^0.2.12",
 		"@paper-design/shaders-react": "^0.0.53",
 		"@polar-sh/better-auth": "^1.1.4",

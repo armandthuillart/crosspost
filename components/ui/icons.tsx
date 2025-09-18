@@ -260,107 +260,6 @@ export const SparkleIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
 	);
 };
 
-export const TestTubeIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
-	return (
-		<svg
-			fill="none"
-			viewBox="0 0 24 24"
-			xmlns="http://www.w3.org/2000/svg"
-			{...props}
-		>
-			<title>Test Tube</title>
-			<path
-				d="M11.223 6V7.98898C11.223 9.38733 11.223 10.0865 11.4102 10.7577C11.5974 11.4289 11.9644 12.0452 12.6984 13.2779L13.6929 14.9482C15.5632 18.0892 16.4984 19.6597 15.7312 20.824L15.7193 20.8418C14.9409 22 12.9606 22 9 22C5.03938 22 3.05907 22 2.2807 20.8418L2.26884 20.824C1.50164 19.6597 2.43679 18.0892 4.30708 14.9482L5.30163 13.2779C6.03558 12.0452 6.40256 11.4289 6.5898 10.7577C6.77704 10.0865 6.77704 9.38733 6.77704 7.98898V6"
-				stroke="currentColor"
-				strokeWidth="2"
-			/>
-			<path
-				d="M6 6H12"
-				stroke="currentColor"
-				strokeLinecap="round"
-				strokeLinejoin="round"
-				strokeWidth="2"
-			/>
-			<path
-				d="M5.5 13.2803C6.16667 12.699 7.73448 13.1181 9.00155 13.6643C10.6682 14.3828 12.1667 13.8019 12.5 13.2803"
-				stroke="currentColor"
-				strokeLinecap="round"
-				strokeWidth="2"
-			/>
-			<path
-				d="M11.5 7C11.5 9 13.8624 11.2121 15.4728 11C15.4728 12.6569 16.934 14 18.7364 14C20.5388 14 22 12.6569 22 11C22 9.34315 21 8 19 8C19 6 17.5 4 15.3799 4C15.3799 2.45687 14.5 2 13.5 2C12.5 2 12 3 12 3C12 3 9 3 9 6"
-				stroke="currentColor"
-				strokeLinecap="round"
-				strokeLinejoin="round"
-				strokeWidth="2"
-			/>
-		</svg>
-	);
-};
-
-export const ZapIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
-	return (
-		<svg
-			fill="none"
-			viewBox="0 0 24 24"
-			xmlns="http://www.w3.org/2000/svg"
-			{...props}
-		>
-			<title>Zap</title>
-			<path
-				d="M8.62814 12.6736H8.16918C6.68545 12.6736 5.94358 12.6736 5.62736 12.1844C5.31114 11.6953 5.61244 11.0138 6.21504 9.65083L8.02668 5.55323C8.57457 4.314 8.84852 3.69438 9.37997 3.34719C9.91142 3 10.5859 3 11.935 3H14.0244C15.6632 3 16.4826 3 16.7916 3.53535C17.1007 4.0707 16.6942 4.78588 15.8811 6.21623L14.8092 8.10188C14.405 8.81295 14.2029 9.16849 14.2057 9.45952C14.2094 9.83775 14.4105 10.1862 14.7354 10.377C14.9854 10.5239 15.3927 10.5239 16.2074 10.5239C17.2373 10.5239 17.7523 10.5239 18.0205 10.7022C18.3689 10.9338 18.5513 11.3482 18.4874 11.7632C18.4382 12.0826 18.0918 12.4656 17.399 13.2317L11.8639 19.3523C10.7767 20.5545 10.2331 21.1556 9.86807 20.9654C9.50303 20.7751 9.67833 19.9822 10.0289 18.3962L10.7157 15.2896C10.9826 14.082 11.1161 13.4782 10.7951 13.0759C10.4741 12.6736 9.85877 12.6736 8.62814 12.6736Z"
-				stroke="currentColor"
-				strokeLinejoin="round"
-				strokeWidth="2"
-			/>
-		</svg>
-	);
-};
-
-export const BubbleChatIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
-	return (
-		<svg
-			fill="none"
-			viewBox="0 0 24 24"
-			xmlns="http://www.w3.org/2000/svg"
-			{...props}
-		>
-			<title>Bubble Chat</title>
-			<path
-				d="M21.5 12C21.5 17.2467 17.2467 21.5 12 21.5C10.3719 21.5 8.8394 21.0904 7.5 20.3687C5.63177 19.362 4.37462 20.2979 3.26592 20.4658C3.09774 20.4913 2.93024 20.4302 2.80997 20.31C2.62741 20.1274 2.59266 19.8451 2.6935 19.6074C3.12865 18.5818 3.5282 16.6382 2.98341 15C2.6698 14.057 2.5 13.0483 2.5 12C2.5 6.75329 6.75329 2.5 12 2.5C17.2467 2.5 21.5 6.75329 21.5 12Z"
-				stroke="currentColor"
-				strokeLinecap="round"
-				strokeLinejoin="round"
-				strokeWidth="2"
-			/>
-		</svg>
-	);
-};
-
-export const DollarCircleIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
-	return (
-		<svg
-			fill="none"
-			viewBox="0 0 24 24"
-			xmlns="http://www.w3.org/2000/svg"
-			{...props}
-		>
-			<title>Dollar Circle</title>
-			<path
-				d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z"
-				stroke="currentColor"
-				strokeWidth="2"
-			/>
-			<path
-				d="M14.7102 10.0611C14.6111 9.29844 13.7354 8.06622 12.1608 8.06619C10.3312 8.06616 9.56136 9.07946 9.40515 9.58611C9.16145 10.2638 9.21019 11.6571 11.3547 11.809C14.0354 11.999 15.1093 12.3154 14.9727 13.956C14.836 15.5965 13.3417 15.951 12.1608 15.9129C10.9798 15.875 9.04764 15.3325 8.97266 13.8733M11.9734 6.99805V8.06982M11.9734 15.9031V16.998"
-				stroke="currentColor"
-				strokeLinecap="round"
-				strokeWidth="2"
-			/>
-		</svg>
-	);
-};
-
 export const CloseIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
 	return (
 		<svg
@@ -409,33 +308,6 @@ export const LifeBuoyIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
 			<title>Life Buoy</title>
 			<path
 				d="M4.93 4.93L9.17 9.17M14.83 9.17L19.07 4.93M14.83 14.83L19.07 19.07M9.17 14.83L4.93 19.07M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12ZM16 12C16 14.2091 14.2091 16 12 16C9.79086 16 8 14.2091 8 12C8 9.79086 9.79086 8 12 8C14.2091 8 16 9.79086 16 12Z"
-				stroke="currentColor"
-				strokeLinecap="round"
-				strokeLinejoin="round"
-				strokeWidth="2"
-			/>
-		</svg>
-	);
-};
-
-export const SignatureIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
-	return (
-		<svg
-			fill="none"
-			viewBox="0 0 24 24"
-			xmlns="http://www.w3.org/2000/svg"
-			{...props}
-		>
-			<title>Signature</title>
-			<path
-				d="M22 12.6344C18 16.1465 17.4279 10.621 15.3496 11.0165C13 11.4637 11.5 16.4445 13 16.4445C14.5 16.4445 12.5 10.5 10.5 12.5556C8.5 14.6111 7.85936 17.2946 6.23526 15.3025C-1.5 5.81446 4.99998 -1.14994 8.16322 3.45685C10.1653 6.37256 6.5 16.9769 2 22"
-				stroke="currentColor"
-				strokeLinecap="round"
-				strokeLinejoin="round"
-				strokeWidth="2"
-			/>
-			<path
-				d="M9 21H19"
 				stroke="currentColor"
 				strokeLinecap="round"
 				strokeLinejoin="round"
@@ -539,6 +411,47 @@ export const ChevronRightIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
 			<title>Chevron Right</title>
 			<path
 				d="M9 18L15 12L9 6"
+				stroke="currentColor"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="2"
+			/>
+		</svg>
+	);
+};
+
+export const SettingsIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
+	return (
+		<svg
+			fill="none"
+			viewBox="0 0 24 24"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<title>Settings</title>
+			<path
+				d="M14 17H5"
+				stroke="currentColor"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="2"
+			/>
+			<path
+				d="M19 7H10"
+				stroke="currentColor"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="2"
+			/>
+			<path
+				d="M17 20C18.6569 20 20 18.6569 20 17C20 15.3431 18.6569 14 17 14C15.3431 14 14 15.3431 14 17C14 18.6569 15.3431 20 17 20Z"
+				stroke="currentColor"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="2"
+			/>
+			<path
+				d="M7 10C8.65685 10 10 8.65685 10 7C10 5.34315 8.65685 4 7 4C5.34315 4 4 5.34315 4 7C4 8.65685 5.34315 10 7 10Z"
 				stroke="currentColor"
 				strokeLinecap="round"
 				strokeLinejoin="round"

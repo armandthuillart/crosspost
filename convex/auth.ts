@@ -145,7 +145,10 @@ export const getUser = query({
 		}
 
 		return {
+			email: user.email,
+			initial: user.name.charAt(0) || user.email.charAt(0),
 			isAnonymous: user.isAnonymous ?? false,
+			name: user.name,
 			userId: user._id,
 			userTier: user.tier as Tier,
 		};

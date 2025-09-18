@@ -1,4 +1,4 @@
-import { Avatar } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,
@@ -15,9 +15,15 @@ import {
 	LegalDocumentIcon,
 	LifeBuoyIcon,
 	LogOutIcon,
+	SettingsIcon,
 } from "@/components/ui/icons";
 
-export function AppMenu() {
+interface AppMenuProps {
+	email: string;
+	initial: string;
+}
+
+export function AppMenu({ email, initial }: AppMenuProps) {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
@@ -26,7 +32,11 @@ export function AppMenu() {
 					size="icon"
 					variant="ghost"
 				>
-					<Avatar className="size-6"></Avatar>
+					<Avatar className="size-6">
+						<AvatarFallback className="border-primary bg-primary text-primary-foreground text-xs">
+							{initial}
+						</AvatarFallback>
+					</Avatar>
 				</Button>
 			</DropdownMenuTrigger>
 
@@ -36,6 +46,13 @@ export function AppMenu() {
 				className="w-80"
 				side="top"
 			>
+				<DropdownMenuItem>
+					<SettingsIcon className="size-5" />
+					Settings
+				</DropdownMenuItem>
+
+				<DropdownMenuSeparator />
+
 				<DropdownMenuSub>
 					<DropdownMenuSubTrigger>
 						<LifeBuoyIcon className="size-5" />
@@ -53,8 +70,6 @@ export function AppMenu() {
 						</DropdownMenuItem>
 					</DropdownMenuSubContent>
 				</DropdownMenuSub>
-
-				<DropdownMenuSeparator />
 
 				<DropdownMenuItem>
 					<LogOutIcon className="size-5" />

@@ -1,6 +1,6 @@
 import "server-only";
 
-import { fetchQuery } from "convex/nextjs";
+import { preloadQuery } from "convex/nextjs";
 import { redirect } from "next/navigation";
 import { Chat } from "@/components/chat";
 import { getToken } from "@/lib/auth-server";
@@ -15,15 +15,9 @@ export default async function Page({ params }: PageProps<"/c/[threadId]">) {
 		return redirect("/api/auth/proxy/anonymous");
 	}
 
-	const { userTier, isAnonymous } = await fetchQuery(
-		api.auth.getUser,
-		{},
-		{ token },
-	);
+	const preloadedUser = await preloadQuery(api.auth.getUser, {}, { token });
 
 	const { threadId } = await params;
 
-	return (
-		<Chat isAnonymous={isAnonymous} threadId={threadId} userTier={userTier} />
-	);
+	return <Chat preloadedUser={preloadedUser} threadId={threadId} />;
 }

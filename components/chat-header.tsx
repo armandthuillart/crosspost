@@ -9,11 +9,18 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { authClient } from "@/lib/auth-client";
 
 interface ChatHeaderProps {
+	email: string;
 	isPro: boolean;
+	initial: string;
 	isAnonymous: boolean;
 }
 
-export function ChatHeader({ isPro, isAnonymous }: ChatHeaderProps) {
+export function ChatHeader({
+	isPro,
+	email,
+	initial,
+	isAnonymous,
+}: ChatHeaderProps) {
 	const router = useRouter();
 
 	async function handleSignInWithGoogle() {
@@ -56,7 +63,7 @@ export function ChatHeader({ isPro, isAnonymous }: ChatHeaderProps) {
 	return (
 		<header className="inset-0 bottom-auto z-50 flex items-center justify-between p-2 group-not-data-chat/chat:absolute group-data-chat/chat:sticky @max-8xl/chat:group-data-chat/chat:bg-background">
 			<SidebarTrigger />
-			<AppMenu />
+			<AppMenu email={email} initial={initial} />
 		</header>
 	);
 }

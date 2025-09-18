@@ -22,7 +22,7 @@ interface ChatProps {
 export function Chat({ threadId, preloadedUser }: ChatProps) {
 	const pathname = usePathname();
 
-	const { initial, userTier, isAnonymous } = usePreloadedQuery(preloadedUser);
+	const user = usePreloadedQuery(preloadedUser);
 
 	const {
 		status,
@@ -67,9 +67,9 @@ export function Chat({ threadId, preloadedUser }: ChatProps) {
 			{...attr("chat", isChat)}
 		>
 			<ChatHeader
-				initial={initial}
-				isAnonymous={isAnonymous}
-				isPro={userTier === "pro"}
+				isAnonymous={user.tier === "anonymous"}
+				isPro={user.tier === "pro"}
+				user={user}
 			/>
 
 			<div className="flex h-full flex-col overflow-y-scroll group-data-chat/chat:gap-32">
@@ -91,9 +91,9 @@ export function Chat({ threadId, preloadedUser }: ChatProps) {
 							<div className="relative mx-auto flex w-full max-w-(--chat-content-max-width) flex-col gap-4 pb-2 @[34rem]:[--chat-content-max-width:40rem] @[64rem]:[--chat-content-max-width:48rem] [--chat-content-max-width:32rem] md:group-not-data-chat/chat:pb-0">
 								{isChat && (
 									<ChatStreamer
-										isAnonymous={userTier === "anonymous"}
-										isFree={userTier === "free"}
-										isPro={userTier === "pro"}
+										isAnonymous={user.tier === "anonymous"}
+										isFree={user.tier === "free"}
+										isPro={user.tier === "pro"}
 									/>
 								)}
 								<ChatInput

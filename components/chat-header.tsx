@@ -7,18 +7,15 @@ import { Button } from "@/components/ui/button";
 import { AppIcon } from "@/components/ui/icons";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { authClient } from "@/lib/auth-client";
+import type { User } from "@/lib/types";
 
 interface ChatHeaderProps {
+	user: User;
 	isPro: boolean;
-	initial: string;
 	isAnonymous: boolean;
 }
 
-export function ChatHeader({
-	isPro,
-	initial,
-	isAnonymous,
-}: ChatHeaderProps) {
+export function ChatHeader({ user, isPro, isAnonymous }: ChatHeaderProps) {
 	const router = useRouter();
 
 	async function handleSignInWithGoogle() {
@@ -61,7 +58,7 @@ export function ChatHeader({
 	return (
 		<header className="inset-0 bottom-auto z-50 flex items-center justify-between p-2 group-not-data-chat/chat:absolute group-data-chat/chat:sticky @max-8xl/chat:group-data-chat/chat:bg-background">
 			<SidebarTrigger />
-			<AppMenu initial={initial} />
+			<AppMenu user={user} />
 		</header>
 	);
 }

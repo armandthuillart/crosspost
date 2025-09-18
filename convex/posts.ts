@@ -1,3 +1,4 @@
+import { v } from "convex/values";
 import { zodToConvex } from "convex-helpers/server/zod";
 import { postSchema } from "../lib/schema";
 import { internalMutation } from "./_generated/server";
@@ -7,4 +8,5 @@ export const createPost = internalMutation({
 	handler: async (ctx, { title, content, platform }) => {
 		return await ctx.db.insert("posts", { content, platform, title });
 	},
+	returns: v.id("posts"),
 });

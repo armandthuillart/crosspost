@@ -3,8 +3,11 @@ import { convex } from "@convex-dev/better-auth/plugins";
 import { checkout, polar, portal, webhooks } from "@polar-sh/better-auth";
 import { type BetterAuthOptions, betterAuth } from "better-auth";
 import { anonymous } from "better-auth/plugins";
+import { v } from "convex/values";
+import { zodToConvex } from "convex-helpers/server/zod";
 import { deleteCookie } from "../app/actions";
 import { polarClient } from "../lib/polar";
+import { tierSchema } from "../lib/schema";
 import type { Tier } from "../lib/types";
 import { components } from "./_generated/api";
 import type { DataModel } from "./_generated/dataModel";
@@ -13,19 +16,13 @@ import authSchema from "./betterAuth/schema";
 
 const siteUrl = process.env.SITE_URL;
 
-export const {
-	adapter,
-	getHeaders,
-	triggersApi,
-	registerRoutes,
-	safeGetAuthUser,
-} = createClient<DataModel, typeof authSchema>(components.betterAuth, {
-	local: {
-		schema: authSchema,
-	},
-
-	verbose: false,
-});
+export const { adapter, getHeaders, getAuthUser, triggersApi, registerRoutes } =
+	createClient<DataModel, typeof authSchema>(components.betterAuth, {
+		local: {
+			schema: authSchema,
+		},
+		verbose: false,
+	});
 
 export const { onCreate, onUpdate, onDelete } = triggersApi();
 
@@ -46,13 +43,14 @@ export const createAuth = (
 			},
 			user: {
 				create: {
-					before: async (user) => {
+					before: async ({ isAnonymous, ...rest }) => {
+						const tier: Tier = isAnonymous ? "anonymous" : "free";
+
 						return {
 							data: {
-								...user,
-								tier: user.isAnonymous
-									? ("anonymous" satisfies Tier)
-									: ("free" satisfies Tier),
+								...rest,
+								isAnonymous,
+								tier,
 							},
 						};
 					},
@@ -101,7 +99,7 @@ export const createAuth = (
 					portal(),
 					webhooks({
 						onCustomerStateChanged: async ({
-							data: { externalId, activeSubscriptions },
+							data: { activeSubscriptions },
 						}) => {
 							const isPro = activeSubscriptions.some(
 								(s) => s.status === "active",
@@ -145,19 +143,19 @@ export const createAuth = (
 export const getUser = query({
 	args: {},
 	handler: async (ctx) => {
-		const user = await safeGetAuthUser(ctx);
-
-		if (!user) {
-			throw new Error("User not found");
-		}
+		const user = await getAuthUser(ctx);
 
 		return {
 			email: user.email,
-			initial: user.name.charAt(0) || user.email.charAt(0),
-			isAnonymous: user.isAnonymous ?? false,
+			id: user._id,
 			name: user.name,
-			userId: user._id,
-			userTier: user.tier as Tier,
+			tier: user.tier as Tier,
 		};
 	},
+	returns: v.object({
+		email: v.string(),
+		id: v.string(),
+		name: v.string(),
+		tier: zodToConvex(tierSchema),
+	}),
 });

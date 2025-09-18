@@ -32,30 +32,28 @@ const rateLimitConfig: Record<Tier, RateLimitConfig> = {
 	},
 };
 
-export const rateLimiter = new RateLimiter(
+export const { limit, hookAPI } = new RateLimiter(
 	components.rateLimiter,
 	rateLimitConfig,
 );
 
-export const { getRateLimit: getAnonymousRateLimit } =
-	rateLimiter.hookAPI<DataModel>("anonymous", {
-		async key(ctx) {
-			return "123";
-		},
-	});
-
-export const { getRateLimit: getFreeRateLimit } =
-	rateLimiter.hookAPI<DataModel>("free", {
-		async key(ctx) {
-			return "123";
-		},
-	});
-
-export const { getRateLimit: getProRateLimit } = rateLimiter.hookAPI<DataModel>(
-	"pro",
+export const { getRateLimit: getAnonymousRateLimit } = hookAPI<DataModel>(
+	"anonymous",
 	{
 		async key(ctx) {
 			return "123";
 		},
 	},
 );
+
+export const { getRateLimit: getFreeRateLimit } = hookAPI<DataModel>("free", {
+	async key(ctx) {
+		return "123";
+	},
+});
+
+export const { getRateLimit: getProRateLimit } = hookAPI<DataModel>("pro", {
+	async key(ctx) {
+		return "123";
+	},
+});

@@ -1,4 +1,4 @@
-import type { Infer } from "convex/values";
+import { type Infer, v } from "convex/values";
 import { zodToConvex } from "convex-helpers/server/zod";
 import { draftSchema } from "../lib/schema";
 import { api } from "./_generated/api";
@@ -9,13 +9,14 @@ import type { platform } from "./schema";
 export const createDraft = mutation({
 	args: zodToConvex(draftSchema),
 	handler: async (ctx, { title, versions }): Promise<Id<"drafts">> => {
-		const { userId } = await ctx.runQuery(api.auth.getUser, {});
+		const user = await ctx.runQuery(api.auth.getUser, {});
 
 		const draftId = await ctx.db.insert("drafts", {
 			title,
-			userId,
+			userId: user.id,
 		});
 
+		// Is there a way to have it type safe either anonymous, free or pro?
 		for (const [P, content] of Object.entries(versions)) {
 			await ctx.db.insert("versions", {
 				content,
@@ -26,4 +27,5 @@ export const createDraft = mutation({
 
 		return draftId;
 	},
+	returns: v.id("drafts"),
 });

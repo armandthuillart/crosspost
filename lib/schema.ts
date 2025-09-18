@@ -2,6 +2,8 @@ import { convexToZod } from "convex-helpers/server/zod";
 import { z } from "zod/v3";
 import { platform } from "../convex/schema";
 
+export const tierSchema = z.enum(["anonymous", "free", "pro"]);
+
 export const draftSchema = z.object({
 	title: z.string().describe("The title of the draft"),
 	versions: z

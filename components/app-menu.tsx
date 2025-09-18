@@ -18,12 +18,13 @@ import {
 	LogOutIcon,
 	SettingsIcon,
 } from "@/components/ui/icons";
+import type { User } from "@/lib/types";
 
 interface AppMenuProps {
-	initial: string;
+	user: User;
 }
 
-export function AppMenu({ initial }: AppMenuProps) {
+export function AppMenu({ user }: AppMenuProps) {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
@@ -33,8 +34,8 @@ export function AppMenu({ initial }: AppMenuProps) {
 					variant="ghost"
 				>
 					<Avatar className="size-6">
-						<AvatarFallback className="border-primary bg-primary text-primary-foreground text-xs">
-							{initial}
+						<AvatarFallback className="border-primary bg-primary text-primary-foreground text-xs uppercase">
+							{user.name.charAt(0) || user.email.charAt(0)}
 						</AvatarFallback>
 					</Avatar>
 				</Button>

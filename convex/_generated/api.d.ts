@@ -23,6 +23,7 @@ import type * as posts from "../posts.js";
 import type * as rateLimiting from "../rateLimiting.js";
 import type * as tools from "../tools.js";
 import type * as users from "../users.js";
+import type * as utils from "../utils.js";
 
 import type {
   ApiFromModules,
@@ -54,6 +55,7 @@ declare const fullApi: ApiFromModules<{
   rateLimiting: typeof rateLimiting;
   tools: typeof tools;
   users: typeof users;
+  utils: typeof utils;
 }>;
 declare const fullApiWithMounts: typeof fullApi;
 

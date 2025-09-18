@@ -1,50 +1,46 @@
 import {
 	abortStream,
 	createThread,
-	getThreadMetadata,
 	listUIMessages,
 	syncStreams,
 	type ThreadDoc,
+	vPaginationResult,
 	vStreamArgs,
+	vThreadDoc,
 } from "@convex-dev/agent";
 import { type PaginationResult, paginationOptsValidator } from "convex/server";
 import { v } from "convex/values";
-import { ChatSDKError } from "../lib/errors";
 import { TITLE_MODEL } from "../lib/gateway";
 import { TITLE_SYSTEM_PROMPT } from "../lib/prompts";
 import { api, components, internal } from "./_generated/api";
-import {
-	type ActionCtx,
-	internalAction,
-	type MutationCtx,
-	mutation,
-	type QueryCtx,
-	query,
-} from "./_generated/server";
+import { internalAction, mutation, query } from "./_generated/server";
 import { chatAgent } from "./agents";
-import { rateLimiter } from "./rateLimiting";
+import { limit } from "./rateLimiting";
+import { verifyOwnership } from "./utils";
 
 export const createChat = mutation({
 	args: {},
-	handler: async (ctx) => {
-		const { userId } = await ctx.runQuery(api.auth.getUser, {});
+	handler: async (ctx): Promise<string> => {
+		const user = await ctx.runQuery(api.auth.getUser, {});
 
-		const threadId = await createThread(ctx, components.agent, {
+		return await createThread(ctx, components.agent, {
 			title: "New Chat",
-			userId,
+			userId: user.id,
 		});
-
-		return threadId;
 	},
+	returns: v.string(),
 });
 
 export const sendMessage = mutation({
-	args: { prompt: v.string(), threadId: v.string() },
+	args: {
+		prompt: v.string(),
+		threadId: v.string(),
+	},
 	handler: async (ctx, { prompt, threadId }) => {
-		const { userId, userTier } = await verifyOwnership(ctx, threadId);
+		const user = await verifyOwnership(ctx, threadId);
 
-		await rateLimiter.limit(ctx, userTier, {
-			key: userId,
+		await limit(ctx, user.tier, {
+			key: user.id,
 			throws: true,
 		});
 
@@ -52,7 +48,7 @@ export const sendMessage = mutation({
 			prompt,
 			skipEmbeddings: true,
 			threadId,
-			userId,
+			userId: user.id,
 		});
 
 		await ctx.scheduler.runAfter(0, internal.chat.streamChat, {
@@ -61,12 +57,13 @@ export const sendMessage = mutation({
 		});
 
 		if (message.order === 0) {
-			await ctx.scheduler.runAfter(0, internal.chat.renameChat, {
+			await ctx.scheduler.runAfter(0, internal.chat.nameChat, {
 				prompt,
 				threadId,
 			});
 		}
 	},
+	returns: v.null(),
 });
 
 export const streamChat = internalAction({
@@ -84,6 +81,7 @@ export const streamChat = internalAction({
 
 		await consumeStream();
 	},
+	returns: v.null(),
 });
 
 export const abortStreamByOrder = mutation({
@@ -100,9 +98,10 @@ export const abortStreamByOrder = mutation({
 			threadId,
 		});
 	},
+	returns: v.null(),
 });
 
-export const renameChat = internalAction({
+export const nameChat = internalAction({
 	args: {
 		prompt: v.string(),
 		threadId: v.string(),
@@ -114,11 +113,14 @@ export const renameChat = internalAction({
 			{ model: TITLE_MODEL, prompt, system: TITLE_SYSTEM_PROMPT },
 		);
 
+		console.log("title", title);
+
 		await chatAgent.updateThreadMetadata(ctx, {
 			patch: { title },
 			threadId,
 		});
 	},
+	returns: v.null(),
 });
 
 export const loadChat = query({
@@ -153,36 +155,12 @@ export const listChats = query({
 		ctx,
 		{ paginationOpts },
 	): Promise<PaginationResult<ThreadDoc>> => {
-		const { userId } = await ctx.runQuery(api.auth.getUser, {});
+		const user = await ctx.runQuery(api.auth.getUser, {});
 
-		const threads = await ctx.runQuery(
-			components.agent.threads.listThreadsByUserId,
-			{ paginationOpts, userId },
-		);
-
-		return threads;
+		return await ctx.runQuery(components.agent.threads.listThreadsByUserId, {
+			paginationOpts,
+			userId: user.id,
+		});
 	},
+	returns: vPaginationResult(vThreadDoc),
 });
-
-export async function verifyOwnership(
-	ctx: QueryCtx | MutationCtx | ActionCtx,
-	threadId: string,
-) {
-	const { userId, userTier } = await ctx.runQuery(api.auth.getUser, {});
-
-	if (!userId) {
-		throw new ChatSDKError("unauthorized:auth");
-	}
-
-	const { userId: threadUserId } = await getThreadMetadata(
-		ctx,
-		components.agent,
-		{ threadId },
-	);
-
-	if (threadUserId !== userId) {
-		throw new ChatSDKError("unauthorized:auth");
-	}
-
-	return { userId, userTier };
-}

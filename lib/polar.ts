@@ -1,5 +1,6 @@
 import { Polar } from "@polar-sh/sdk";
-import { isProduction } from "./constants";
+
+const isProduction = process.env.POLAR_ENV === "production";
 
 export const polarClient = new Polar({
 	accessToken: process.env.POLAR_ACCESS_TOKEN,

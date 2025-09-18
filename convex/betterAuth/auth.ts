@@ -3,7 +3,9 @@ import { v } from "convex/values";
 import { subDays } from "date-fns";
 import { createAuth } from "../auth";
 import { internal } from "./_generated/api";
+import type { Id } from "./_generated/dataModel";
 import { internalMutation } from "./_generated/server";
+import { tier } from "./schema";
 
 export const auth = getStaticAuth(createAuth);
 
@@ -29,5 +31,12 @@ export const tidyUpAnonymousUsers = internalMutation({
 				cursor: continueCursor,
 			});
 		}
+	},
+});
+
+export const setTier = internalMutation({
+	args: { tier, userId: v.string() },
+	handler: async (ctx, { tier, userId }) => {
+		await ctx.db.patch(userId as Id<"user">, { tier });
 	},
 });

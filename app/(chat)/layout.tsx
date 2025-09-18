@@ -19,11 +19,7 @@ export default async function ChatLayout({
 		return redirect("/api/auth/anonymous");
 	}
 
-	const { isAnonymous } = await fetchQuery(
-		api.auth.getUser,
-		{},
-		{ token },
-	);
+	const { isAnonymous } = await fetchQuery(api.auth.getUser, {}, { token });
 
 	return !isAnonymous ? (
 		<SidebarProvider defaultOpen={false}>

@@ -132,7 +132,7 @@ export const createAuth = (
 		user: {
 			additionalFields: {
 				tier: {
-					required: true,
+					required: false,
 					type: "string",
 				},
 			},

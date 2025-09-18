@@ -85,7 +85,7 @@ export type Mounts = {
                 image?: null | string;
                 isAnonymous?: null | boolean;
                 name: string;
-                tier: string;
+                tier?: null | string;
                 updatedAt: number;
                 userId?: null | string;
               };
@@ -666,7 +666,7 @@ export type Mounts = {
                 image?: null | string;
                 isAnonymous?: null | boolean;
                 name?: string;
-                tier?: string;
+                tier?: null | string;
                 updatedAt?: number;
                 userId?: null | string;
               };
@@ -891,7 +891,7 @@ export type Mounts = {
                 image?: null | string;
                 isAnonymous?: null | boolean;
                 name?: string;
-                tier?: string;
+                tier?: null | string;
                 updatedAt?: number;
                 userId?: null | string;
               };

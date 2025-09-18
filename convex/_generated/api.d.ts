@@ -2955,7 +2955,7 @@ export declare const components: {
                   image?: null | string;
                   isAnonymous?: null | boolean;
                   name: string;
-                  tier: string;
+                  tier?: null | string;
                   updatedAt: number;
                   userId?: null | string;
                 };
@@ -3536,7 +3536,7 @@ export declare const components: {
                   image?: null | string;
                   isAnonymous?: null | boolean;
                   name?: string;
-                  tier?: string;
+                  tier?: null | string;
                   updatedAt?: number;
                   userId?: null | string;
                 };
@@ -3761,7 +3761,7 @@ export declare const components: {
                   image?: null | string;
                   isAnonymous?: null | boolean;
                   name?: string;
-                  tier?: string;
+                  tier?: null | string;
                   updatedAt?: number;
                   userId?: null | string;
                 };

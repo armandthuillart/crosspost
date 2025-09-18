@@ -1,3 +1,5 @@
+import "server-only";
+
 import { fetchQuery } from "convex/nextjs";
 import { redirect } from "next/navigation";
 import { Chat } from "@/components/chat";
@@ -11,7 +13,7 @@ export default async function Page({ params }: PageProps<"/c/[threadId]">) {
 	if (!token) {
 		// Redirect to our proxy, not directly to "/sign-in/anonymous".
 		// The proxy converts this GET into the required POST and propagates cookies.
-		return redirect("/api/auth/anonymous");
+		return redirect("/api/auth/proxy/anonymous");
 	}
 
 	const { userTier, isAnonymous } = await fetchQuery(

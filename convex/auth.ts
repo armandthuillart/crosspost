@@ -12,13 +12,19 @@ import authSchema from "./betterAuth/schema";
 
 const siteUrl = process.env.SITE_URL;
 
-export const { adapter, triggersApi, getHeaders, getAuthUser, registerRoutes } =
-	createClient<DataModel, typeof authSchema>(components.betterAuth, {
-		local: {
-			schema: authSchema,
-		},
-		verbose: false,
-	});
+export const {
+	adapter,
+	getHeaders,
+	triggersApi,
+	registerRoutes,
+	safeGetAuthUser,
+} = createClient<DataModel, typeof authSchema>(components.betterAuth, {
+	local: {
+		schema: authSchema,
+	},
+
+	verbose: false,
+});
 
 export const { onCreate, onUpdate, onDelete } = triggersApi();
 
@@ -32,6 +38,7 @@ export const createAuth = (
 		databaseHooks: {
 			user: {
 				create: {
+					// Type mismatch, doesn't contain additional fields.
 					before: async (user) => {
 						return {
 							data: {
@@ -131,7 +138,11 @@ export const createAuth = (
 export const getUser = query({
 	args: {},
 	handler: async (ctx) => {
-		const user = await getAuthUser(ctx);
+		const user = await safeGetAuthUser(ctx);
+
+		if (!user) {
+			throw new Error("User not found");
+		}
 
 		return {
 			isAnonymous: user.isAnonymous ?? false,

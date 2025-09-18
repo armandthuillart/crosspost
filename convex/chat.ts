@@ -131,8 +131,6 @@ export const loadChat = query({
 		threadId: v.string(),
 	},
 	handler: async (ctx, { threadId, streamArgs, paginationOpts }) => {
-		await verifyOwnership(ctx, threadId);
-
 		const streams = await syncStreams(ctx, components.agent, {
 			streamArgs,
 			threadId,

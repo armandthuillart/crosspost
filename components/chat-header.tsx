@@ -16,7 +16,10 @@ export function ChatHeader({ isPro, isAnonymous }: ChatHeaderProps) {
 	const router = useRouter();
 
 	async function handleSignIn() {
-		await authClient.signIn.social({ provider: "google" });
+		await authClient.signIn.social({
+			callbackURL: "/api/auth/proxy/oauth",
+			provider: "google",
+		});
 	}
 
 	if (isAnonymous) {

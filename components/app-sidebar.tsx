@@ -12,6 +12,7 @@ import {
 	SidebarMenuButton,
 	SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { appName } from "@/lib/constants";
 
 export function AppSidebar() {
 	const pathname = usePathname();
@@ -31,7 +32,8 @@ export function AppSidebar() {
 									isActive={pathname === "/"}
 									onClick={() => router.push("/")}
 								>
-									<AppIcon className="size-5" />
+									<AppIcon className="size-5 text-selection-foreground" />
+									{appName}
 								</SidebarMenuButton>
 							</SidebarMenuItem>
 						</SidebarMenu>

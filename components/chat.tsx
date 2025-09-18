@@ -1,9 +1,11 @@
 "use client";
 
 import { useUIMessages } from "@convex-dev/agent/react";
+import { useConvexAuth } from "convex/react";
 import { LayoutGroup } from "motion/react";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { setCookie } from "@/app/actions";
 import { ChatGreetings } from "@/components/chat-greetings";
 import { ChatHeader } from "@/components/chat-header";
 import { ChatInput } from "@/components/chat-input";
@@ -21,6 +23,8 @@ interface ChatProps {
 
 export function Chat({ threadId, userTier, isAnonymous }: ChatProps) {
 	const pathname = usePathname();
+
+
 
 	const {
 		status,
@@ -54,6 +58,12 @@ export function Chat({ threadId, userTier, isAnonymous }: ChatProps) {
 			setHasSentMessage(true);
 		}
 	}, [hasSubmitted]);
+
+	useEffect(() => {
+		if (!isChat) {
+			setCookie("chat", threadId);
+		}
+	}, [isChat, threadId]);
 
 	return (
 		<main

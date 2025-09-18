@@ -48,9 +48,9 @@ export const sendMessage = mutation({
 			throws: true,
 		});
 
-		const { messageId } = await chatAgent.saveMessage(ctx, {
+		const { message, messageId } = await chatAgent.saveMessage(ctx, {
 			prompt,
-			skipEmbeddings: true, // We're in a mutation (no access to fetch), so they'll be lazily generated when streaming.
+			skipEmbeddings: true,
 			threadId,
 			userId,
 		});
@@ -59,6 +59,13 @@ export const sendMessage = mutation({
 			promptMessageId: messageId,
 			threadId,
 		});
+
+		if (message.order === 0) {
+			await ctx.scheduler.runAfter(0, internal.chat.renameChat, {
+				prompt,
+				threadId,
+			});
+		}
 	},
 });
 
@@ -75,11 +82,7 @@ export const streamChat = internalAction({
 			{ saveStreamDeltas: { chunking: "word", throttleMs: 100 } },
 		);
 
-		await consumeStream({
-			onError: (error) => {
-				console.error("chat.tsx: streamChat: error:", error);
-			},
-		});
+		await consumeStream();
 	},
 });
 
@@ -91,17 +94,11 @@ export const abortStreamByOrder = mutation({
 	handler: async (ctx, { order, threadId }) => {
 		await verifyOwnership(ctx, threadId);
 
-		if (
-			await abortStream(ctx, components.agent, {
-				order,
-				reason: "Aborting explicitly",
-				threadId,
-			})
-		) {
-			console.log("Aborted stream", threadId, order);
-		} else {
-			console.log("No stream found", threadId, order);
-		}
+		await abortStream(ctx, components.agent, {
+			order,
+			reason: "Aborting explicitly",
+			threadId,
+		});
 	},
 });
 
@@ -111,14 +108,14 @@ export const renameChat = internalAction({
 		threadId: v.string(),
 	},
 	handler: async (ctx, { prompt, threadId }) => {
-		const result = await chatAgent.generateText(
+		const { text: title } = await chatAgent.generateText(
 			ctx,
 			{ threadId },
 			{ model: TITLE_MODEL, prompt, system: TITLE_SYSTEM_PROMPT },
 		);
 
 		await chatAgent.updateThreadMetadata(ctx, {
-			patch: { title: result.text },
+			patch: { title },
 			threadId,
 		});
 	},

@@ -41,6 +41,7 @@
 	--color-destructive-foreground: var(--destructive-foreground);
 	--color-selection: var(--selection);
 	--color-selection-foreground: var(--selection-foreground);
+	--ease-snappy: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 

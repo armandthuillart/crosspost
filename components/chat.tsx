@@ -22,8 +22,7 @@ interface ChatProps {
 export function Chat({ threadId, preloadedUser }: ChatProps) {
 	const pathname = usePathname();
 
-	const { email, initial, userTier, isAnonymous } =
-		usePreloadedQuery(preloadedUser);
+	const { initial, userTier, isAnonymous } = usePreloadedQuery(preloadedUser);
 
 	const {
 		status,
@@ -68,7 +67,6 @@ export function Chat({ threadId, preloadedUser }: ChatProps) {
 			{...attr("chat", isChat)}
 		>
 			<ChatHeader
-				email={email}
 				initial={initial}
 				isAnonymous={isAnonymous}
 				isPro={userTier === "pro"}

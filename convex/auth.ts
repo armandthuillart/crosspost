@@ -3,6 +3,7 @@ import { convex } from "@convex-dev/better-auth/plugins";
 import { checkout, polar, portal, webhooks } from "@polar-sh/better-auth";
 import { type BetterAuthOptions, betterAuth } from "better-auth";
 import { anonymous } from "better-auth/plugins";
+import { deleteCookie } from "../app/actions";
 import { polarClient } from "../lib/polar";
 import type { Tier } from "../lib/types";
 import { components } from "./_generated/api";
@@ -36,9 +37,15 @@ export const createAuth = (
 		baseURL: siteUrl,
 		database: adapter(ctx),
 		databaseHooks: {
+			session: {
+				create: {
+					after: async () => {
+						await deleteCookie("remember");
+					},
+				},
+			},
 			user: {
 				create: {
-					// Type mismatch, doesn't contain additional fields.
 					before: async (user) => {
 						return {
 							data: {

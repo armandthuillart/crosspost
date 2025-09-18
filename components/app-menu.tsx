@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,11 +20,10 @@ import {
 } from "@/components/ui/icons";
 
 interface AppMenuProps {
-	email: string;
 	initial: string;
 }
 
-export function AppMenu({ email, initial }: AppMenuProps) {
+export function AppMenu({ initial }: AppMenuProps) {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
@@ -71,9 +71,11 @@ export function AppMenu({ email, initial }: AppMenuProps) {
 					</DropdownMenuSubContent>
 				</DropdownMenuSub>
 
-				<DropdownMenuItem>
-					<LogOutIcon className="size-5" />
-					Log out
+				<DropdownMenuItem asChild>
+					<Link href="/api/auth/proxy/sign-out">
+						<LogOutIcon className="size-5" />
+						Log out
+					</Link>
 				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>

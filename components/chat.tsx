@@ -1,7 +1,6 @@
 "use client";
 
 import { useUIMessages } from "@convex-dev/agent/react";
-import { useConvexAuth } from "convex/react";
 import { LayoutGroup } from "motion/react";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -23,8 +22,6 @@ interface ChatProps {
 
 export function Chat({ threadId, userTier, isAnonymous }: ChatProps) {
 	const pathname = usePathname();
-
-
 
 	const {
 		status,

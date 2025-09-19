@@ -2,42 +2,67 @@ import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { isDevelopment } from "@/lib/constants";
 
-// POST proxy that forwards cookies, then redirects to "/".
+// Anonymous sign-in proxy that ensures Convex JWT is minted before redirect.
 export async function GET() {
 	const hs = await headers();
-
-	// Build same-origin URL so cookies are scoped correctly.
 	const host = hs.get("host");
 	const protocol = isDevelopment ? "http" : "https";
 	const url = `${protocol}://${host}/api/auth/sign-in/anonymous`;
 
-	// Forward the client's cookies so upstream sees an existing Better Auth session (if any).
 	const cookie = hs.get("cookie") ?? "";
 
-	// First, try to mint a fresh Convex JWT from the existing session (no new user creation).
+	// Try to refresh existing Convex JWT first.
 	const refresh = await fetch(`${protocol}://${host}/api/auth/convex/token`, {
 		headers: { cookie },
 		method: "GET",
 		redirect: "manual",
 	});
 
-	// If refresh fails (no session), fall back to create an anonymous session.
-	const upstream = refresh.ok
-		? refresh
-		: await fetch(url, { method: "POST", redirect: "manual" });
+	let upstream: Response;
+	const cookiesToSet: string[] = [];
 
-	// Send the browser to "/" after sign-in. 307 keeps semantics (GET stays GET).
+	if (refresh.ok) {
+		// Use existing session.
+		upstream = refresh;
+
+		const refreshCookie = refresh.headers.get("set-cookie");
+
+		if (refreshCookie) {
+			cookiesToSet.push(refreshCookie);
+		}
+	} else {
+		// Create new anonymous session.
+		upstream = await fetch(url, { method: "POST", redirect: "manual" });
+
+		if (upstream.ok) {
+			const session = upstream.headers.get("set-cookie");
+
+			if (session) {
+				cookiesToSet.push(session);
+			}
+
+			// Mint Convex JWT after session creation.
+			const mint = await fetch(`${protocol}://${host}/api/auth/convex/token`, {
+				headers: { cookie: session ?? cookie },
+				method: "GET",
+				redirect: "manual",
+			});
+
+			if (mint.ok) {
+				const token = mint.headers.get("set-cookie");
+
+				if (token) {
+					cookiesToSet.push(token);
+				}
+			}
+		}
+	}
+
 	const response = NextResponse.redirect(`${protocol}://${host}/`, 307);
 
-	// Capture Set-Cookie so Better Auth sets the session cookie and the Convex plugin sets "convex_jwt".
-	// We only need "convex_jwt" for SSR token reads, but forward whatever is present.
-	const setCookie = upstream.headers.get("set-cookie");
-
-	if (setCookie) {
-		// If cookies are present, attach them to our redirect.
-		// Browsers apply Set-Cookie on redirects, so the client stores them before landing on "/".
-		response.headers.set("set-cookie", setCookie);
-	}
+	cookiesToSet.forEach((cookie) => {
+		response.headers.append("set-cookie", cookie);
+	});
 
 	return response;
 }

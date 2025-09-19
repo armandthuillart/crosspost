@@ -7,7 +7,7 @@ import { v } from "convex/values";
 import { zodToConvex } from "convex-helpers/server/zod";
 import { polarClient } from "../lib/polar";
 import { tierSchema } from "../lib/schema";
-import type { Tier } from "../lib/types";
+import type { Tier, User } from "../lib/types";
 import { components } from "./_generated/api";
 import type { DataModel } from "./_generated/dataModel";
 import { query } from "./_generated/server";
@@ -35,7 +35,8 @@ export const createAuth = (
 		databaseHooks: {
 			user: {
 				create: {
-					before: async ({ isAnonymous, ...rest }) => {
+					// userId presence is just to facilitate the migration from 0.7 to 0.8.
+					before: async ({ userId, isAnonymous, ...rest }) => {
 						const tier: Tier = isAnonymous ? "anonymous" : "free";
 
 						return {
@@ -134,15 +135,17 @@ export const createAuth = (
 
 export const getUser = query({
 	args: {},
-	handler: async (ctx) => {
+	handler: async (ctx): Promise<User> => {
 		const user = await getAuthUser(ctx);
 
-		return {
+		const tainted: User = {
 			email: user.email,
 			id: user._id,
 			name: user.name,
 			tier: user.tier as Tier,
 		};
+
+		return tainted;
 	},
 	returns: v.object({
 		email: v.string(),

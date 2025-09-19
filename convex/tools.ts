@@ -7,8 +7,16 @@ import type { Id } from "./_generated/dataModel";
 export const createDraft = createTool({
 	args: draftSchema,
 	description: "Create a new draft of a post",
-	handler: async (ctx, { title, versions }): Promise<Id<"drafts">> => {
-		return await ctx.runMutation(api.drafts.createDraft, {
+	handler: async (
+		{ threadId, runMutation },
+		{ title, versions },
+	): Promise<Id<"drafts">> => {
+		if (!threadId) {
+			throw new Error("Thread ID is required");
+		}
+
+		return await runMutation(api.drafts.createDraft, {
+			threadId,
 			title,
 			versions,
 		});

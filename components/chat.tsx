@@ -21,20 +21,20 @@ interface ChatProps {
 
 export function Chat({ threadId, preloadedUser }: ChatProps) {
 	const pathname = usePathname();
+	const isChat = pathname.includes("/c/");
+
 	const user = usePreloadedQuery(preloadedUser);
 
 	const {
 		status,
 		results: messages,
 		loadMore,
-	} = useUIMessages(
-		api.chat.loadChat,
-		{ threadId },
-		{ initialNumItems: 10, stream: true },
-	);
+	} = useUIMessages(api.chat.loadChat, isChat ? { threadId } : "skip", {
+		initialNumItems: 10,
+		stream: true,
+	});
 
 	const order = messages.find((m) => m.status === "streaming")?.order ?? 0;
-	const isChat = messages.length > 0 || pathname.includes("/c/");
 	const canLoadMore = status === "CanLoadMore";
 	const isStreaming = messages.some((m) => m.status === "streaming");
 	const hasSubmitted = messages.some((m) => m.status === "pending");
@@ -67,7 +67,9 @@ export function Chat({ threadId, preloadedUser }: ChatProps) {
 		>
 			<ChatHeader
 				isAnonymous={user.tier === "anonymous"}
+				isChat={isChat}
 				isFree={user.tier === "free"}
+				threadId={threadId}
 				user={user}
 			/>
 
@@ -87,7 +89,7 @@ export function Chat({ threadId, preloadedUser }: ChatProps) {
 
 					<div className="px-2">
 						<LayoutGroup>
-							<div className="relative mx-auto flex w-full max-w-(--chat-content-max-width) flex-col gap-4 pb-2 @[34rem]:[--chat-content-max-width:40rem] @[64rem]:[--chat-content-max-width:48rem] [--chat-content-max-width:32rem] md:group-not-data-chat/chat:pb-0">
+							<div className="relative mx-auto flex w-full max-w-(--chat-content-max-width) flex-col gap-4 pb-2 @[34rem]:[--chat-content-max-width:40rem] @[64rem]:[--chat-content-max-width:48rem] [--chat-content-max-width:32rem] md:pb-4 md:group-not-data-chat/chat:pb-0">
 								{isChat && (
 									<ChatStreamer
 										isAnonymous={user.tier === "anonymous"}

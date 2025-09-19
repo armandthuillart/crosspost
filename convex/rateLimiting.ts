@@ -32,28 +32,37 @@ const rateLimitConfig: Record<Tier, RateLimitConfig> = {
 	},
 };
 
-export const { limit, hookAPI } = new RateLimiter(
+export const rateLimiter = new RateLimiter(
 	components.rateLimiter,
 	rateLimitConfig,
 );
 
-export const { getRateLimit: getAnonymousRateLimit } = hookAPI<DataModel>(
-	"anonymous",
+export const { getRateLimit: getAnonymousRateLimit } =
+	rateLimiter.hookAPI<DataModel>("anonymous", {
+		async key(ctx) {
+			const identity = await ctx.auth.getUserIdentity();
+
+			if (!identity || !identity.subject) {
+				console.log("identity is null");
+				return "";
+			}
+
+			return identity.subject;
+		},
+	});
+
+export const { getRateLimit: getFreeRateLimit } =
+	rateLimiter.hookAPI<DataModel>("free", {
+		async key(ctx) {
+			return ctx.auth.getUserIdentity().then((identity) => identity!.subject);
+		},
+	});
+
+export const { getRateLimit: getProRateLimit } = rateLimiter.hookAPI<DataModel>(
+	"pro",
 	{
 		async key(ctx) {
 			return ctx.auth.getUserIdentity().then((identity) => identity!.subject);
 		},
 	},
 );
-
-export const { getRateLimit: getFreeRateLimit } = hookAPI<DataModel>("free", {
-	async key(ctx) {
-		return ctx.auth.getUserIdentity().then((identity) => identity!.subject);
-	},
-});
-
-export const { getRateLimit: getProRateLimit } = hookAPI<DataModel>("pro", {
-	async key(ctx) {
-		return ctx.auth.getUserIdentity().then((identity) => identity!.subject);
-	},
-});

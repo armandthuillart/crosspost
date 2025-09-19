@@ -1,6 +1,7 @@
 import {
 	abortStream,
 	createThread,
+	listMessages,
 	listUIMessages,
 	syncStreams,
 	type ThreadDoc,
@@ -8,13 +9,14 @@ import {
 	vStreamArgs,
 	vThreadDoc,
 } from "@convex-dev/agent";
+import { MINUTE } from "@convex-dev/rate-limiter";
 import { type PaginationResult, paginationOptsValidator } from "convex/server";
 import { v } from "convex/values";
 import { TITLE_SYSTEM_PROMPT } from "../lib/prompts";
 import { api, components, internal } from "./_generated/api";
 import { internalAction, mutation, query } from "./_generated/server";
 import { chatAgent } from "./agents";
-import { limit } from "./rateLimiting";
+import { rateLimiter } from "./rateLimiting";
 import { verifyOwnership } from "./utils";
 
 export const createChat = mutation({
@@ -38,7 +40,7 @@ export const sendMessage = mutation({
 	handler: async (ctx, { prompt, threadId }) => {
 		const user = await verifyOwnership(ctx, threadId);
 
-		await limit(ctx, user.tier, {
+		await rateLimiter.limit(ctx, user.tier, {
 			key: user.id,
 			throws: true,
 		});
@@ -131,6 +133,8 @@ export const loadChat = query({
 		threadId: v.string(),
 	},
 	handler: async (ctx, { threadId, streamArgs, paginationOpts }) => {
+		await verifyOwnership(ctx, threadId);
+
 		const streams = await syncStreams(ctx, components.agent, {
 			streamArgs,
 			threadId,
@@ -164,4 +168,59 @@ export const listChats = query({
 		});
 	},
 	returns: vPaginationResult(vThreadDoc),
+});
+
+export const migrateChats = mutation({
+	args: {
+		anonymousUserId: v.string(),
+		newUserId: v.string(),
+	},
+	handler: async (ctx, { anonymousUserId, newUserId }) => {
+		const { page: threads } = await ctx.runQuery(
+			components.agent.threads.listThreadsByUserId,
+			{
+				order: "desc",
+				paginationOpts: { cursor: null, numItems: 1 },
+				userId: anonymousUserId,
+			},
+		);
+
+		const threadId = threads[0]._id;
+
+		if (threadId) {
+			const { page: messages } = await listMessages(ctx, components.agent, {
+				paginationOpts: { cursor: null, numItems: 1 },
+				threadId,
+			});
+
+			const lastMessage = messages[0];
+
+			const now = Date.now();
+			const createdAt = lastMessage?._creationTime;
+			const wasChattingRecently = createdAt && createdAt > now - MINUTE * 5;
+
+			if (wasChattingRecently) {
+				await chatAgent.updateThreadMetadata(ctx, {
+					patch: { userId: newUserId },
+					threadId,
+				});
+
+				const drafts = await ctx.db
+					.query("drafts")
+					.withIndex("by_thread", (q) => q.eq("threadId", threadId))
+					.collect();
+
+				for (const { _id: draftId } of drafts) {
+					await ctx.db.patch(draftId, {
+						userId: newUserId,
+					});
+				}
+			}
+		}
+
+		await ctx.runMutation(internal.users.deleteAllForUserId, {
+			userId: anonymousUserId,
+		});
+	},
+	returns: v.null(),
 });

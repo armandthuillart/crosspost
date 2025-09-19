@@ -1,10 +1,12 @@
 import { cookies, headers } from "next/headers";
-import { NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { isDevelopment } from "@/lib/constants";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
 	const hs = await headers();
 	const cookieStore = await cookies();
+	const searchParams = request.nextUrl.searchParams;
+	const threadId = searchParams.get("threadId");
 
 	// Build same-origin URL so cookies are scoped correctly.
 	const host = hs.get("host");
@@ -20,8 +22,11 @@ export async function GET() {
 		redirect: "manual",
 	});
 
-	// Send the browser to "/" after sign-in. 307 keeps semantics (GET stays GET).
-	const response = NextResponse.redirect(`${protocol}://${host}/`, 307);
+	// Send the browser to "/" or "/c/{threadId}" after sign-in. 307 keeps semantics (GET stays GET).
+	const response = NextResponse.redirect(
+		`${protocol}://${host}/${threadId ? `c/${threadId}` : ""}`,
+		307,
+	);
 
 	const setCookie = refresh.headers.get("set-cookie");
 

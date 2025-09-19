@@ -5,7 +5,7 @@ import { LoaderIcon } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-	"relative inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium text-sm outline-none outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+	"relative inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium text-sm outline-none outline-none transition-all duration-200 ease-snappy focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
 	{
 		compoundVariants: [
 			{

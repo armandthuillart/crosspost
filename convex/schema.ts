@@ -10,9 +10,12 @@ export const platform = v.union(
 
 export default defineSchema({
 	drafts: defineTable({
+		threadId: v.string(),
 		title: v.string(),
 		userId: v.string(),
-	}).index("by_user", ["userId"]),
+	})
+		.index("by_user", ["userId"])
+		.index("by_thread", ["threadId"]),
 	posts: defineTable({
 		content: v.string(),
 		platform,
@@ -23,5 +26,7 @@ export default defineSchema({
 		draftId: v.id("drafts"),
 		platform,
 		updatedAt: v.optional(v.number()),
-	}).index("by_draft_platform", ["draftId", "platform"]),
+	})
+		.index("by_draft", ["draftId"])
+		.index("by_draft_platform", ["draftId", "platform"]),
 });

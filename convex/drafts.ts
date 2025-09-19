@@ -1,5 +1,6 @@
 import { type Infer, v } from "convex/values";
 import { zodToConvex } from "convex-helpers/server/zod";
+import { z } from "zod/v3";
 import { draftSchema } from "../lib/schema";
 import { api } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
@@ -7,11 +8,15 @@ import { mutation } from "./_generated/server";
 import type { platform } from "./schema";
 
 export const createDraft = mutation({
-	args: zodToConvex(draftSchema),
-	handler: async (ctx, { title, versions }): Promise<Id<"drafts">> => {
+	args: zodToConvex(draftSchema.extend({ threadId: z.string() })),
+	handler: async (
+		ctx,
+		{ title, threadId, versions },
+	): Promise<Id<"drafts">> => {
 		const user = await ctx.runQuery(api.auth.getUser, {});
 
 		const draftId = await ctx.db.insert("drafts", {
+			threadId,
 			title,
 			userId: user.id,
 		});

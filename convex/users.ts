@@ -2,7 +2,7 @@ import { v } from "convex/values";
 import { components } from "./_generated/api";
 import { internalMutation } from "./_generated/server";
 
-export const deleteAllForUserIdAsync = internalMutation({
+export const deleteAllForUserId = internalMutation({
 	args: { userId: v.string() },
 	handler: async (ctx, { userId }) => {
 		for await (const { _id: draftId } of ctx.db

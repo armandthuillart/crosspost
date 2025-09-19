@@ -1,6 +1,7 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import { usePaginatedQuery } from "convex/react";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { AppIcon, SearchIcon } from "@/components/ui/icons";
 import {
 	Sidebar,
@@ -12,15 +13,18 @@ import {
 	SidebarMenuButton,
 	SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { api } from "@/convex/_generated/api";
 import { appName } from "@/lib/constants";
 
 export function AppSidebar() {
+	const { push } = useRouter();
+
 	const pathname = usePathname();
-	const router = useRouter();
+
 	return (
 		<Sidebar>
 			<SidebarHeader>
-				<AppSearch />
+				<SibebarHistorySearch />
 			</SidebarHeader>
 
 			<SidebarContent>
@@ -30,7 +34,7 @@ export function AppSidebar() {
 							<SidebarMenuItem>
 								<SidebarMenuButton
 									isActive={pathname === "/"}
-									onClick={() => router.push("/")}
+									onClick={() => push("/")}
 								>
 									<AppIcon className="size-5 text-selection-foreground" />
 									{appName}
@@ -39,12 +43,20 @@ export function AppSidebar() {
 						</SidebarMenu>
 					</SidebarGroupContent>
 				</SidebarGroup>
+
+				<SidebarGroup>
+					<SidebarGroupContent>
+						<SidebarMenu>
+							<SibebarHistory />
+						</SidebarMenu>
+					</SidebarGroupContent>
+				</SidebarGroup>
 			</SidebarContent>
 		</Sidebar>
 	);
 }
 
-function AppSearch() {
+function SibebarHistorySearch() {
 	return (
 		<div className="flex w-full items-center gap-2 pl-2.5 text-muted-foreground">
 			<div className="my-2 flex size-5 shrink-0 items-center justify-center">
@@ -57,4 +69,29 @@ function AppSearch() {
 			/>
 		</div>
 	);
+}
+
+function SibebarHistory() {
+	const { threadId } = useParams();
+	const { push } = useRouter();
+
+	const { results: chats } = usePaginatedQuery(
+		api.chat.listChats,
+		{ paginationOpts: { cursor: null, numItems: 10 } },
+		{ initialNumItems: 10 },
+	);
+
+	console.log(chats);
+
+	return chats.map(({ _id: chatId, title }) => (
+		<SidebarMenuItem key={chatId}>
+			<SidebarMenuButton
+				className="justify-between"
+				isActive={chatId === threadId}
+				onClick={() => push(`/c/${chatId}`)}
+			>
+				<span className="truncate">{title}</span>
+			</SidebarMenuButton>
+		</SidebarMenuItem>
+	));
 }

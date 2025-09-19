@@ -12,15 +12,23 @@ import type { User } from "@/lib/types";
 interface ChatHeaderProps {
 	user: User;
 	isFree: boolean;
+	isChat: boolean;
+	threadId: string;
 	isAnonymous: boolean;
 }
 
-export function ChatHeader({ user, isFree, isAnonymous }: ChatHeaderProps) {
+export function ChatHeader({
+	user,
+	isChat,
+	isFree,
+	threadId,
+	isAnonymous,
+}: ChatHeaderProps) {
 	const router = useRouter();
 
 	async function handleSignInWithGoogle() {
 		await authClient.signIn.social({
-			callbackURL: "/api/auth/proxy/oauth",
+			callbackURL: `/api/auth/proxy/oauth?${isChat ? new URLSearchParams({ threadId }) : ""}`,
 			provider: "google",
 		});
 	}

@@ -13,6 +13,13 @@ import { showStreamerAtom } from "@/lib/atoms";
 import { authClient } from "@/lib/auth-client";
 import { api } from "../convex/_generated/api";
 
+async function handleSignInWithGoogle() {
+	await authClient.signIn.social({
+		callbackURL: "/api/auth/proxy/oauth",
+		provider: "google",
+	});
+}
+
 interface ChatStreamerProps {
 	isPro: boolean;
 	isFree: boolean;
@@ -64,10 +71,6 @@ export function ChatStreamer({
 		return `Will reset on ${format(date, "LLLL, d yyyy 'at' HH:mm")}.`;
 	})();
 
-	async function handleSignIn() {
-		await authClient.signIn.social({ provider: "google" });
-	}
-
 	return (
 		<AnimatePresence initial={false}>
 			{isVisible && (
@@ -104,7 +107,7 @@ export function ChatStreamer({
 									{isAnonymous ? (
 										<Button
 											className="rounded-full"
-											onClick={handleSignIn}
+											onClick={handleSignInWithGoogle}
 											size="sm"
 										>
 											Sign up for free

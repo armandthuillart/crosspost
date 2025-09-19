@@ -1,5 +1,6 @@
 import { createClient, type GenericCtx } from "@convex-dev/better-auth";
 import { convex } from "@convex-dev/better-auth/plugins";
+import { requireMutationCtx } from "@convex-dev/better-auth/utils";
 import { checkout, polar, portal, webhooks } from "@polar-sh/better-auth";
 import { type BetterAuthOptions, betterAuth } from "better-auth";
 import { anonymous } from "better-auth/plugins";
@@ -8,7 +9,7 @@ import { zodToConvex } from "convex-helpers/server/zod";
 import { polarClient } from "../lib/polar";
 import { tierSchema } from "../lib/schema";
 import type { Tier, User } from "../lib/types";
-import { components } from "./_generated/api";
+import { api, components } from "./_generated/api";
 import type { DataModel } from "./_generated/dataModel";
 import { query } from "./_generated/server";
 import authSchema from "./betterAuth/schema";
@@ -35,7 +36,6 @@ export const createAuth = (
 		databaseHooks: {
 			user: {
 				create: {
-					// userId presence is just to facilitate the migration from 0.7 to 0.8.
 					before: async ({ isAnonymous, ...rest }) => {
 						const tier: Tier = isAnonymous ? "anonymous" : "free";
 
@@ -56,12 +56,11 @@ export const createAuth = (
 		plugins: [
 			anonymous({
 				onLinkAccount: async ({
-					newUser: {
-						user: { name, email, id: externalId },
-					},
+					anonymousUser: { user: anonymousUser },
+					newUser: { user: newUser },
 				}) => {
 					const paginated = await polarClient.customers.list({
-						email,
+						email: newUser.email,
 						limit: 1,
 					});
 
@@ -69,11 +68,17 @@ export const createAuth = (
 
 					if (!customer) {
 						await polarClient.customers.create({
-							email,
-							externalId,
-							name,
+							email: newUser.email,
+							externalId: newUser.id,
+							name: newUser.name,
 						});
 					}
+
+					// Move the user threads to the new user.
+					await requireMutationCtx(ctx).runMutation(api.chat.migrateChats	, {
+						anonymousUserId: anonymousUser.id,
+						newUserId: newUser.id,
+					});
 				},
 			}),
 			polar({

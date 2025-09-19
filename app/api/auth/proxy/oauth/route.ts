@@ -1,9 +1,10 @@
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { isDevelopment } from "@/lib/constants";
 
 export async function GET() {
 	const hs = await headers();
+	const cookieStore = await cookies();
 
 	// Build same-origin URL so cookies are scoped correctly.
 	const host = hs.get("host");
@@ -29,6 +30,8 @@ export async function GET() {
 		// Browsers apply Set-Cookie on redirects, so the client stores them before landing on "/".
 		response.headers.set("set-cookie", setCookie);
 	}
+
+	cookieStore.delete("remember");
 
 	return response;
 }

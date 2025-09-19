@@ -5,7 +5,6 @@ import { type BetterAuthOptions, betterAuth } from "better-auth";
 import { anonymous } from "better-auth/plugins";
 import { v } from "convex/values";
 import { zodToConvex } from "convex-helpers/server/zod";
-import { deleteCookie } from "../app/actions";
 import { polarClient } from "../lib/polar";
 import { tierSchema } from "../lib/schema";
 import type { Tier } from "../lib/types";
@@ -34,13 +33,6 @@ export const createAuth = (
 		baseURL: siteUrl,
 		database: adapter(ctx),
 		databaseHooks: {
-			session: {
-				create: {
-					after: async () => {
-						await deleteCookie("remember");
-					},
-				},
-			},
 			user: {
 				create: {
 					before: async ({ isAnonymous, ...rest }) => {
@@ -49,7 +41,7 @@ export const createAuth = (
 						return {
 							data: {
 								...rest,
-								isAnonymous,
+								isAnonymous: isAnonymous ?? false,
 								tier,
 							},
 						};
@@ -149,7 +141,7 @@ export const getUser = query({
 			email: user.email,
 			id: user._id,
 			name: user.name,
-			tier: user.tier as "anonymous" | "free" | "pro",
+			tier: user.tier as Tier,
 		};
 	},
 	returns: v.object({

@@ -1,4 +1,5 @@
-import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { setCookie } from "@/app/actions";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,6 +19,7 @@ import {
 	LogOutIcon,
 	SettingsIcon,
 } from "@/components/ui/icons";
+import { authClient } from "@/lib/auth-client";
 import type { User } from "@/lib/types";
 
 interface AppMenuProps {
@@ -25,6 +27,19 @@ interface AppMenuProps {
 }
 
 export function AppMenu({ user }: AppMenuProps) {
+	const router = useRouter();
+
+	async function handleSignOut() {
+		await authClient.signOut({
+			fetchOptions: {
+				onSuccess: async () => {
+					await setCookie("remember", "");
+					router.push("/");
+				},
+			},
+		});
+	}
+
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
@@ -72,11 +87,9 @@ export function AppMenu({ user }: AppMenuProps) {
 					</DropdownMenuSubContent>
 				</DropdownMenuSub>
 
-				<DropdownMenuItem asChild>
-					<Link href="/api/auth/proxy/sign-out">
-						<LogOutIcon className="size-5" />
-						Log out
-					</Link>
+				<DropdownMenuItem onClick={handleSignOut}>
+					<LogOutIcon className="size-5" />
+					Log out
 				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>

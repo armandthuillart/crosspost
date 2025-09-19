@@ -10,7 +10,6 @@ import {
 } from "@convex-dev/agent";
 import { type PaginationResult, paginationOptsValidator } from "convex/server";
 import { v } from "convex/values";
-import { TITLE_MODEL } from "../lib/gateway";
 import { TITLE_SYSTEM_PROMPT } from "../lib/prompts";
 import { api, components, internal } from "./_generated/api";
 import { internalAction, mutation, query } from "./_generated/server";
@@ -110,10 +109,12 @@ export const nameChat = internalAction({
 		const { text: title } = await chatAgent.generateText(
 			ctx,
 			{ threadId },
-			{ model: TITLE_MODEL, prompt, system: TITLE_SYSTEM_PROMPT },
+			{
+				model: "google/gemini-2.5-flash-lite",
+				prompt,
+				system: TITLE_SYSTEM_PROMPT,
+			},
 		);
-
-		console.log("title", title);
 
 		await chatAgent.updateThreadMetadata(ctx, {
 			patch: { title },

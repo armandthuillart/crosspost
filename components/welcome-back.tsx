@@ -25,7 +25,7 @@ export function WelcomeBack() {
 				<AlertDialogHeader>
 					<AlertDialogTitle>Welcome back</AlertDialogTitle>
 					<AlertDialogDescription>
-						Log in or sign up to publish to your socials, more generous limits,
+						Log in or sign up to post to your social media, for more messages,
 						and more.
 					</AlertDialogDescription>
 				</AlertDialogHeader>

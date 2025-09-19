@@ -36,7 +36,7 @@ export const createAuth = (
 			user: {
 				create: {
 					// userId presence is just to facilitate the migration from 0.7 to 0.8.
-					before: async ({ userId, isAnonymous, ...rest }) => {
+					before: async ({ isAnonymous, ...rest }) => {
 						const tier: Tier = isAnonymous ? "anonymous" : "free";
 
 						return {

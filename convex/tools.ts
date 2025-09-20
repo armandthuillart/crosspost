@@ -1,12 +1,14 @@
 import { createTool } from "@convex-dev/agent";
+import { z } from "zod/v3";
 import { draftSchema, postSchema } from "../lib/schema";
 import type { Platform } from "../lib/types";
 import { api, internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
+import { chatAgent } from "./agents";
 
 export const createDraft = createTool({
 	args: draftSchema,
-	description: "Create a new draft of a post",
+	description: "Create a new post draft",
 	handler: async (
 		{ threadId, runMutation },
 		{ title, versions },
@@ -25,6 +27,7 @@ export const createDraft = createTool({
 
 export const createPostIntent = createTool({
 	args: postSchema,
+	description: "Create a post intent for the given content",
 	handler: async (ctx, { title, content, platform }): Promise<string> => {
 		function parse(content: string): string {
 			const hashtags = content.match(/#\w+/g)?.map((tag) => tag.slice(1)) || [];
@@ -69,5 +72,29 @@ export const createPostIntent = createTool({
 		});
 
 		return `${baseUrl}?${params.toString()}`;
+	},
+});
+
+export const renameChat = createTool({
+	args: z.object({
+		title: z
+			.string()
+			.max(6, "Must be under 6 words")
+			.describe("The new title of the chat"),
+	}),
+	description: "Rename the current chat when the topic changes",
+	handler: async (ctx, { title }): Promise<string> => {
+		const { threadId } = ctx;
+
+		if (!threadId) {
+			throw new Error("No threadId in context");
+		}
+
+		await chatAgent.updateThreadMetadata(ctx, {
+			patch: { title },
+			threadId,
+		});
+
+		return `Chat renamed to "${title}"`;
 	},
 });

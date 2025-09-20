@@ -2,7 +2,7 @@ import { Agent, stepCountIs } from "@convex-dev/agent";
 import { appName } from "../lib/constants";
 import { CHAT_SYSTEM_PROMPT } from "../lib/prompts";
 import { components } from "./_generated/api";
-import { createDraft, createPostIntent } from "./tools";
+import { createDraft, createPostIntent, renameChat } from "./tools";
 
 export const chatAgent = new Agent(components.agent, {
 	contextOptions: {
@@ -21,8 +21,5 @@ export const chatAgent = new Agent(components.agent, {
 	name: appName,
 	stopWhen: stepCountIs(3),
 	textEmbeddingModel: "google/text-embedding-005",
-	tools: {
-		"create-draft": createDraft,
-		"create-post-intent": createPostIntent,
-	},
+	tools: { createDraft, createPostIntent, renameChat },
 });

@@ -358,6 +358,26 @@ function SidebarMenuButton({
 	);
 }
 
+function SidebarGroupLabel({
+	className,
+	asChild = false,
+	...props
+}: React.ComponentProps<"div"> & { asChild?: boolean }) {
+	const Comp = asChild ? SlotPrimitive.Root : "div";
+	return (
+		<Comp
+			className={cn(
+				"flex shrink-0 items-center rounded-md px-2.5 py-2 text-muted-foreground text-sm outline-hidden ring-sidebar-ring transition-[margin,opacity] duration-200 ease-linear focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0",
+				"group-data-[collapsible=icon]:-mt-8 group-data-[collapsible=icon]:opacity-0",
+				className,
+			)}
+			data-sidebar="group-label"
+			data-slot="sidebar-group-label"
+			{...props}
+		/>
+	);
+}
+
 export {
 	Sidebar,
 	useSidebar,
@@ -368,6 +388,7 @@ export {
 	SidebarTrigger,
 	SidebarMenuItem,
 	SidebarProvider,
+	SidebarGroupLabel,
 	SidebarMenuButton,
 	SidebarGroupContent,
 };

@@ -2,37 +2,38 @@
 
 import { useUIMessages } from "@convex-dev/agent/react";
 import { type Preloaded, usePreloadedQuery } from "convex/react";
+import { useAtom } from "jotai";
 import { LayoutGroup } from "motion/react";
-import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { setCookie } from "@/app/actions";
 import { ChatGreetings } from "@/components/chat-greetings";
 import { ChatHeader } from "@/components/chat-header";
 import { ChatInput } from "@/components/chat-input";
 import { ChatMessages } from "@/components/chat-messages";
 import { ChatStreamer } from "@/components/chat-streamer";
 import { api } from "@/convex/_generated/api";
+import { currentThreadIdAtom } from "@/lib/atoms";
 import { attr } from "@/lib/utils";
 
 interface ChatProps {
-	threadId: string;
+	threadId: string | null;
 	preloadedUser: Preloaded<typeof api.auth.getUser>;
 }
 
 export function Chat({ threadId, preloadedUser }: ChatProps) {
-	const pathname = usePathname();
-	const isChat = pathname.includes("/c/");
+	const [currentThreadId, setCurrentThreadId] = useAtom(currentThreadIdAtom);
 
+	const isChat = !!currentThreadId;
 	const user = usePreloadedQuery(preloadedUser);
 
 	const {
 		status,
 		results: messages,
 		loadMore,
-	} = useUIMessages(api.chat.loadChat, isChat ? { threadId } : "skip", {
-		initialNumItems: 10,
-		stream: true,
-	});
+	} = useUIMessages(
+		api.chat.loadChat,
+		currentThreadId ? { threadId: currentThreadId } : "skip",
+		{ initialNumItems: 10, stream: true },
+	);
 
 	const order = messages.find((m) => m.status === "streaming")?.order ?? 0;
 	const canLoadMore = status === "CanLoadMore";
@@ -55,10 +56,10 @@ export function Chat({ threadId, preloadedUser }: ChatProps) {
 	}, [hasSubmitted]);
 
 	useEffect(() => {
-		if (!isChat) {
-			setCookie("chat", threadId);
+		if (threadId) {
+			setCurrentThreadId(threadId);
 		}
-	}, [isChat, threadId]);
+	}, [threadId, setCurrentThreadId]);
 
 	return (
 		<main
@@ -97,12 +98,12 @@ export function Chat({ threadId, preloadedUser }: ChatProps) {
 										isPro={user.tier === "pro"}
 									/>
 								)}
+
 								<ChatInput
 									hasSubmitted={hasSubmitted}
 									isChat={isChat}
 									isStreaming={isStreaming}
 									order={order}
-									threadId={threadId}
 								/>
 							</div>
 						</LayoutGroup>

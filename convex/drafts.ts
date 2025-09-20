@@ -8,7 +8,7 @@ import { mutation } from "./_generated/server";
 import type { platform } from "./schema";
 
 export const createDraft = mutation({
-	args: zodToConvex(draftSchema.extend({ threadId: z.string() })),
+	args: zodToConvex(draftSchema.extend({ threadId: z.string() })).fields,
 	handler: async (
 		ctx,
 		{ title, threadId, versions },

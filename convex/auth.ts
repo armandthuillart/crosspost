@@ -16,6 +16,9 @@ import authSchema from "./betterAuth/schema";
 
 const siteUrl = process.env.SITE_URL;
 
+// For some reasons, using env variable is not working.
+const convexUrl = "https://content-boar-853.convex.cloud";
+
 export const {
 	adapter,
 	getHeaders,
@@ -78,9 +81,7 @@ export const createAuth = (
 						});
 					}
 
-					const convex = new ConvexHttpClient(
-						"https://content-boar-853.convex.cloud",
-					);
+					const convex = new ConvexHttpClient(convexUrl);
 
 					await convex.mutation(api.chat.migrateChats, {
 						anonymousUserId: anonymousUser.id,
@@ -110,9 +111,7 @@ export const createAuth = (
 								(s) => s.status === "active",
 							);
 
-							const convex = new ConvexHttpClient(
-								"https://content-boar-853.convex.cloud",
-							);
+							const convex = new ConvexHttpClient(convexUrl);
 
 							if (externalId) {
 								if (isPro) {

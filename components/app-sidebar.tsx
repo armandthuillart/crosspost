@@ -8,6 +8,7 @@ import {
 	SidebarContent,
 	SidebarGroup,
 	SidebarGroupContent,
+	SidebarGroupLabel,
 	SidebarHeader,
 	SidebarMenu,
 	SidebarMenuButton,
@@ -36,7 +37,7 @@ export function AppSidebar() {
 									isActive={pathname === "/"}
 									onClick={() => push("/")}
 								>
-									<AppIcon className="size-5 text-selection-foreground" />
+									<AppIcon className="size-5 text-primary" />
 									{appName}
 								</SidebarMenuButton>
 							</SidebarMenuItem>
@@ -45,6 +46,7 @@ export function AppSidebar() {
 				</SidebarGroup>
 
 				<SidebarGroup>
+					<SidebarGroupLabel>Chats</SidebarGroupLabel>
 					<SidebarGroupContent>
 						<SidebarMenu>
 							<SibebarHistory />
@@ -81,12 +83,10 @@ function SibebarHistory() {
 		{ initialNumItems: 10 },
 	);
 
-	console.log(chats);
-
 	return chats.map(({ _id: chatId, title }) => (
 		<SidebarMenuItem key={chatId}>
 			<SidebarMenuButton
-				className="justify-between"
+				className="cursor-pointer justify-between"
 				isActive={chatId === threadId}
 				onClick={() => push(`/c/${chatId}`)}
 			>

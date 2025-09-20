@@ -1,5 +1,6 @@
 "use client";
 
+import { motion, type SVGMotionProps } from "motion/react";
 import type { SVGProps } from "react";
 
 export const AppIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
@@ -182,9 +183,9 @@ export const EditIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
 	);
 };
 
-export const CopyIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
+export const CopyIcon = ({ ...props }: SVGMotionProps<SVGElement>) => {
 	return (
-		<svg
+		<motion.svg
 			fill="none"
 			viewBox="0 0 24 24"
 			xmlns="http://www.w3.org/2000/svg"
@@ -205,13 +206,13 @@ export const CopyIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
 				strokeLinejoin="round"
 				strokeWidth="2"
 			/>
-		</svg>
+		</motion.svg>
 	);
 };
 
-export const TickIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
+export const TickIcon = ({ ...props }: SVGMotionProps<SVGElement>) => {
 	return (
-		<svg
+		<motion.svg
 			fill="currentColor"
 			viewBox="0 0 24 24"
 			xmlns="http://www.w3.org/2000/svg"
@@ -224,7 +225,7 @@ export const TickIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
 				fill="currentColor"
 				fillRule="evenodd"
 			/>
-		</svg>
+		</motion.svg>
 	);
 };
 

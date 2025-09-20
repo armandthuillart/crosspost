@@ -12,7 +12,6 @@ import {
 import { MINUTE } from "@convex-dev/rate-limiter";
 import { type PaginationResult, paginationOptsValidator } from "convex/server";
 import { v } from "convex/values";
-import { TITLE_SYSTEM_PROMPT } from "../lib/prompts";
 import { api, components, internal } from "./_generated/api";
 import { internalAction, mutation, query } from "./_generated/server";
 import { chatAgent } from "./agents";
@@ -45,7 +44,7 @@ export const sendMessage = mutation({
 			throws: true,
 		});
 
-		const { message, messageId } = await chatAgent.saveMessage(ctx, {
+		const { messageId } = await chatAgent.saveMessage(ctx, {
 			prompt,
 			skipEmbeddings: true,
 			threadId,
@@ -56,13 +55,6 @@ export const sendMessage = mutation({
 			promptMessageId: messageId,
 			threadId,
 		});
-
-		if (message.order === 0) {
-			await ctx.scheduler.runAfter(0, internal.chat.nameChat, {
-				prompt,
-				threadId,
-			});
-		}
 	},
 	returns: v.null(),
 });
@@ -96,30 +88,6 @@ export const abortStreamByOrder = mutation({
 		await abortStream(ctx, components.agent, {
 			order,
 			reason: "Aborting explicitly",
-			threadId,
-		});
-	},
-	returns: v.null(),
-});
-
-export const nameChat = internalAction({
-	args: {
-		prompt: v.string(),
-		threadId: v.string(),
-	},
-	handler: async (ctx, { prompt, threadId }) => {
-		const { text: title } = await chatAgent.generateText(
-			ctx,
-			{ threadId },
-			{
-				model: "google/gemini-2.5-flash-lite",
-				prompt,
-				system: TITLE_SYSTEM_PROMPT,
-			},
-		);
-
-		await chatAgent.updateThreadMetadata(ctx, {
-			patch: { title },
 			threadId,
 		});
 	},

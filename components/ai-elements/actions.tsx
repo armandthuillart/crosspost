@@ -2,12 +2,6 @@
 
 import type { HTMLAttributes } from "react";
 import { Button, type ButtonProps } from "@/components/ui/button";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 
 type ActionsProps = HTMLAttributes<HTMLDivElement>;
@@ -24,27 +18,16 @@ function Actions({ className, ...props }: ActionsProps) {
 	);
 }
 
-interface ActionProps extends ButtonProps {
-	tooltip: string;
-}
-
-function Action({ tooltip, children, className, ...props }: ActionProps) {
+function Action({ children, className, ...props }: ButtonProps) {
 	return (
-		<TooltipProvider>
-			<Tooltip>
-				<TooltipTrigger asChild>
-					<Button
-						className={cn("size-8 [&>svg]:size-4", className)}
-						size="icon"
-						variant="ghost"
-						{...props}
-					>
-						{children}
-					</Button>
-				</TooltipTrigger>
-				<TooltipContent side="bottom">{tooltip}</TooltipContent>
-			</Tooltip>
-		</TooltipProvider>
+		<Button
+			className={cn("size-8 [&>svg]:size-4", className)}
+			size="icon"
+			variant="ghost"
+			{...props}
+		>
+			{children}
+		</Button>
 	);
 }
 

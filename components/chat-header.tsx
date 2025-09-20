@@ -13,7 +13,7 @@ interface ChatHeaderProps {
 	user: User;
 	isFree: boolean;
 	isChat: boolean;
-	threadId: string;
+	threadId: string | null;
 	isAnonymous: boolean;
 }
 
@@ -28,7 +28,7 @@ export function ChatHeader({
 
 	async function handleSignInWithGoogle() {
 		await authClient.signIn.social({
-			callbackURL: `/api/auth/proxy/oauth?${isChat ? new URLSearchParams({ threadId }) : ""}`,
+			callbackURL: `/api/auth/proxy/oauth?${isChat ? new URLSearchParams({ threadId: threadId ?? "" }) : ""}`,
 			provider: "google",
 		});
 	}

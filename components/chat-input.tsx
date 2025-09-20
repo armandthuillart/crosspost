@@ -21,7 +21,8 @@ import {
 import { api } from "@/convex/_generated/api";
 import { useAutoFocus } from "@/hooks/use-auto-focus";
 import { useTypewriter } from "@/hooks/use-typewriter";
-import { showStreamerAtom } from "@/lib/atoms";
+import { currentThreadIdAtom, showStreamerAtom } from "@/lib/atoms";
+import { optimisticallyCreateChat } from "@/lib/stores";
 
 const TEXTAREA_MIN_HEIGHT = 24;
 const TEXTAREA_EXPANDED_MIN_HEIGHT = 48;
@@ -29,7 +30,6 @@ const TEXTAREA_EXPANDED_MIN_HEIGHT = 48;
 interface ChatInputProps {
 	order: number;
 	isChat: boolean;
-	threadId: string;
 	isStreaming: boolean;
 	hasSubmitted: boolean;
 }
@@ -37,10 +37,11 @@ interface ChatInputProps {
 export function ChatInput({
 	order,
 	isChat,
-	threadId,
 	isStreaming,
 	hasSubmitted,
 }: ChatInputProps) {
+	const [currentThreadId, setCurrentThreadId] = useAtom(currentThreadIdAtom);
+
 	const inputRef = useRef<HTMLTextAreaElement>(null);
 
 	const [, showStreamer] = useAtom(showStreamerAtom);
@@ -49,6 +50,10 @@ export function ChatInput({
 	const [isExpanded, setIsExpanded] = useState(false);
 
 	const isDirty = prompt.trim().length > 0;
+
+	const createChat = useMutation(api.chat.createChat).withOptimisticUpdate(
+		optimisticallyCreateChat(api.chat.listChats, setCurrentThreadId),
+	);
 
 	const sendMessage = useMutation(api.chat.sendMessage).withOptimisticUpdate(
 		optimisticallySendMessage(api.chat.loadChat),
@@ -64,25 +69,40 @@ export function ChatInput({
 	}, []);
 
 	const handleSubmit = useCallback(
-		(event: FormEvent<HTMLFormElement>) => {
+		async (event: FormEvent<HTMLFormElement>) => {
 			event.preventDefault();
 			if (!isDirty) return;
 
+			let chatId = currentThreadId;
+
+			if (!chatId) {
+				chatId = await createChat();
+				setCurrentThreadId(chatId);
+				window.history.replaceState(null, "", `/c/${chatId}`);
+			}
+
 			void sendMessage({
 				prompt,
-				threadId,
+				threadId: chatId,
 			}).catch((e) => {
 				if (isRateLimitError(e)) {
 					showStreamer(true);
 				}
 			});
 
-			window.history.replaceState(null, "", `/c/${threadId}`);
-
 			setPrompt("");
 			resetHeight();
 		},
-		[prompt, isDirty, threadId, sendMessage, resetHeight, showStreamer],
+		[
+			prompt,
+			isDirty,
+			createChat,
+			sendMessage,
+			resetHeight,
+			showStreamer,
+			currentThreadId,
+			setCurrentThreadId,
+		],
 	);
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: intentionally depend only on prompt to avoid feedback loops from setState
@@ -199,7 +219,10 @@ export function ChatInput({
 			/>
 			{isStreaming ? (
 				<PromptInputStop
-					onClick={() => abortStreamByOrder({ order, threadId })}
+					onClick={() =>
+						currentThreadId &&
+						abortStreamByOrder({ order, threadId: currentThreadId })
+					}
 				/>
 			) : (
 				<PromptInputSubmit disabled={!isDirty || hasSubmitted} />

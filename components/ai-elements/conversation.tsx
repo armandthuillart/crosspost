@@ -69,13 +69,12 @@ function PureConversationScrollButton({ className, ...props }: ButtonProps) {
 				>
 					<Button
 						className={cn(
-							"-translate-x-1/2 absolute bottom-12 left-1/2 z-20 rounded-full hover:bg-muted",
+							"-translate-x-1/2 absolute bottom-12 left-1/2 z-20 rounded-full bg-muted hover:bg-muted",
 							isVisible && "bottom-32",
 							className,
 						)}
 						onClick={handleScroll}
 						size="icon"
-						variant="outline"
 						{...props}
 					>
 						<ArrowDownIcon className="size-5" />

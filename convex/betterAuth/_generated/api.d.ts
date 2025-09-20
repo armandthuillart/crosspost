@@ -971,6 +971,14 @@ export type Mounts = {
       any
     >;
   };
+  auth: {
+    updateTier: FunctionReference<
+      "mutation",
+      "public",
+      { tier: "anonymous" | "free" | "pro"; userId: string },
+      null
+    >;
+  };
 };
 // For now fullApiWithMounts is only fullApi which provides
 // jump-to-definition in component client code.

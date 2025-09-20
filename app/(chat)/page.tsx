@@ -6,8 +6,7 @@ import { getToken } from "@/lib/auth-server";
 import { api } from "../../convex/_generated/api";
 
 export default async function Page() {
-	const token = await getToken();
-	const cookieStore = await cookies();
+	const [token, cookieStore] = await Promise.all([getToken(), cookies()]);
 
 	if (!token) {
 		// Redirect to our proxy, not directly to "/sign-in/anonymous".

@@ -1,9 +1,9 @@
 import { createClient, type GenericCtx } from "@convex-dev/better-auth";
 import { convex } from "@convex-dev/better-auth/plugins";
-import { requireMutationCtx } from "@convex-dev/better-auth/utils";
 import { checkout, polar, portal, webhooks } from "@polar-sh/better-auth";
 import { type BetterAuthOptions, betterAuth } from "better-auth";
 import { anonymous } from "better-auth/plugins";
+import { ConvexHttpClient } from "convex/browser";
 import { v } from "convex/values";
 import { zodToConvex } from "convex-helpers/server/zod";
 import { polarClient } from "../lib/polar";
@@ -16,13 +16,18 @@ import authSchema from "./betterAuth/schema";
 
 const siteUrl = process.env.SITE_URL;
 
-export const { adapter, getHeaders, getAuthUser, triggersApi, registerRoutes } =
-	createClient<DataModel, typeof authSchema>(components.betterAuth, {
-		local: {
-			schema: authSchema,
-		},
-		verbose: false,
-	});
+export const {
+	adapter,
+	getHeaders,
+	triggersApi,
+	registerRoutes,
+	safeGetAuthUser,
+} = createClient<DataModel, typeof authSchema>(components.betterAuth, {
+	local: {
+		schema: authSchema,
+	},
+	verbose: false,
+});
 
 export const { onCreate, onUpdate, onDelete } = triggersApi();
 
@@ -38,7 +43,6 @@ export const createAuth = (
 				create: {
 					before: async ({ isAnonymous, ...rest }) => {
 						const tier: Tier = isAnonymous ? "anonymous" : "free";
-
 						return {
 							data: {
 								...rest,
@@ -56,8 +60,8 @@ export const createAuth = (
 		plugins: [
 			anonymous({
 				onLinkAccount: async ({
-					anonymousUser: { user: anonymousUser },
 					newUser: { user: newUser },
+					anonymousUser: { user: anonymousUser },
 				}) => {
 					const paginated = await polarClient.customers.list({
 						email: newUser.email,
@@ -74,8 +78,11 @@ export const createAuth = (
 						});
 					}
 
-					// Move the user threads to the new user.
-					await requireMutationCtx(ctx).runMutation(api.chat.migrateChats	, {
+					const convex = new ConvexHttpClient(
+						"https://content-boar-853.convex.cloud",
+					);
+
+					await convex.mutation(api.chat.migrateChats, {
 						anonymousUserId: anonymousUser.id,
 						newUserId: newUser.id,
 					});
@@ -97,20 +104,28 @@ export const createAuth = (
 					portal(),
 					webhooks({
 						onCustomerStateChanged: async ({
-							data: { activeSubscriptions },
+							data: { externalId, activeSubscriptions },
 						}) => {
 							const isPro = activeSubscriptions.some(
 								(s) => s.status === "active",
 							);
 
-							if (isPro) {
-								console.log(
-									"onCustomerStateChanged: A user is now pro, we should update his tier to pro",
-								);
-							} else {
-								console.log(
-									"onCustomerStateChanged: A user is not longer pro, we should downgrade his tier to free",
-								);
+							const convex = new ConvexHttpClient(
+								"https://content-boar-853.convex.cloud",
+							);
+
+							if (externalId) {
+								if (isPro) {
+									await convex.mutation(api.betterAuth.auth.updateTier, {
+										tier: "pro",
+										userId: externalId,
+									});
+								} else {
+									await convex.mutation(api.betterAuth.auth.updateTier, {
+										tier: "free",
+										userId: externalId,
+									});
+								}
 							}
 						},
 						secret: process.env.POLAR_WEBHOOK_SECRET as string,
@@ -141,13 +156,13 @@ export const createAuth = (
 export const getUser = query({
 	args: {},
 	handler: async (ctx): Promise<User> => {
-		const user = await getAuthUser(ctx);
+		const user = await safeGetAuthUser(ctx);
 
 		const tainted: User = {
-			email: user.email,
-			id: user._id,
-			name: user.name,
-			tier: user.tier as Tier,
+			email: user?.email ?? "",
+			id: user?._id ?? "",
+			name: user?.name ?? "",
+			tier: (user?.tier as Tier) ?? "anonymous",
 		};
 
 		return tainted;

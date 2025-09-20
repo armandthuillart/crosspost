@@ -185,36 +185,43 @@ export const migrateChats = mutation({
 			},
 		);
 
-		const threadId = threads[0]._id;
+		const thread = threads[0];
 
-		if (threadId) {
-			const { page: messages } = await listMessages(ctx, components.agent, {
-				paginationOpts: { cursor: null, numItems: 1 },
+		if (!thread) {
+			await ctx.runMutation(internal.users.deleteAllForUserId, {
+				userId: anonymousUserId,
+			});
+			return;
+		}
+
+		const threadId = thread._id;
+
+		const { page: messages } = await listMessages(ctx, components.agent, {
+			paginationOpts: { cursor: null, numItems: 1 },
+			threadId,
+		});
+
+		const lastMessage = messages[0];
+
+		const now = Date.now();
+		const createdAt = lastMessage?._creationTime;
+		const wasChattingRecently = createdAt && createdAt > now - MINUTE * 5;
+
+		if (wasChattingRecently) {
+			await chatAgent.updateThreadMetadata(ctx, {
+				patch: { userId: newUserId },
 				threadId,
 			});
 
-			const lastMessage = messages[0];
+			const drafts = await ctx.db
+				.query("drafts")
+				.withIndex("by_thread", (q) => q.eq("threadId", threadId))
+				.collect();
 
-			const now = Date.now();
-			const createdAt = lastMessage?._creationTime;
-			const wasChattingRecently = createdAt && createdAt > now - MINUTE * 5;
-
-			if (wasChattingRecently) {
-				await chatAgent.updateThreadMetadata(ctx, {
-					patch: { userId: newUserId },
-					threadId,
+			for (const { _id: draftId } of drafts) {
+				await ctx.db.patch(draftId, {
+					userId: newUserId,
 				});
-
-				const drafts = await ctx.db
-					.query("drafts")
-					.withIndex("by_thread", (q) => q.eq("threadId", threadId))
-					.collect();
-
-				for (const { _id: draftId } of drafts) {
-					await ctx.db.patch(draftId, {
-						userId: newUserId,
-					});
-				}
 			}
 		}
 

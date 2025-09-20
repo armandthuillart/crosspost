@@ -1,9 +1,12 @@
 import { getStaticAuth } from "@convex-dev/better-auth";
 import { v } from "convex/values";
+import { zodToConvex } from "convex-helpers/server/zod";
 import { subDays } from "date-fns";
+import { tierSchema } from "../../lib/schema";
 import { createAuth } from "../auth";
 import { internal } from "./_generated/api";
-import { internalMutation } from "./_generated/server";
+import type { Id } from "./_generated/dataModel";
+import { internalMutation, mutation } from "./_generated/server";
 
 export const auth = getStaticAuth(createAuth);
 
@@ -30,6 +33,19 @@ export const tidyUpAnonymousUsers = internalMutation({
 				cursor: continueCursor,
 			});
 		}
+	},
+	returns: v.null(),
+});
+
+export const updateTier = mutation({
+	args: {
+		tier: zodToConvex(tierSchema),
+		userId: v.string(),
+	},
+	handler: async (ctx, { tier, userId }) => {
+		await ctx.db.patch(userId as Id<"user">, {
+			tier,
+		});
 	},
 	returns: v.null(),
 });

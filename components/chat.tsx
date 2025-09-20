@@ -4,6 +4,7 @@ import { useUIMessages } from "@convex-dev/agent/react";
 import { type Preloaded, usePreloadedQuery } from "convex/react";
 import { useAtom } from "jotai";
 import { LayoutGroup } from "motion/react";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ChatGreetings } from "@/components/chat-greetings";
 import { ChatHeader } from "@/components/chat-header";
@@ -20,9 +21,11 @@ interface ChatProps {
 }
 
 export function Chat({ threadId, preloadedUser }: ChatProps) {
+	const pathname = usePathname();
+
 	const [currentThreadId, setCurrentThreadId] = useAtom(currentThreadIdAtom);
 
-	const isChat = !!currentThreadId;
+	const isChat = !!currentThreadId && pathname.startsWith("/c");
 	const user = usePreloadedQuery(preloadedUser);
 
 	const {

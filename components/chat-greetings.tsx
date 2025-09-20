@@ -1,14 +1,16 @@
 "use client";
 
 import { Spiral } from "@paper-design/shaders-react";
+import { useTheme } from "next-themes";
 
 export function ChatGreetings() {
+	const { resolvedTheme } = useTheme();
 	return (
 		<div className="mx-auto size-20 max-md:my-auto">
 			<Spiral
 				className="rounded-full"
-				colorBack="#ffffff"
-				colorFront="#339cff"
+				colorBack="rgb(255, 255, 255, 0)"
+				colorFront={resolvedTheme === "dark" ? "#FFFFFF" : "#339CFF"}
 				density={0.9}
 				distortion={0}
 				noise={0}

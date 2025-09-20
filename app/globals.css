@@ -88,13 +88,13 @@
 	--primary-foreground: oklch(0% 0 0);
 	--sidebar: oklch(0% 0 0);
 	--sidebar-foreground: oklch(100% 0 0);
-	--sidebar-accent: oklch(25.2% 0 0);
+	--sidebar-accent: oklch(25% 0 0);
 	--sidebar-accent-foreground: oklch(100% 0 0);
 	--muted-foreground: oklch(65% 0 0);
 	--muted: oklch(24.8% 0 0);
 	--input: oklch(100% 0 0 / 20%);
 	--border: oklch(100% 0 0 / 5%);
-	--accent: oklch(25.2% 0 0);
+	--accent: oklch(25% 0 0);
 	--accent-foreground: oklch(100% 0 0);
 	--popover: oklch(22.7% 0 0);
 	--popover-foreground: oklch(100% 0 0);

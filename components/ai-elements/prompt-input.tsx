@@ -9,7 +9,7 @@ function PromptInput({ className, ...props }: HTMLMotionProps<"form">) {
 	return (
 		<motion.form
 			className={cn(
-				"group/prompt-input grid grid-cols-[auto_1fr_auto] gap-x-2 rounded-4xl not-dark:border bg-background p-2.5 shadow-2xs not-dark:has-focus-visible:border-input has-focus-visible:shadow-xs data-[state=collapsed]:min-h-14 data-[state=collapsed]:pl-3.5 dark:bg-muted data-[state=collapsed]:[grid-template-areas:'tool_input_action'] data-[state=expanded]:[grid-template-areas:'input_input_input''tool_footer_action']",
+				"group/prompt-input grid grid-cols-[auto_1fr_auto] gap-x-2 rounded-4xl not-dark:border bg-background p-2.5 shadow-2xs transition-colors duration-250 ease-snappy not-dark:has-focus-visible:border-input has-focus-visible:shadow-xs data-[state=collapsed]:min-h-14 data-[state=collapsed]:pl-3.5 dark:bg-muted data-[state=collapsed]:[grid-template-areas:'tool_input_action'] data-[state=expanded]:[grid-template-areas:'input_input_input''tool_footer_action']",
 				className,
 			)}
 			layoutId="prompt-input"
@@ -56,7 +56,7 @@ function PurePromptInputSubmit({
 	return (
 		<motion.button
 			className={cn(
-				"disabled:!pointer-events-none disabled:!opacity-50 flex size-9 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-none [grid-area:action]",
+				"disabled:!pointer-events-none disabled:!opacity-50 flex size-9 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-none transition-all duration-500 ease-snappy [grid-area:action]",
 				className,
 			)}
 			layout="position"

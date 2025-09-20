@@ -86,7 +86,7 @@ function SibebarHistory() {
 	return chats.map(({ _id: chatId, title }) => (
 		<SidebarMenuItem key={chatId}>
 			<SidebarMenuButton
-				className="cursor-pointer justify-between"
+				className="justify-between"
 				isActive={chatId === threadId}
 				onClick={() => push(`/c/${chatId}`)}
 			>

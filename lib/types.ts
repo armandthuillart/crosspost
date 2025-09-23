@@ -1,12 +1,10 @@
 import type { UIMessage } from "@convex-dev/agent/react";
-import type { Infer } from "convex/values";
 import type { z } from "zod/v3";
-import type { platform } from "../convex/schema";
-import type { tierSchema } from "../lib/schema";
+import type { platformSchema, tierSchema } from "../lib/schema";
 
 export type Tier = z.infer<typeof tierSchema>;
 
-export type Platform = Infer<typeof platform>;
+export type Platform = z.infer<typeof platformSchema>;
 
 export type TextUIPart = Extract<UIMessage["parts"][number], { type: "text" }>;
 

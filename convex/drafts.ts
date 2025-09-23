@@ -1,14 +1,19 @@
-import { type Infer, v } from "convex/values";
-import { zodToConvex } from "convex-helpers/server/zod";
-import { z } from "zod/v3";
-import { draftSchema } from "../lib/schema";
+import { v } from "convex/values";
+import type { Platform } from "../lib/types";
 import { api } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
 import { mutation } from "./_generated/server";
-import type { platform } from "./schema";
 
 export const createDraft = mutation({
-	args: zodToConvex(draftSchema.extend({ threadId: z.string() })).fields,
+	args: v.object({
+		threadId: v.string(),
+		title: v.string(),
+		versions: v.object({
+			bluesky: v.optional(v.string()),
+			threads: v.optional(v.string()),
+			x: v.optional(v.string()),
+		}),
+	}),
 	handler: async (
 		ctx,
 		{ title, threadId, versions },
@@ -26,7 +31,7 @@ export const createDraft = mutation({
 			await ctx.db.insert("versions", {
 				content,
 				draftId,
-				platform: P as Infer<typeof platform>,
+				platform: P as Platform,
 			});
 		}
 

@@ -14,7 +14,7 @@ import { type PaginationResult, paginationOptsValidator } from "convex/server";
 import { v } from "convex/values";
 import { api, components, internal } from "./_generated/api";
 import { internalAction, mutation, query } from "./_generated/server";
-import { chatAgent } from "./agents";
+import { agent } from "./agents";
 import { rateLimiter } from "./rateLimiting";
 import { verifyOwnership } from "./utils";
 
@@ -44,7 +44,7 @@ export const sendMessage = mutation({
 			throws: true,
 		});
 
-		const { messageId } = await chatAgent.saveMessage(ctx, {
+		const { messageId } = await agent.saveMessage(ctx, {
 			prompt,
 			skipEmbeddings: true,
 			threadId,
@@ -65,7 +65,7 @@ export const streamChat = internalAction({
 		threadId: v.string(),
 	},
 	handler: async (ctx, { threadId, promptMessageId }) => {
-		const { consumeStream } = await chatAgent.streamText(
+		const { consumeStream } = await agent.streamText(
 			ctx,
 			{ threadId },
 			{ promptMessageId },
@@ -176,7 +176,7 @@ export const migrateChats = mutation({
 		const wasChattingRecently = createdAt && createdAt > now - MINUTE * 5;
 
 		if (wasChattingRecently) {
-			await chatAgent.updateThreadMetadata(ctx, {
+			await agent.updateThreadMetadata(ctx, {
 				patch: { userId: newUserId },
 				threadId,
 			});

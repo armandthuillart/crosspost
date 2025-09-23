@@ -20,7 +20,6 @@ export function optimisticallyCreateChat(
 ): (store: OptimisticLocalStore) => void {
 	return (store) => {
 		const optimisticId = generateConvexId();
-
 		setCurrentThreadId(optimisticId);
 
 		insertAtTop({

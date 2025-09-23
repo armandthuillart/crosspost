@@ -1,8 +1,8 @@
-import { convexToZod } from "convex-helpers/server/zod";
 import { z } from "zod/v3";
-import { platform } from "../convex/schema";
 
 export const tierSchema = z.enum(["anonymous", "free", "pro"]);
+
+export const platformSchema = z.enum(["threads", "linkedin", "bluesky", "x"]);
 
 export const draftSchema = z.object({
 	title: z.string().describe("The title of the draft"),
@@ -32,7 +32,7 @@ export const draftSchema = z.object({
 export const postSchema = z
 	.object({
 		content: z.string().describe("The content of the post"),
-		platform: convexToZod(platform).describe("Platform to publish the post to"),
+		platform: platformSchema.describe("Platform to publish the post to"),
 		title: z.string().describe("The title of the post"),
 	})
 	.refine(

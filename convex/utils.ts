@@ -13,6 +13,10 @@ export async function verifyOwnership(
 		throw new ChatSDKError("unauthorized:auth");
 	}
 
+	console.log("DEBUG: verifyOwnership called with threadId:", threadId);
+	console.log("DEBUG: threadId type:", typeof threadId);
+	console.log("DEBUG: threadId length:", threadId.length);
+
 	const { userId } = await getThreadMetadata(ctx, components.agent, {
 		threadId,
 	});

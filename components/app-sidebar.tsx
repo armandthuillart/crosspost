@@ -2,10 +2,13 @@
 
 import { usePaginatedQuery } from "convex/react";
 import { useParams, usePathname, useRouter } from "next/navigation";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import { AppIcon, SearchIcon } from "@/components/ui/icons";
 import {
 	Sidebar,
 	SidebarContent,
+	SidebarFooter,
 	SidebarGroup,
 	SidebarGroupContent,
 	SidebarGroupLabel,
@@ -54,6 +57,22 @@ export function AppSidebar() {
 					</SidebarGroupContent>
 				</SidebarGroup>
 			</SidebarContent>
+
+			<SidebarFooter className="flex-row items-center justify-between">
+				<div className="flex items-center gap-2">
+					<Avatar className="size-6 shrink-0">
+						<AvatarFallback className="bg-primary">A</AvatarFallback>
+					</Avatar>
+
+					<div className="flex w-full flex-col">
+						<span className="text-sm">Armand</span>
+						<span className="text-muted-foreground text-xs">Free</span>
+					</div>
+				</div>
+				<Button className="rounded-full" size="sm" variant="outline">
+					Upgrade
+				</Button>
+			</SidebarFooter>
 		</Sidebar>
 	);
 }

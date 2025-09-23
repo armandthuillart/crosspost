@@ -1,12 +1,7 @@
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
-
-export const platform = v.union(
-	v.literal("linkedin"),
-	v.literal("bluesky"),
-	v.literal("threads"),
-	v.literal("x"),
-);
+import { zodToConvex } from "convex-helpers/server/zod";
+import { platformSchema } from "../lib/schema";
 
 export default defineSchema({
 	drafts: defineTable({
@@ -18,13 +13,13 @@ export default defineSchema({
 		.index("by_thread", ["threadId"]),
 	posts: defineTable({
 		content: v.string(),
-		platform,
+		platform: zodToConvex(platformSchema),
 		title: v.string(),
 	}),
 	versions: defineTable({
 		content: v.string(),
 		draftId: v.id("drafts"),
-		platform,
+		platform: zodToConvex(platformSchema),
 		updatedAt: v.optional(v.number()),
 	})
 		.index("by_draft", ["draftId"])

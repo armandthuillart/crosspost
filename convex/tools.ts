@@ -4,11 +4,12 @@ import { draftSchema, postSchema } from "../lib/schema";
 import type { Platform } from "../lib/types";
 import { api, internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
-import { chatAgent } from "./agents";
+import { agent } from "./agents";
 
-export const createDraft = createTool({
+export const draft = createTool({
 	args: draftSchema,
-	description: "Create a new post draft",
+	description:
+		"Create a new post draft. It will return the draft id if successful.",
 	handler: async (
 		{ threadId, runMutation },
 		{ title, versions },
@@ -25,9 +26,10 @@ export const createDraft = createTool({
 	},
 });
 
-export const createPostIntent = createTool({
+export const post = createTool({
 	args: postSchema,
-	description: "Create a post intent for the given content",
+	description:
+		"Create a post intent for the given content. It will return the post intent url if successful.",
 	handler: async (ctx, { title, content, platform }): Promise<string> => {
 		function parse(content: string): string {
 			const hashtags = content.match(/#\w+/g)?.map((tag) => tag.slice(1)) || [];
@@ -75,14 +77,15 @@ export const createPostIntent = createTool({
 	},
 });
 
-export const renameChat = createTool({
+export const rename = createTool({
 	args: z.object({
 		title: z
 			.string()
 			.max(6, "Must be under 6 words")
 			.describe("The new title of the chat"),
 	}),
-	description: "Rename the current chat when the topic changes",
+	description:
+		"Rename the current chat when the topic changes. It will return the new chat title if successful.",
 	handler: async (ctx, { title }): Promise<string> => {
 		const { threadId } = ctx;
 
@@ -90,7 +93,7 @@ export const renameChat = createTool({
 			throw new Error("No threadId in context");
 		}
 
-		await chatAgent.updateThreadMetadata(ctx, {
+		await agent.updateThreadMetadata(ctx, {
 			patch: { title },
 			threadId,
 		});

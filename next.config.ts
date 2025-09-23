@@ -1,9 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-	experimental: {
-		browserDebugInfoInTerminal: true,
-	},
+	experimental: { browserDebugInfoInTerminal: true },
+	reactStrictMode: false,
 	typedRoutes: true,
 };
 

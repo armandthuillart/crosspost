@@ -1,10 +1,11 @@
+import type { GatewayEmbeddingModelId, GatewayModelId } from "@ai-sdk/gateway";
 import { Agent, stepCountIs } from "@convex-dev/agent";
 import { appName } from "../lib/constants";
-import { CHAT_SYSTEM_PROMPT } from "../lib/prompts";
+import { AGENT_PROMPT } from "../lib/prompts";
 import { components } from "./_generated/api";
-import { createDraft, createPostIntent, renameChat } from "./tools";
+import { draft, post, rename } from "./tools";
 
-export const chatAgent = new Agent(components.agent, {
+export const agent = new Agent(components.agent, {
 	contextOptions: {
 		recentMessages: 40,
 		searchOptions: {
@@ -16,10 +17,11 @@ export const chatAgent = new Agent(components.agent, {
 		},
 		searchOtherThreads: true,
 	},
-	instructions: CHAT_SYSTEM_PROMPT,
-	languageModel: "google/gemini-2.5-flash",
+	instructions: AGENT_PROMPT,
+	languageModel: "xai/grok-4-fast-non-reasoning" as GatewayModelId,
 	name: appName,
 	stopWhen: stepCountIs(3),
-	textEmbeddingModel: "google/text-embedding-005",
-	tools: { createDraft, createPostIntent, renameChat },
+	textEmbeddingModel:
+		"openai/text-embedding-3-small" as GatewayEmbeddingModelId,
+	tools: { draft, post, rename },
 });

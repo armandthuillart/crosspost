@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { AppMenu } from "@/components/app-menu";
 import { CTA } from "@/components/chat-header.upgrade";
 import { Button } from "@/components/ui/button";
 import { AppIcon } from "@/components/ui/icons";
@@ -66,7 +65,6 @@ export function ChatHeader({
 	return (
 		<header className="inset-0 bottom-auto z-50 flex items-center justify-between p-2 group-not-data-chat/chat:absolute group-data-chat/chat:sticky @max-8xl/chat:group-data-chat/chat:bg-background">
 			<SidebarTrigger />
-			<AppMenu user={user} />
 		</header>
 	);
 }

@@ -378,12 +378,24 @@ function SidebarGroupLabel({
 	);
 }
 
+function SidebarFooter({ className, ...props }: React.ComponentProps<"div">) {
+	return (
+		<div
+			className={cn("flex flex-col gap-2 p-3", className)}
+			data-sidebar="footer"
+			data-slot="sidebar-footer"
+			{...props}
+		/>
+	);
+}
+
 export {
 	Sidebar,
 	useSidebar,
 	SidebarMenu,
 	SidebarGroup,
 	SidebarHeader,
+	SidebarFooter,
 	SidebarContent,
 	SidebarTrigger,
 	SidebarMenuItem,

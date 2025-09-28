@@ -95,7 +95,7 @@ export function Chat({ chatId, preloadedUser }: ChatProps) {
 									user={user}
 								/>
 							</div>
-							<PostGallery />
+							{!isChat && <PostGallery />}
 						</LayoutGroup>
 					</div>
 				</div>

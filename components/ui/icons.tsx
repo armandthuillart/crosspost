@@ -35,6 +35,45 @@ export const ArrowUpIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
 	);
 };
 
+export const InternetIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
+	return (
+		<svg
+			aria-hidden="true"
+			fill="none"
+			viewBox="0 0 24 24"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<circle
+				cx="12"
+				cy="12"
+				r="10"
+				stroke="currentColor"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="2"
+			/>
+			<ellipse
+				cx="12"
+				cy="12"
+				rx="4"
+				ry="10"
+				stroke="currentColor"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="2"
+			/>
+			<path
+				d="M2 12H22"
+				stroke="currentColor"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="2"
+			/>
+		</svg>
+	);
+};
+
 export const LoaderIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
 	return (
 		<svg
@@ -457,6 +496,91 @@ export const SettingsIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
 				strokeLinecap="round"
 				strokeLinejoin="round"
 				strokeWidth="2"
+			/>
+		</svg>
+	);
+};
+
+export const XIcon = (props: SVGProps<SVGSVGElement>) => {
+	return (
+		<svg
+			aria-hidden="true"
+			fill="none"
+			height="24"
+			viewBox="0 0 24 24"
+			width="24"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<path
+				className="stroke-black dark:stroke-white"
+				d="M3 21L10.5484 13.4516M21 3L13.4516 10.5484M13.4516 10.5484L8 3H3L10.5484 13.4516M13.4516 10.5484L21 21H16L10.5484 13.4516"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="2"
+			/>
+		</svg>
+	);
+};
+
+export const ThreadsIcon = (props: SVGProps<SVGSVGElement>) => {
+	return (
+		<svg
+			aria-hidden="true"
+			fill="none"
+			height="24"
+			viewBox="0 0 24 24"
+			width="24"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<path
+				className="stroke-black dark:stroke-white"
+				d="M19.25 8.50488C17.6729 2.63804 12.25 3.00452 12.25 3.00452C12.25 3.00452 4.75 2.50512 4.75 12C4.75 21.4949 12.25 20.9955 12.25 20.9955C12.25 20.9955 16.7077 21.2924 18.75 17.0782C19.4167 15.2204 19.25 11.5049 12.75 11.5049C12.75 11.5049 9.75 11.5049 9.75 14.0049C9.75 14.9812 10.75 16.0049 12.25 16.0049C13.75 16.0049 15.4212 14.9777 15.75 13.0049C16.75 7.00488 11.25 6.50488 9.75 9.00488"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="2"
+			/>
+		</svg>
+	);
+};
+
+export const BlueskyIcon = (props: SVGProps<SVGSVGElement>) => {
+	return (
+		<svg
+			aria-hidden="true"
+			fill="none"
+			height="24"
+			viewBox="0 0 24 24"
+			width="24"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<path
+				d="M12 11.4963C11.8936 11.2963 7.45492 3 3.50417 3C1.33647 3 2.00456 8 2.50443 10.5C2.70653 11.5108 3.50417 14.5 8.003 14C8.003 14 4.00404 14.5 4.00404 17C4.00404 18.5 6.50339 21 8.50287 21C10.4606 21 11.9391 16.6859 12 16.5058C12.0609 16.6859 13.5394 21 15.4971 21C17.4966 21 19.996 18.5 19.996 17C19.996 14.5 15.997 14 15.997 14C20.4958 14.5 21.2935 11.5108 21.4956 10.5C21.9954 8 22.6635 3 20.4958 3C16.5451 3 12.1064 11.2963 12 11.4963Z"
+				fill="#1181F6"
+			/>
+		</svg>
+	);
+};
+
+export const LinkedInIcon = (props: SVGProps<SVGSVGElement>) => {
+	return (
+		<svg
+			aria-hidden="true"
+			fill="none"
+			height="24"
+			viewBox="0 0 24 24"
+			width="24"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<rect fill="white" height="16" rx="3" width="16" x="4" y="4" />
+			<path
+				clipRule="evenodd"
+				d="M4.5 1.75C2.98122 1.75 1.75 2.98122 1.75 4.5L1.75 19.5C1.75 21.0188 2.98122 22.25 4.5 22.25L19.5 22.25C21.0188 22.25 22.25 21.0188 22.25 19.5L22.25 4.5C22.25 2.98122 21.0188 1.75 19.5 1.75L4.5 1.75ZM8.25898 6.36914C8.25898 7.0595 7.69934 7.61914 7.00898 7.61914H7C6.30964 7.61914 5.75 7.0595 5.75 6.36914C5.75 5.67878 6.30964 5.11914 7 5.11914H7.00898C7.69934 5.11914 8.25898 5.67878 8.25898 6.36914ZM7.00117 8.5C7.55345 8.5 8.00117 8.94772 8.00117 9.5L8.00117 17C8.00117 17.5523 7.55345 18 7.00117 18C6.44888 18 6.00117 17.5523 6.00117 17L6.00117 9.5C6.00117 8.94772 6.44888 8.5 7.00117 8.5ZM11.001 8.5C11.5533 8.5 12.001 8.94772 12.001 9.5V9.53513C12.5893 9.19479 13.2724 9 14.001 9C16.2101 9 18.001 10.7909 18.001 13V17C18.001 17.5523 17.5533 18 17.001 18C16.4487 18 16.001 17.5523 16.001 17V13C16.001 11.8954 15.1055 11 14.001 11C12.8964 11 12.001 11.8954 12.001 13V17C12.001 17.5523 11.5533 18 11.001 18C10.4487 18 10.001 17.5523 10.001 17L10.001 9.5C10.001 8.94772 10.4487 8.5 11.001 8.5Z"
+				fill="#0A66C2"
+				fillRule="evenodd"
 			/>
 		</svg>
 	);

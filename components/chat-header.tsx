@@ -21,14 +21,14 @@ export function ChatHeader({ isFree, isAnonymous }: ChatHeaderProps) {
 
 	if (isAnonymous) {
 		return (
-			<header className="absolute @max-8xl/chat:sticky inset-0 bottom-auto z-50 flex w-full items-center justify-between p-2 @max-8xl/chat:group-data-chat/chat:bg-background">
+			<header className="absolute @max-8xl/chat:sticky inset-0 bottom-auto z-50 flex w-full items-center justify-between p-2 group-not-data-chat/chat:justify-end @max-8xl/chat:group-data-chat/chat:bg-background">
 				<Button
-					className="group/trigger"
+					className="group/trigger group-not-data-chat/chat:hidden"
 					onClick={() => push("/")}
 					size="icon"
 					variant="ghost"
 				>
-					<AppIcon className="size-6 text-primary" />
+					<AppIcon className="size-6" />
 				</Button>
 
 				{isFree && <CTA />}
@@ -37,10 +37,11 @@ export function ChatHeader({ isFree, isAnonymous }: ChatHeaderProps) {
 					<Button
 						className="rounded-full"
 						onClick={handleSignInWithGoogle}
-						variant="outline"
+						variant="secondary"
 					>
 						Sign in
 					</Button>
+
 					<Button className="rounded-full" onClick={handleSignInWithGoogle}>
 						Sign up for free
 					</Button>

@@ -4,17 +4,18 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-	--radius-sm: 0.5rem; /* 8px */
-	--radius-md: 0.625rem; /* 10px */
-	--radius-lg: 1rem; /* 16px */
-	--radius-xl: 1.125rem; /* 18px */
-	--radius-2xl: 1.25rem; /* 20px */
-	--radius-3xl: 1.5rem; /* 24px */
-	--radius-4xl: 1.75rem; /* 28px */
-	--container-8xl: 96rem; /* 1536px */
-	--color-material: var(--material);
+  --radius-sm: 0.5rem; 
+	--radius-md: 0.625rem; 
+	--radius-lg: 1rem; 
+	--radius-xl: 1.125rem; 
+	--radius-2xl: 1.25rem; 
+	--radius-3xl: 1.5rem; 
+	--radius-4xl: 1.75rem; 
+	--container-8xl: 96rem;
 	--color-background: var(--background);
 	--color-foreground: var(--foreground);
+
+	--color-material: var(--material);
 	--color-primary: var(--primary);
 	--color-primary-foreground: var(--primary-foreground);
 	--color-secondary: var(--secondary);
@@ -48,12 +49,15 @@
 
 
 :root {
+	--background: oklch(100% 0 0);
+  --foreground: oklch(16% 0 0);
+  --accent: oklch(96% 0 0);
+  --accent-foreground: oklch(16% 0 0);
+
 	--primary: oklch(68.2% 0.173 251);
 	--primary-foreground: oklch(100% 0 0);
 	--secondary: oklch(92.2% 0 0);
 	--secondary-foreground: oklch(14.5% 0 0);
-	--accent: oklch(14.9% 0 0 / 5%);
-	--accent-foreground: oklch(14.5% 0 0);
 	--muted: oklch(97% 0 0);
 	--muted-foreground: oklch(60.3% 0 0);
 	--ring: oklch(70.8% 0 0);
@@ -64,8 +68,6 @@
 	--card-foreground: oklch(14.5% 0 0);
 	--popover: oklch(100% 0 0);
 	--popover-foreground: oklch(14.5% 0 0);
-	--background: oklch(100% 0 0);
-	--foreground: oklch(14.5% 0 0);
 	--sidebar: oklch(100% 0 0);
 	--sidebar-ring: oklch(70.8% 0 0);
 	--sidebar-foreground: oklch(14.9% 0 0);
@@ -82,16 +84,19 @@
 }
 
 .dark {
-	--background: oklch(0% 0 0);
+	--background: oklch(20.5% 0 0);
 	--foreground: oklch(100% 0 0);
+	--muted: oklch(27% 0 0);
+	--muted-foreground: oklch(55% 0 0);
+	--secondary: oklch(37% 0 0);
+  --secondary-foreground: oklch(100% 0 0);
+
 	--primary: oklch(100% 0 0);
 	--primary-foreground: oklch(0% 0 0);
 	--sidebar: oklch(0% 0 0);
 	--sidebar-foreground: oklch(100% 0 0);
 	--sidebar-accent: oklch(25% 0 0);
 	--sidebar-accent-foreground: oklch(100% 0 0);
-	--muted-foreground: oklch(65% 0 0);
-	--muted: oklch(24.8% 0 0);
 	--input: oklch(100% 0 0 / 20%);
 	--border: oklch(100% 0 0 / 5%);
 	--accent: oklch(25% 0 0);

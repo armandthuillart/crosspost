@@ -14,15 +14,18 @@ import {
 } from "react";
 import {
 	PromptInput,
+	PromptInputButton,
 	PromptInputStop,
 	PromptInputSubmit,
 	PromptInputTextarea,
 } from "@/components/ai-elements/prompt-input";
+import { InternetIcon } from "@/components/ui/icons";
 import { api } from "@/convex/_generated/api";
 import { useAutoFocus } from "@/hooks/use-auto-focus";
 import { useTypewriter } from "@/hooks/use-typewriter";
 import { currentThreadIdAtom, showStreamerAtom } from "@/lib/atoms";
 import { optimisticallyCreateChat } from "@/lib/stores";
+import { attr } from "@/lib/utils";
 
 const TEXTAREA_MIN_HEIGHT = 24;
 const TEXTAREA_EXPANDED_MIN_HEIGHT = 48;
@@ -206,10 +209,11 @@ export function ChatInput({
 		: `Ask to post about ${typewriter}`;
 
 	return (
-		<PromptInput
-			data-state={isExpanded ? "expanded" : "collapsed"}
-			onSubmit={handleSubmit}
-		>
+		<PromptInput {...attr("expanded", isExpanded)} onSubmit={handleSubmit}>
+			<PromptInputButton>
+				<InternetIcon className="size-5" />
+			</PromptInputButton>
+
 			<PromptInputTextarea
 				onChange={handleChange}
 				onKeyDown={handleKeyDown}

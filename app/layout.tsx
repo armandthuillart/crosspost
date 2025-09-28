@@ -38,7 +38,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
 				</head>
 			)}
 			<body
-				className={cn("h-full bg-background text-foreground", inter.className)}
+				className={cn(
+					"h-full bg-background text-foreground antialiased",
+					inter.className,
+				)}
 			>
 				<ThemeProvider>
 					<JotaiProvider>

@@ -9,6 +9,7 @@ import { ChatHeader } from "@/components/chat-header";
 import { ChatInput } from "@/components/chat-input";
 import { ChatMessages } from "@/components/chat-messages";
 import { ChatStreamer } from "@/components/chat-streamer";
+import { PostGallery } from "@/components/post-gallery";
 import { api } from "@/convex/_generated/api";
 import { attr } from "@/lib/utils";
 
@@ -61,7 +62,7 @@ export function Chat({ chatId, preloadedUser }: ChatProps) {
 			<ChatHeader isAnonymous={isAnonymous} isFree={isFree} />
 
 			<div className="flex h-full flex-col overflow-y-scroll group-data-chat/chat:gap-32">
-				<div className="flex h-full flex-col overflow-hidden group-data-chat/chat:h-full group-data-chat/chat:justify-center max-md:shrink-0 group-not-data-chat/chat:md:gap-6 group-not-data-chat/chat:md:pt-24 group-not-data-chat/chat:lg:pt-[30dvh]">
+				<div className="flex h-full flex-col group-data-chat/chat:h-full group-data-chat/chat:justify-center group-data-chat/chat:overflow-hidden max-md:shrink-0 group-not-data-chat/chat:md:gap-6 group-not-data-chat/chat:md:pt-44 group-not-data-chat/chat:lg:pt-60">
 					{!isChat ? (
 						<ChatGreetings />
 					) : (
@@ -92,6 +93,7 @@ export function Chat({ chatId, preloadedUser }: ChatProps) {
 									order={order}
 								/>
 							</div>
+							<PostGallery />
 						</LayoutGroup>
 					</div>
 				</div>

@@ -2,9 +2,19 @@
 
 import { type HTMLMotionProps, motion } from "motion/react";
 import { type ComponentProps, memo } from "react";
+import {
+	Button,
+	type ButtonProps,
+	buttonVariants,
+} from "@/components/ui/button";
 import { ArrowUpIcon, StopIcon } from "@/components/ui/icons";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { Button, type ButtonProps } from "../ui/button";
 
 function PromptInput({
 	children,
@@ -13,7 +23,7 @@ function PromptInput({
 }: HTMLMotionProps<"form">) {
 	return (
 		<motion.form
-			className="group/prompt-input overflow-hidden not-dark:border bg-background transition-[box-shadow,border-color,background-color] ease-snappy not-dark:has-focus-visible:border-input has-focus-visible:shadow-xs dark:bg-muted"
+			className="group/prompt-input overflow-hidden not-dark:border bg-background shadow-xs transition-[box-shadow,border-color,background-color] ease-snappy not-dark:has-focus-visible:border-input dark:bg-muted"
 			layout
 			layoutId="prompt-input-outer"
 			style={{ borderRadius: 28 }}
@@ -104,22 +114,30 @@ function PromptInputStop({ className, ...props }: ComponentProps<"button">) {
 
 function PromptInputButton({ children, className, ...props }: ButtonProps) {
 	return (
-		<motion.div
-			className="h-9 [grid-area:left]"
-			layout="position"
-			layoutId="prompt-input-button"
-			transition={{ layout: { duration: 0.5, ease: [0.32, 0.72, 0, 1] } }}
-		>
-			<Button
-				className="rounded-full"
-				size="icon"
-				type="button"
-				variant="ghost"
-				{...props}
-			>
-				{children}
-			</Button>
-		</motion.div>
+		<TooltipProvider>
+			<Tooltip>
+				<motion.div
+					className="h-9 [grid-area:left]"
+					layout="position"
+					layoutId="prompt-input-button"
+					transition={{ layout: { duration: 0.5, ease: [0.32, 0.72, 0, 1] } }}
+				>
+					<TooltipTrigger
+						className={cn(
+							buttonVariants({
+								size: "icon",
+								variant: "ghost",
+								...props,
+							}),
+							"rounded-full",
+						)}
+					>
+						{children}
+					</TooltipTrigger>
+				</motion.div>
+				<TooltipContent side="bottom">Search the web</TooltipContent>
+			</Tooltip>
+		</TooltipProvider>
 	);
 }
 

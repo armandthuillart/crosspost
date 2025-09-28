@@ -87,10 +87,12 @@ export function Chat({ chatId, preloadedUser }: ChatProps) {
 								)}
 
 								<ChatInput
+									chatId={chatId}
 									hasSubmitted={hasSubmitted}
 									isChat={isChat}
 									isStreaming={isStreaming}
 									order={order}
+									user={user}
 								/>
 							</div>
 							<PostGallery />

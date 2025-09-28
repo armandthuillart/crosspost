@@ -3,7 +3,6 @@ import { motion } from "motion/react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { appName } from "@/lib/constants";
 import type { Platform } from "@/lib/types";
-import { XIcon } from "./ui/icons";
 
 const seeds: PostCardProps[] = [
 	{
@@ -42,7 +41,7 @@ const seeds: PostCardProps[] = [
 export function PostGallery() {
 	return (
 		<motion.div
-			className="mx-auto mt-24 flex w-full max-w-7xl flex-col gap-4"
+			className="mx-auto mt-24 flex w-full max-w-7xl flex-col gap-4 pb-24"
 			layoutId="post-gallery"
 			transition={{ layout: { duration: 0.5, ease: [0.32, 0.72, 0, 1] } }}
 		>
@@ -70,7 +69,7 @@ interface PostCardProps {
 	platform: Platform;
 }
 
-function PostCard({ title, platform, postedAt }: PostCardProps) {
+function PostCard({ title, postedAt }: PostCardProps) {
 	return (
 		<div className="flex w-full flex-col gap-2 has-focus-visible:ring-3 has-focus-visible:ring-ring/50">
 			<div className="aspect-video overflow-hidden rounded-md border" />

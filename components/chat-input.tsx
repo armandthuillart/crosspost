@@ -23,27 +23,33 @@ import { InternetIcon } from "@/components/ui/icons";
 import { api } from "@/convex/_generated/api";
 import { useAutoFocus } from "@/hooks/use-auto-focus";
 import { useTypewriter } from "@/hooks/use-typewriter";
-import { currentThreadIdAtom, showStreamerAtom } from "@/lib/atoms";
-import { optimisticallyCreateChat } from "@/lib/stores";
+import { showStreamerAtom } from "@/lib/atoms";
+import { authClient } from "@/lib/auth-client";
+// import { optimisticallyCreateChat } from "@/lib/stores";
+import type { User } from "@/lib/types";
 import { attr } from "@/lib/utils";
 
 const TEXTAREA_MIN_HEIGHT = 24;
 const TEXTAREA_EXPANDED_MIN_HEIGHT = 48;
 
 interface ChatInputProps {
+	user: User | null;
 	order: number;
 	isChat: boolean;
+	chatId: string | null;
 	isStreaming: boolean;
 	hasSubmitted: boolean;
 }
 
 export function ChatInput({
+	user,
 	order,
+	chatId,
 	isChat,
 	isStreaming,
 	hasSubmitted,
 }: ChatInputProps) {
-	const [currentThreadId, setCurrentThreadId] = useAtom(currentThreadIdAtom);
+	const [threadId, setThreadId] = useState(chatId);
 
 	const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -54,9 +60,7 @@ export function ChatInput({
 
 	const isDirty = prompt.trim().length > 0;
 
-	const createChat = useMutation(api.chat.createChat).withOptimisticUpdate(
-		optimisticallyCreateChat(api.chat.listChats, setCurrentThreadId),
-	);
+	const createChat = useMutation(api.chat.createChat);
 
 	const sendMessage = useMutation(api.chat.sendMessage).withOptimisticUpdate(
 		optimisticallySendMessage(api.chat.loadChat),
@@ -76,17 +80,33 @@ export function ChatInput({
 			event.preventDefault();
 			if (!isDirty) return;
 
-			let chatId = currentThreadId;
+			if (!user) {
+				const { error } = await authClient.signIn.anonymous();
+
+				if (error) {
+					console.error("Failed to sign in anonymously", error);
+					return;
+				}
+			}
+
+			let threadId = chatId;
 
 			if (!chatId) {
-				chatId = await createChat();
-				setCurrentThreadId(chatId);
-				window.history.replaceState(null, "", `/c/${chatId}`);
+				threadId = await createChat();
+				window.history.replaceState(null, "", `/c/${threadId}`);
+				setThreadId(threadId);
+			}
+
+			if (!threadId) {
+				console.error(
+					"Should not happen, chatId is null but no threadId was created",
+				);
+				return;
 			}
 
 			void sendMessage({
 				prompt,
-				threadId: chatId,
+				threadId,
 			}).catch((e) => {
 				if (isRateLimitError(e)) {
 					showStreamer(true);
@@ -97,14 +117,14 @@ export function ChatInput({
 			resetHeight();
 		},
 		[
+			user,
+			chatId,
 			prompt,
 			isDirty,
 			createChat,
 			sendMessage,
 			resetHeight,
 			showStreamer,
-			currentThreadId,
-			setCurrentThreadId,
 		],
 	);
 
@@ -223,10 +243,7 @@ export function ChatInput({
 			/>
 			{isStreaming ? (
 				<PromptInputStop
-					onClick={() =>
-						currentThreadId &&
-						abortStreamByOrder({ order, threadId: currentThreadId })
-					}
+					onClick={() => threadId && abortStreamByOrder({ order, threadId })}
 				/>
 			) : (
 				<PromptInputSubmit disabled={!isDirty || hasSubmitted} />

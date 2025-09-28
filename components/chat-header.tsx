@@ -37,7 +37,7 @@ export function ChatHeader({ isFree, isAnonymous }: ChatHeaderProps) {
 					<Button
 						className="rounded-full"
 						onClick={handleSignInWithGoogle}
-						variant="secondary"
+						variant="outline"
 					>
 						Sign in
 					</Button>

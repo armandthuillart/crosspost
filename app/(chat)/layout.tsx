@@ -6,6 +6,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { WelcomeBack } from "@/components/welcome-back";
 import { api } from "@/convex/_generated/api";
 import { getToken } from "@/lib/auth-server";
+import type { User } from "@/lib/types";
 
 export default async function ChatLayout({
 	children,
@@ -14,12 +15,16 @@ export default async function ChatLayout({
 }) {
 	const [token, cookieStore] = await Promise.all([getToken(), cookies()]);
 
-	const user = await fetchQuery(api.auth.getUser, {}, { token });
+	let user: User | null = null;
+
+	if (token) {
+		user = await fetchQuery(api.auth.getUser, {}, { token });
+	}
 
 	const sidebar = cookieStore.get("sidebar")?.value;
 	const isBack = cookieStore.has("remember");
 
-	return user.tier !== "anonymous" ? (
+	return user && user.tier !== "anonymous" ? (
 		<SidebarProvider defaultOpen={sidebar === "true"}>
 			<AppSidebar />
 			{children}

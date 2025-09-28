@@ -6,30 +6,17 @@ import { Button } from "@/components/ui/button";
 import { AppIcon } from "@/components/ui/icons";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { authClient } from "@/lib/auth-client";
-import type { User } from "@/lib/types";
 
 interface ChatHeaderProps {
-	user: User;
 	isFree: boolean;
-	isChat: boolean;
-	threadId: string | null;
 	isAnonymous: boolean;
 }
 
-export function ChatHeader({
-	user,
-	isChat,
-	isFree,
-	threadId,
-	isAnonymous,
-}: ChatHeaderProps) {
-	const router = useRouter();
+export function ChatHeader({ isFree, isAnonymous }: ChatHeaderProps) {
+	const { push } = useRouter();
 
 	async function handleSignInWithGoogle() {
-		await authClient.signIn.social({
-			callbackURL: `/api/auth/proxy/oauth?${isChat ? new URLSearchParams({ threadId: threadId ?? "" }) : ""}`,
-			provider: "google",
-		});
+		await authClient.signIn.social({ provider: "google" });
 	}
 
 	if (isAnonymous) {
@@ -37,7 +24,7 @@ export function ChatHeader({
 			<header className="absolute @max-8xl/chat:sticky inset-0 bottom-auto z-50 flex w-full items-center justify-between p-2 @max-8xl/chat:group-data-chat/chat:bg-background">
 				<Button
 					className="group/trigger"
-					onClick={() => router.push("/")}
+					onClick={() => push("/")}
 					size="icon"
 					variant="ghost"
 				>

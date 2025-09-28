@@ -13,7 +13,7 @@ export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
 			disableTransitionOnChange
 			enableColorScheme
 			enableSystem
-			storageKey="chat:theme"
+			storageKey="theme"
 			{...props}
 		>
 			{children}

@@ -1,4 +1,5 @@
 import { v } from "convex/values";
+import { ChatSDKError } from "../lib/errors";
 import type { Platform } from "../lib/types";
 import { api } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
@@ -19,6 +20,10 @@ export const createDraft = mutation({
 		{ title, threadId, versions },
 	): Promise<Id<"drafts">> => {
 		const user = await ctx.runQuery(api.auth.getUser, {});
+
+		if (!user) {
+			throw new ChatSDKError("unauthorized:auth");
+		}
 
 		const draftId = await ctx.db.insert("drafts", {
 			threadId,

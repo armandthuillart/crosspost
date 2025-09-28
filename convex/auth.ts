@@ -154,22 +154,27 @@ export const createAuth = (
 
 export const getUser = query({
 	args: {},
-	handler: async (ctx): Promise<User> => {
+	handler: async (ctx): Promise<User | null> => {
 		const user = await safeGetAuthUser(ctx);
 
-		const tainted: User = {
-			email: user?.email ?? "",
-			id: user?._id ?? "",
-			name: user?.name ?? "",
-			tier: (user?.tier as Tier) ?? "anonymous",
-		};
+		const tainted: User | null = user
+			? {
+					email: user.email,
+					id: user._id,
+					name: user.name,
+					tier: user.tier as Tier,
+				}
+			: null;
 
 		return tainted;
 	},
-	returns: v.object({
-		email: v.string(),
-		id: v.string(),
-		name: v.string(),
-		tier: zodToConvex(tierSchema),
-	}),
+	returns: v.union(
+		v.null(),
+		v.object({
+			email: v.string(),
+			id: v.string(),
+			name: v.string(),
+			tier: zodToConvex(tierSchema),
+		}),
+	),
 });

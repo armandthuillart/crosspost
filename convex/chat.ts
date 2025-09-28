@@ -12,6 +12,7 @@ import {
 import { MINUTE } from "@convex-dev/rate-limiter";
 import { type PaginationResult, paginationOptsValidator } from "convex/server";
 import { v } from "convex/values";
+import { ChatSDKError } from "../lib/errors";
 import { api, components, internal } from "./_generated/api";
 import { internalAction, mutation, query } from "./_generated/server";
 import { agent } from "./agents";
@@ -22,6 +23,10 @@ export const createChat = mutation({
 	args: {},
 	handler: async (ctx): Promise<string> => {
 		const user = await ctx.runQuery(api.auth.getUser, {});
+
+		if (!user) {
+			throw new ChatSDKError("unauthorized:auth");
+		}
 
 		return await createThread(ctx, components.agent, {
 			title: "New Chat",
@@ -38,6 +43,10 @@ export const sendMessage = mutation({
 	},
 	handler: async (ctx, { prompt, threadId }) => {
 		const user = await verifyOwnership(ctx, threadId);
+
+		if (!user) {
+			throw new ChatSDKError("unauthorized:auth");
+		}
 
 		await rateLimiter.limit(ctx, user.tier, {
 			key: user.id,
@@ -129,6 +138,10 @@ export const listChats = query({
 		{ paginationOpts },
 	): Promise<PaginationResult<ThreadDoc>> => {
 		const user = await ctx.runQuery(api.auth.getUser, {});
+
+		if (!user) {
+			throw new ChatSDKError("unauthorized:auth");
+		}
 
 		return await ctx.runQuery(components.agent.threads.listThreadsByUserId, {
 			paginationOpts,

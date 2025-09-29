@@ -18,6 +18,7 @@ import { internalAction, mutation, query } from "~/convex/generated/server";
 import { rateLimiter } from "~/convex/rateLimiting";
 import { verifyOwnership } from "~/convex/utils";
 import { ChatSDKError } from "~/lib/errors";
+import { AGENT_PROMPT } from "~/lib/prompts";
 
 export const createChat = mutation({
 	args: {},
@@ -38,31 +39,38 @@ export const createChat = mutation({
 
 export const sendMessage = mutation({
 	args: {
+		city: v.optional(v.string()),
+		countryCode: v.optional(v.string()),
 		prompt: v.string(),
 		threadId: v.string(),
 	},
-	handler: async (ctx, { prompt, threadId }) => {
+	handler: async (ctx, { city, prompt, threadId, countryCode }) => {
 		const user = await verifyOwnership(ctx, threadId);
 
 		if (!user) {
 			throw new ChatSDKError("unauthorized:auth");
 		}
 
+		const { id: userId } = user;
+
 		await rateLimiter.limit(ctx, user.tier, {
 			key: user.id,
 			throws: true,
 		});
 
-		const { messageId } = await agent.saveMessage(ctx, {
+		const { messageId: promptMessageId } = await agent.saveMessage(ctx, {
 			prompt,
 			skipEmbeddings: true,
 			threadId,
-			userId: user.id,
+			userId,
 		});
 
 		await ctx.scheduler.runAfter(0, internal.chat.streamChat, {
-			promptMessageId: messageId,
+			city,
+			countryCode,
+			promptMessageId,
 			threadId,
+			userId,
 		});
 	},
 	returns: v.null(),
@@ -70,14 +78,20 @@ export const sendMessage = mutation({
 
 export const streamChat = internalAction({
 	args: {
+		city: v.optional(v.string()),
+		countryCode: v.optional(v.string()),
 		promptMessageId: v.string(),
 		threadId: v.string(),
+		userId: v.string(),
 	},
-	handler: async (ctx, { threadId, promptMessageId }) => {
+	handler: async (
+		ctx,
+		{ city, userId, threadId, countryCode, promptMessageId },
+	) => {
 		const { consumeStream } = await agent.streamText(
 			ctx,
-			{ threadId },
-			{ promptMessageId },
+			{ threadId, userId },
+			{ promptMessageId, system: AGENT_PROMPT({ city, countryCode }) },
 			{ saveStreamDeltas: { chunking: "word", throttleMs: 100 } },
 		);
 

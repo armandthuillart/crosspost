@@ -35,18 +35,22 @@ const TEXTAREA_EXPANDED_MIN_HEIGHT = 48;
 
 interface ChatInputProps {
 	user: User | null;
+	city?: string;
 	order: number;
 	isChat: boolean;
 	chatId: string | null;
+	countryCode?: string;
 	isStreaming: boolean;
 	hasSubmitted: boolean;
 }
 
 export function ChatInput({
+	city,
 	user,
 	order,
 	chatId,
 	isChat,
+	countryCode,
 	isStreaming,
 	hasSubmitted,
 }: ChatInputProps) {
@@ -107,6 +111,8 @@ export function ChatInput({
 			}
 
 			void sendMessage({
+				city,
+				countryCode,
 				prompt,
 				threadId,
 			}).catch((e) => {
@@ -120,12 +126,14 @@ export function ChatInput({
 		},
 		[
 			user,
+			city,
 			chatId,
 			prompt,
 			isDirty,
 			replace,
 			showBanner,
 			createChat,
+			countryCode,
 			sendMessage,
 			resetHeight,
 		],

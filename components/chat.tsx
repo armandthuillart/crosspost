@@ -17,10 +17,12 @@ import type { MyMessage } from "~/lib/types";
 import { attr } from "~/lib/utils";
 
 interface ChatProps {
+	city?: string;
+	countryCode?: string;
 	preloadedUser: Preloaded<typeof api.auth.getUser>;
 }
 
-export function Chat({ preloadedUser }: ChatProps) {
+export function Chat({ city, countryCode, preloadedUser }: ChatProps) {
 	const user = usePreloadedQuery(preloadedUser);
 
 	const { chatId } = useParams<ParamsOf<"/c/[chatId]">>();
@@ -92,6 +94,8 @@ export function Chat({ preloadedUser }: ChatProps) {
 
 								<ChatInput
 									chatId={chatId}
+									city={city}
+									countryCode={countryCode}
 									hasSubmitted={hasSubmitted}
 									isChat={isChat}
 									isStreaming={isStreaming}

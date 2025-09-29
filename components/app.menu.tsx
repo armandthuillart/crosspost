@@ -1,7 +1,8 @@
+"use client";
+
 import { useRouter } from "next/navigation";
-import { setCookie } from "@/app/actions";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback } from "~/components/ui/avatar";
+import { Button } from "~/components/ui/button";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -11,30 +12,29 @@ import {
 	DropdownMenuSubContent,
 	DropdownMenuSubTrigger,
 	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "~/components/ui/dropdown-menu";
 import {
 	KeyIcon,
 	LegalDocumentIcon,
 	LifeBuoyIcon,
 	LogOutIcon,
 	SettingsIcon,
-} from "@/components/ui/icons";
-import { authClient } from "@/lib/auth-client";
-import type { User } from "@/lib/types";
+} from "~/components/ui/icons";
+import { authClient } from "~/lib/auth-client";
+import type { User } from "~/lib/types";
 
 interface AppMenuProps {
 	user: User;
 }
 
 export function AppMenu({ user }: AppMenuProps) {
-	const router = useRouter();
+	const { push } = useRouter();
 
 	async function handleSignOut() {
 		await authClient.signOut({
 			fetchOptions: {
 				onSuccess: async () => {
-					await setCookie("remember", "");
-					router.push("/");
+					push("/");
 				},
 			},
 		});

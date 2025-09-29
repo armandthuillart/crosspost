@@ -1,12 +1,12 @@
 import { fetchQuery } from "convex/nextjs";
 import { cookies } from "next/headers";
 import type { ReactNode } from "react";
-import { AppSidebar } from "@/components/app-sidebar";
-import { SidebarProvider } from "@/components/ui/sidebar";
-import { WelcomeBack } from "@/components/welcome-back";
-import { api } from "@/convex/_generated/api";
-import { getToken } from "@/lib/auth-server";
-import type { User } from "@/lib/types";
+import { AppSidebar } from "~/components/app.sidebar";
+import { SidebarProvider } from "~/components/ui/sidebar";
+import { WelcomeBack } from "~/components/welcome-back";
+import { api } from "~/convex/generated/api";
+import { getToken } from "~/lib/auth-server";
+import type { User } from "~/lib/types";
 
 export default async function ChatLayout({
 	children,

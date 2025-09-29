@@ -7,9 +7,9 @@ import {
 	AlertDialogDescription,
 	AlertDialogHeader,
 	AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import { authClient } from "@/lib/auth-client";
+} from "~/components/ui/alert-dialog";
+import { Button } from "~/components/ui/button";
+import { authClient } from "~/lib/auth-client";
 
 export function WelcomeBack() {
 	async function handleSignInWithGoogle() {

@@ -1,8 +1,8 @@
 import { formatDistanceToNow } from "date-fns";
 import { motion } from "motion/react";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { appName } from "@/lib/constants";
-import type { Platform } from "@/lib/types";
+import { Avatar, AvatarFallback } from "~/components/ui/avatar";
+import { appName } from "~/lib/constants";
+import type { Platform } from "~/lib/types";
 
 const seeds: PostCardProps[] = [
 	{

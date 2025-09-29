@@ -1,11 +1,10 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { CTA } from "@/components/chat-header.upgrade";
-import { Button } from "@/components/ui/button";
-import { AppIcon } from "@/components/ui/icons";
-import { SidebarTrigger } from "@/components/ui/sidebar";
-import { authClient } from "@/lib/auth-client";
+import { Button } from "~/components/ui/button";
+import { AppIcon } from "~/components/ui/icons";
+import { SidebarTrigger } from "~/components/ui/sidebar";
+import { authClient } from "~/lib/auth-client";
 
 interface ChatHeaderProps {
 	isFree: boolean;
@@ -31,7 +30,7 @@ export function ChatHeader({ isFree, isAnonymous }: ChatHeaderProps) {
 					<AppIcon className="size-6" />
 				</Button>
 
-				{isFree && <CTA />}
+				{isFree && <Button className="rounded-full">Upgrade</Button>}
 
 				<div className="flex items-center gap-2">
 					<Button

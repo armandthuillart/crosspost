@@ -1,7 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-	experimental: { browserDebugInfoInTerminal: true },
+	experimental: {
+		browserDebugInfoInTerminal: true,
+		turbopackPersistentCaching: true,
+	},
 	typedRoutes: true,
 };
 

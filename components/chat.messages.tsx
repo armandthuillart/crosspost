@@ -3,21 +3,22 @@
 import type { UIMessage } from "@convex-dev/agent/react";
 import { AnimatePresence } from "motion/react";
 import { useEffect, useState } from "react";
-import { Action, Actions } from "@/components/ai-elements/actions";
+import { Action, Actions } from "~/components/ai-elements/actions";
 import {
 	Conversation,
 	ConversationAutoLoadOnTop,
 	ConversationContent,
 	ConversationScrollButton,
-} from "@/components/ai-elements/conversation";
-import { Message, MessageContent } from "@/components/ai-elements/message";
-import { MessagePart } from "@/components/chat-message-part";
-import { CopyIcon, TickIcon } from "@/components/ui/icons";
-import { ShiningText } from "@/components/ui/shining-text";
-import { attr } from "@/lib/utils";
+} from "~/components/ai-elements/conversation";
+import { Message, MessageContent } from "~/components/ai-elements/message";
+import { MessagePart } from "~/components/chat.message-part";
+import { CopyIcon, TickIcon } from "~/components/ui/icons";
+import { ShiningText } from "~/components/ui/shining-text";
+import type { MyMessage } from "~/lib/types";
+import { attr } from "~/lib/utils";
 
 interface ChatMessagesProps {
-	messages: Array<UIMessage>;
+	messages: Array<MyMessage>;
 	loadMore: (numItems: number) => void;
 	canLoadMore: boolean;
 	isLoadingMore: boolean;
@@ -33,8 +34,6 @@ export function ChatMessages({
 }: ChatMessagesProps) {
 	const [isCopied, setIsCopied] = useState<string | null>(null);
 	const [isThinking, setIsThinking] = useState(false);
-
-	console.log(messages);
 
 	async function handleCopy(message: UIMessage) {
 		await navigator.clipboard.writeText(message.text);

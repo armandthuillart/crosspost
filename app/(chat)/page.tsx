@@ -1,7 +1,7 @@
 import { preloadQuery } from "convex/nextjs";
-import { Chat } from "@/components/chat";
-import { getToken } from "@/lib/auth-server";
-import { api } from "../../convex/_generated/api";
+import { Chat } from "~/components/chat";
+import { api } from "~/convex/generated/api";
+import { getToken } from "~/lib/auth-server";
 
 export default async function Page() {
 	const token = await getToken();

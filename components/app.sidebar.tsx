@@ -2,9 +2,9 @@
 
 import { usePaginatedQuery } from "convex/react";
 import { useParams, usePathname, useRouter } from "next/navigation";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { AppIcon, SearchIcon } from "@/components/ui/icons";
+import { Avatar, AvatarFallback } from "~/components/ui/avatar";
+import { Button } from "~/components/ui/button";
+import { AppIcon, SearchIcon } from "~/components/ui/icons";
 import {
 	Sidebar,
 	SidebarContent,
@@ -16,9 +16,9 @@ import {
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
-} from "@/components/ui/sidebar";
-import { api } from "@/convex/_generated/api";
-import { appName } from "@/lib/constants";
+} from "~/components/ui/sidebar";
+import { api } from "~/convex/generated/api";
+import { appName } from "~/lib/constants";
 
 export function AppSidebar() {
 	const { push } = useRouter();

@@ -19,16 +19,15 @@ import {
 	PromptInputStop,
 	PromptInputSubmit,
 	PromptInputTextarea,
-} from "@/components/ai-elements/prompt-input";
-import { InternetIcon } from "@/components/ui/icons";
-import { api } from "@/convex/_generated/api";
-import { useAutoFocus } from "@/hooks/use-auto-focus";
-import { useTypewriter } from "@/hooks/use-typewriter";
-import { showStreamerAtom } from "@/lib/atoms";
-import { authClient } from "@/lib/auth-client";
-// import { optimisticallyCreateChat } from "@/lib/stores";
-import type { User } from "@/lib/types";
-import { attr } from "@/lib/utils";
+} from "~/components/ai-elements/prompt-input";
+import { InternetIcon } from "~/components/ui/icons";
+import { api } from "~/convex/generated/api";
+import { useAutoFocus } from "~/hooks/use-auto-focus";
+import { useTypewriter } from "~/hooks/use-typewriter";
+import { showBannerAtom } from "~/lib/atoms";
+import { authClient } from "~/lib/auth-client";
+import type { User } from "~/lib/types";
+import { attr } from "~/lib/utils";
 
 const TEXTAREA_MIN_HEIGHT = 24;
 const TEXTAREA_EXPANDED_MIN_HEIGHT = 48;
@@ -55,7 +54,7 @@ export function ChatInput({
 
 	const inputRef = useRef<HTMLTextAreaElement>(null);
 
-	const [, showStreamer] = useAtom(showStreamerAtom);
+	const [, showBanner] = useAtom(showBannerAtom);
 	const [prompt, setPrompt] = useState("");
 	const [threshold, setThreshold] = useState<number | null>(null);
 	const [isExpanded, setIsExpanded] = useState(false);
@@ -111,7 +110,7 @@ export function ChatInput({
 				threadId,
 			}).catch((e) => {
 				if (isRateLimitError(e)) {
-					showStreamer(true);
+					showBanner(true);
 				}
 			});
 
@@ -124,10 +123,10 @@ export function ChatInput({
 			prompt,
 			isDirty,
 			replace,
+			showBanner,
 			createChat,
 			sendMessage,
 			resetHeight,
-			showStreamer,
 		],
 	);
 

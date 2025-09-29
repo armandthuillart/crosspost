@@ -1,7 +1,7 @@
 "use client";
 
 import { Swirl, type SwirlProps } from "@paper-design/shaders-react";
-import { cn } from "@/lib/utils";
+import { cn } from "~/lib/utils";
 
 export function AppShader({ colors, className, ...props }: SwirlProps) {
 	return (

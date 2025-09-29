@@ -5,15 +5,16 @@ import { type Preloaded, usePreloadedQuery } from "convex/react";
 import { LayoutGroup } from "motion/react";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ChatGreetings } from "@/components/chat-greetings";
-import { ChatHeader } from "@/components/chat-header";
-import { ChatInput } from "@/components/chat-input";
-import { ChatMessages } from "@/components/chat-messages";
-import { ChatStreamer } from "@/components/chat-streamer";
-import { PostGallery } from "@/components/post-gallery";
-import { api } from "@/convex/_generated/api";
-import { attr } from "@/lib/utils";
-import type { ParamsOf } from "../.next/types/routes";
+import type { ParamsOf } from "~/.next/types/routes";
+import { ChatBanner } from "~/components/chat.banner";
+import { ChatGreetings } from "~/components/chat.greetings";
+import { ChatHeader } from "~/components/chat.header";
+import { ChatInput } from "~/components/chat.input";
+import { ChatMessages } from "~/components/chat.messages";
+import { PostGallery } from "~/components/post-gallery";
+import { api } from "~/convex/generated/api";
+import type { MyMessage } from "~/lib/types";
+import { attr } from "~/lib/utils";
 
 interface ChatProps {
 	preloadedUser: Preloaded<typeof api.auth.getUser>;
@@ -21,8 +22,8 @@ interface ChatProps {
 
 export function Chat({ preloadedUser }: ChatProps) {
 	const user = usePreloadedQuery(preloadedUser);
-	const { chatId } = useParams<ParamsOf<"/c/[chatId]">>();
 
+	const { chatId } = useParams<ParamsOf<"/c/[chatId]">>();
 	const isChat = Boolean(chatId);
 
 	const {
@@ -74,7 +75,7 @@ export function Chat({ preloadedUser }: ChatProps) {
 							hasSentMessage={hasSentMessage}
 							isLoadingMore={isLoadingMore}
 							loadMore={loadMore}
-							messages={messages}
+							messages={messages as Array<MyMessage>}
 						/>
 					)}
 
@@ -82,7 +83,7 @@ export function Chat({ preloadedUser }: ChatProps) {
 						<LayoutGroup>
 							<div className="relative mx-auto flex w-full max-w-(--chat-content-max-width) flex-col gap-4 pb-2 @[34rem]:[--chat-content-max-width:40rem] @[64rem]:[--chat-content-max-width:48rem] [--chat-content-max-width:32rem] md:pb-4 md:group-not-data-chat/chat:pb-0">
 								{isChat && (
-									<ChatStreamer
+									<ChatBanner
 										isAnonymous={isAnonymous}
 										isFree={isFree}
 										isPro={isPro}

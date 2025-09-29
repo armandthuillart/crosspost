@@ -9,7 +9,10 @@
 		"module": "esnext",
 		"moduleResolution": "bundler",
 		"noEmit": true,
-		"paths": { "@/*": ["./*"] },
+		"paths": {
+			"~/*": ["./*"],
+			"~/convex/generated/*": ["./convex/_generated/*"]
+		},
 		"plugins": [{ "name": "next" }],
 		"resolveJsonModule": true,
 		"skipLibCheck": true,

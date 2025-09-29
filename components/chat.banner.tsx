@@ -7,11 +7,11 @@ import {
 import { format, isToday, isTomorrow } from "date-fns";
 import { useAtom } from "jotai";
 import { AnimatePresence, motion } from "motion/react";
-import { Button } from "@/components/ui/button";
-import { CloseIcon } from "@/components/ui/icons";
-import { showStreamerAtom } from "@/lib/atoms";
-import { authClient } from "@/lib/auth-client";
-import { api } from "../convex/_generated/api";
+import { Button } from "~/components/ui/button";
+import { CloseIcon } from "~/components/ui/icons";
+import { api } from "~/convex/generated/api";
+import { showBannerAtom } from "~/lib/atoms";
+import { authClient } from "~/lib/auth-client";
 
 async function handleSignInWithGoogle() {
 	await authClient.signIn.social({
@@ -20,18 +20,14 @@ async function handleSignInWithGoogle() {
 	});
 }
 
-interface ChatStreamerProps {
+interface ChatBannerProps {
 	isPro: boolean;
 	isFree: boolean;
 	isAnonymous: boolean;
 }
 
-export function ChatStreamer({
-	isPro,
-	isFree,
-	isAnonymous,
-}: ChatStreamerProps) {
-	const [isVisible, setIsVisible] = useAtom(showStreamerAtom);
+export function ChatBanner({ isPro, isFree, isAnonymous }: ChatBannerProps) {
+	const [isVisible, setIsVisible] = useAtom(showBannerAtom);
 
 	let getRateLimitApi: GetRateLimitValueQuery =
 		api.rateLimiting.getAnonymousRateLimit;

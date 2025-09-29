@@ -12,12 +12,12 @@ import {
 import { MINUTE } from "@convex-dev/rate-limiter";
 import { type PaginationResult, paginationOptsValidator } from "convex/server";
 import { v } from "convex/values";
-import { ChatSDKError } from "../lib/errors";
-import { api, components, internal } from "./_generated/api";
-import { internalAction, mutation, query } from "./_generated/server";
-import { agent } from "./agents";
-import { rateLimiter } from "./rateLimiting";
-import { verifyOwnership } from "./utils";
+import { agent } from "~/convex/agents";
+import { api, components, internal } from "~/convex/generated/api";
+import { internalAction, mutation, query } from "~/convex/generated/server";
+import { rateLimiter } from "~/convex/rateLimiting";
+import { verifyOwnership } from "~/convex/utils";
+import { ChatSDKError } from "~/lib/errors";
 
 export const createChat = mutation({
 	args: {},

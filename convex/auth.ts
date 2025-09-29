@@ -6,13 +6,13 @@ import { anonymous } from "better-auth/plugins";
 import { ConvexHttpClient } from "convex/browser";
 import { v } from "convex/values";
 import { zodToConvex } from "convex-helpers/server/zod";
-import { polarClient } from "../lib/polar";
-import { tierSchema } from "../lib/schema";
-import type { Tier, User } from "../lib/types";
-import { api, components } from "./_generated/api";
-import type { DataModel } from "./_generated/dataModel";
-import { query } from "./_generated/server";
-import authSchema from "./betterAuth/schema";
+import authSchema from "~/convex/betterAuth/schema";
+import { api, components } from "~/convex/generated/api";
+import type { DataModel } from "~/convex/generated/dataModel";
+import { query } from "~/convex/generated/server";
+import { polarClient } from "~/lib/polar";
+import { tierSchema } from "~/lib/schema";
+import type { Tier, User } from "~/lib/types";
 
 const siteUrl = process.env.SITE_URL;
 
@@ -153,7 +153,7 @@ export const createAuth = (
 		user: {
 			additionalFields: {
 				firstName: {
-					required: true,
+					required: false,
 					type: "string",
 				},
 				lastName: {
@@ -177,7 +177,7 @@ export const getUser = query({
 		const tainted: User | null = user
 			? {
 					email: user.email,
-					firstName: user.firstName,
+					firstName: user.firstName ?? "",
 					id: user._id,
 					lastName: user.lastName ?? undefined,
 					tier: user.tier as Tier,

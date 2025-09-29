@@ -2,6 +2,7 @@
 	"compilerOptions": {
 		"allowJs": true,
 		"allowSyntheticDefaultImports": true,
+		"baseUrl": "..",
 		"forceConsistentCasingInFileNames": true,
 		"isolatedModules": true,
 		"jsx": "react-jsx",
@@ -9,6 +10,11 @@
 		"module": "ESNext",
 		"moduleResolution": "Bundler",
 		"noEmit": true,
+		"paths": {
+			"~/*": ["./*"],
+			"~/convex/betterAuth/generated/*": ["./convex/betterAuth/_generated/*"],
+			"~/convex/generated/*": ["./convex/_generated/*"]
+		},
 		"skipLibCheck": true,
 		"strict": true,
 		"target": "ESNext"

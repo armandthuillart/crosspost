@@ -3,9 +3,9 @@ import {
 	type RateLimitConfig,
 	RateLimiter,
 } from "@convex-dev/rate-limiter";
-import type { Tier } from "../lib/types";
-import { components } from "./_generated/api";
-import type { DataModel } from "./_generated/dataModel";
+import { components } from "~/convex/generated/api";
+import type { DataModel } from "~/convex/generated/dataModel";
+import type { Tier } from "~/lib/types";
 
 const HOUR = 60 * MINUTE;
 const DAY = 24 * HOUR;

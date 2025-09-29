@@ -1,9 +1,9 @@
 import { v } from "convex/values";
-import { ChatSDKError } from "../lib/errors";
-import type { Platform } from "../lib/types";
-import { api } from "./_generated/api";
-import type { Id } from "./_generated/dataModel";
-import { mutation } from "./_generated/server";
+import { api } from "~/convex/generated/api";
+import type { Id } from "~/convex/generated/dataModel";
+import { mutation } from "~/convex/generated/server";
+import { ChatSDKError } from "~/lib/errors";
+import type { Platform } from "~/lib/types";
 
 export const createDraft = mutation({
 	args: v.object({

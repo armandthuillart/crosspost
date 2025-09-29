@@ -1,9 +1,9 @@
 import type { GatewayModelId } from "@ai-sdk/gateway";
 import { Agent, stepCountIs } from "@convex-dev/agent";
-import { appName } from "../lib/constants";
-import { AGENT_PROMPT } from "../lib/prompts";
-import { components } from "./_generated/api";
-import { draft, post, rename } from "./tools";
+import { components } from "~/convex/generated/api";
+import { draft, post, rename } from "~/convex/tools";
+import { appName } from "~/lib/constants";
+import { AGENT_PROMPT } from "~/lib/prompts";
 
 export const agent = new Agent(components.agent, {
 	contextOptions: {

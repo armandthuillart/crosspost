@@ -2,11 +2,14 @@ import { getStaticAuth } from "@convex-dev/better-auth";
 import { v } from "convex/values";
 import { zodToConvex } from "convex-helpers/server/zod";
 import { subDays } from "date-fns";
-import { tierSchema } from "../../lib/schema";
-import { createAuth } from "../auth";
-import { internal } from "./_generated/api";
-import type { Id } from "./_generated/dataModel";
-import { internalMutation, mutation } from "./_generated/server";
+import { createAuth } from "~/convex/auth";
+import { internal } from "~/convex/betterAuth/generated/api";
+import type { Id } from "~/convex/betterAuth/generated/dataModel";
+import {
+	internalMutation,
+	mutation,
+} from "~/convex/betterAuth/generated/server";
+import { tierSchema } from "~/lib/schema";
 
 export const auth = getStaticAuth(createAuth);
 

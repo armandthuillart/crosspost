@@ -1,7 +1,7 @@
 import { v } from "convex/values";
 import { zodToConvex } from "convex-helpers/server/zod";
-import { platformSchema } from "../lib/schema";
-import { internalMutation } from "./_generated/server";
+import { internalMutation } from "~/convex/generated/server";
+import { platformSchema } from "~/lib/schema";
 
 export const createPost = internalMutation({
 	args: v.object({

@@ -39,17 +39,26 @@ export const createAuth = (
 	{ optionsOnly } = { optionsOnly: false },
 ) => {
 	return betterAuth({
+		account: {
+			accountLinking: {
+				updateUserInfoOnLink: true,
+			},
+		},
 		baseURL: siteUrl,
 		database: adapter(ctx),
 		databaseHooks: {
 			user: {
 				create: {
-					before: async ({ isAnonymous, ...rest }) => {
+					before: async ({ name, isAnonymous, ...rest }) => {
 						const tier: Tier = isAnonymous ? "anonymous" : "free";
+						const firstName = name.split(" ")[0];
+						const lastName = name.split(" ")[1];
 						return {
 							data: {
 								...rest,
+								firstName,
 								isAnonymous: isAnonymous ?? false,
+								lastName,
 								tier,
 							},
 						};
@@ -143,6 +152,14 @@ export const createAuth = (
 		},
 		user: {
 			additionalFields: {
+				firstName: {
+					required: true,
+					type: "string",
+				},
+				lastName: {
+					required: false,
+					type: "string",
+				},
 				tier: {
 					required: false,
 					type: "string",
@@ -160,8 +177,9 @@ export const getUser = query({
 		const tainted: User | null = user
 			? {
 					email: user.email,
+					firstName: user.firstName,
 					id: user._id,
-					name: user.name,
+					lastName: user.lastName ?? undefined,
 					tier: user.tier as Tier,
 				}
 			: null;
@@ -172,8 +190,9 @@ export const getUser = query({
 		v.null(),
 		v.object({
 			email: v.string(),
+			firstName: v.string(),
 			id: v.string(),
-			name: v.string(),
+			lastName: v.optional(v.string()),
 			tier: zodToConvex(tierSchema),
 		}),
 	),

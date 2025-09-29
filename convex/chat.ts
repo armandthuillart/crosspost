@@ -178,7 +178,10 @@ export const migrateChats = mutation({
 		const threadId = thread._id;
 
 		const { page: messages } = await listMessages(ctx, components.agent, {
-			paginationOpts: { cursor: null, numItems: 1 },
+			paginationOpts: {
+				cursor: null,
+				numItems: 1,
+			},
 			threadId,
 		});
 
@@ -209,6 +212,8 @@ export const migrateChats = mutation({
 		await ctx.runMutation(internal.users.deleteAllForUserId, {
 			userId: anonymousUserId,
 		});
+
+		await rateLimiter.reset(ctx, "anonymous", { key: anonymousUserId });
 	},
 	returns: v.null(),
 });

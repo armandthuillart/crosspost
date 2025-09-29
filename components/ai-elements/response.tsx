@@ -4,8 +4,8 @@ import type { Route } from "next";
 import Link from "next/link";
 import { memo } from "react";
 import { Streamdown, type StreamdownProps } from "streamdown";
-import { ArrowUpRightIcon } from "@/components/ui/icons";
-import { cn } from "@/lib/utils";
+import { ArrowUpRightIcon } from "~/components/ui/icons";
+import { cn } from "~/lib/utils";
 
 const components: StreamdownProps["components"] = {
 	a: ({ href, node, children, ...props }) => (

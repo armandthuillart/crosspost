@@ -2,8 +2,8 @@
 
 import { DropdownMenu as DropdownMenuPrimitive } from "radix-ui";
 import type { ComponentProps } from "react";
-import { ChevronRightIcon, TickIcon } from "@/components/ui/icons";
-import { cn } from "@/lib/utils";
+import { ChevronRightIcon, TickIcon } from "~/components/ui/icons";
+import { cn } from "~/lib/utils";
 
 function DropdownMenu({ ...props }: DropdownMenuPrimitive.DropdownMenuProps) {
 	return <DropdownMenuPrimitive.Root data-slot="dropdown-menu" {...props} />;

@@ -10,10 +10,10 @@ import {
 	useRef,
 } from "react";
 import { StickToBottom, useStickToBottomContext } from "use-stick-to-bottom";
-import { Button, type ButtonProps } from "@/components/ui/button";
-import { ArrowDownIcon } from "@/components/ui/icons";
-import { showStreamerAtom } from "@/lib/atoms";
-import { cn } from "@/lib/utils";
+import { Button, type ButtonProps } from "~/components/ui/button";
+import { ArrowDownIcon } from "~/components/ui/icons";
+import { showBannerAtom } from "~/lib/atoms";
+import { cn } from "~/lib/utils";
 
 function Conversation({
 	className,
@@ -51,7 +51,7 @@ function ConversationContent({
 function PureConversationScrollButton({ className, ...props }: ButtonProps) {
 	const { isAtBottom, scrollToBottom } = useStickToBottomContext();
 
-	const [isVisible] = useAtom(showStreamerAtom);
+	const [isVisible] = useAtom(showBannerAtom);
 
 	const handleScroll = useCallback(() => {
 		scrollToBottom();

@@ -1,8 +1,8 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import { Slot as SlotPrimitive } from "radix-ui";
 import type { ComponentProps } from "react";
-import { LoaderIcon } from "@/components/ui/icons";
-import { cn } from "@/lib/utils";
+import { LoaderIcon } from "~/components/ui/icons";
+import { cn } from "~/lib/utils";
 
 const buttonVariants = cva(
 	"relative inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium text-sm outline-none outline-none transition-[opacity,box-shadow,background-color] ease-snappy focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
@@ -11,7 +11,14 @@ const buttonVariants = cva(
 			{
 				className: "h-9 px-4",
 				size: "default",
-				variant: ["ghost", "default", "outline", "secondary", "destructive"],
+				variant: [
+					"ghost",
+					"default",
+					"outline",
+					"secondary",
+					"selection",
+					"destructive",
+				],
 			},
 		],
 		defaultVariants: {
@@ -37,6 +44,8 @@ const buttonVariants = cva(
 				outline: "border border-input bg-background hover:bg-accent",
 				secondary:
 					"bg-secondary text-secondary-foreground hover:bg-secondary/80",
+				selection:
+					"bg-selection text-selection-foreground hover:bg-selection/80",
 			},
 		},
 	},

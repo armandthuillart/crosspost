@@ -6,15 +6,15 @@ import {
 	Button,
 	type ButtonProps,
 	buttonVariants,
-} from "@/components/ui/button";
-import { ArrowUpIcon, StopIcon } from "@/components/ui/icons";
+} from "~/components/ui/button";
+import { ArrowUpIcon, StopIcon } from "~/components/ui/icons";
 import {
 	Tooltip,
 	TooltipContent,
 	TooltipProvider,
 	TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
+} from "~/components/ui/tooltip";
+import { cn } from "~/lib/utils";
 
 function PromptInput({
 	children,
@@ -23,7 +23,7 @@ function PromptInput({
 }: HTMLMotionProps<"form">) {
 	return (
 		<motion.form
-			className="group/prompt-input overflow-hidden border bg-background shadow-xs transition-[box-shadow,border-color,background-color] ease-snappy has-focus-visible:border-input dark:bg-muted"
+			className="group/prompt-input overflow-hidden bg-muted transition-colors ease-snappy"
 			layout
 			layoutId="prompt-input-outer"
 			style={{ borderRadius: 28 }}
@@ -129,7 +129,7 @@ function PromptInputButton({ children, className, ...props }: ButtonProps) {
 								variant: "ghost",
 								...props,
 							}),
-							"rounded-full",
+							"rounded-full bg-background",
 						)}
 					>
 						{children}

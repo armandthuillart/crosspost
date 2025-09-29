@@ -8,7 +8,7 @@ import {
 	type Variants,
 } from "motion/react";
 import type { HTMLAttributes } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "~/lib/utils";
 
 const variants: Variants = {
 	animate: { filter: "blur(0px)", opacity: 1, scale: 1, y: 0 },

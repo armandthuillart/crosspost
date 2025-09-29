@@ -1,10 +1,14 @@
 import type { UIMessage } from "@convex-dev/agent/react";
-import type { InferUITools, UIDataTypes } from "ai";
+import type { InferUITool, UIDataTypes } from "ai";
 import type { z } from "zod/v3";
-import type { draft, post, rename } from "../convex/tools";
-import type { platformSchema, tierSchema } from "../lib/schema";
+import type { draft, rename } from "~/convex/tools";
+import type { draftSchema, platformSchema, tierSchema } from "~/lib/schema";
 
 export type Tier = z.infer<typeof tierSchema>;
+
+export type Draft = z.infer<typeof draftSchema>;
+
+export type UIDraft = InferUITool<typeof draft>;
 
 export type Platform = z.infer<typeof platformSchema>;
 
@@ -13,30 +17,14 @@ export type TextUIPart = Extract<UIMessage["parts"][number], { type: "text" }>;
 export interface User {
 	id: string;
 	tier: Tier;
-	name: string;
 	email: string;
+	lastName?: string;
+	firstName: string;
 }
 
-type UITools = {
-	draft: {
-		input: {
-			title: string;
-			versions: { threads?: string; bluesky?: string; x?: string };
-		};
-		output: string;
-	};
-	post: {
-		input: {
-			title: string;
-			content: string;
-			platform: "threads" | "linkedin" | "bluesky" | "x";
-		};
-		output: string;
-	};
-	rename: {
-		input: { title: string };
-		output: string;
-	};
+type MyUITools = {
+	draft: UIDraft;
+	rename: InferUITool<typeof rename>;
 };
 
-export type MyMessage = UIMessage<never, UIDataTypes, UITools>;
+export type MyMessage = UIMessage<unknown, UIDataTypes, MyUITools>;

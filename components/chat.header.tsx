@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { Button } from "~/components/ui/button";
-import { AppIcon } from "~/components/ui/icons";
+import { AppIcon, SparkleIcon, StarIcon } from "~/components/ui/icons";
 import { SidebarTrigger } from "~/components/ui/sidebar";
 import { authClient } from "~/lib/auth-client";
 
@@ -30,8 +30,6 @@ export function ChatHeader({ isFree, isAnonymous }: ChatHeaderProps) {
 					<AppIcon className="size-6" />
 				</Button>
 
-				{isFree && <Button className="rounded-full">Upgrade</Button>}
-
 				<div className="flex items-center gap-2">
 					<Button
 						className="rounded-full"
@@ -52,6 +50,15 @@ export function ChatHeader({ isFree, isAnonymous }: ChatHeaderProps) {
 	return (
 		<header className="inset-0 bottom-auto z-50 flex items-center justify-between p-2 group-not-data-chat/chat:absolute group-data-chat/chat:sticky @max-8xl/chat:group-data-chat/chat:bg-background">
 			<SidebarTrigger />
+
+			{isFree && (
+				<div className="-translate-x-1/2 absolute start-1/2">
+					<Button className="gap-1.5 rounded-full px-3" variant="selection">
+						<StarIcon className="size-3.5" />
+						Upgrade
+					</Button>
+				</div>
+			)}
 		</header>
 	);
 }

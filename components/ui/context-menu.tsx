@@ -2,8 +2,8 @@
 
 import { ContextMenu as ContextMenuPrimitive } from "radix-ui";
 import type { ComponentProps } from "react";
-import { TickIcon } from "@/components/ui/icons";
-import { cn } from "@/lib/utils";
+import { TickIcon } from "~/components/ui/icons";
+import { cn } from "~/lib/utils";
 
 function ContextMenu({
 	...props

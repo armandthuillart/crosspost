@@ -2952,8 +2952,10 @@ export declare const components: {
                   createdAt: number;
                   email: string;
                   emailVerified: boolean;
+                  firstName: string;
                   image?: null | string;
                   isAnonymous?: null | boolean;
+                  lastName?: null | string;
                   name: string;
                   tier?: null | string;
                   updatedAt: number;
@@ -3085,8 +3087,10 @@ export declare const components: {
                     | "createdAt"
                     | "email"
                     | "emailVerified"
+                    | "firstName"
                     | "image"
                     | "isAnonymous"
+                    | "lastName"
                     | "name"
                     | "tier"
                     | "updatedAt"
@@ -3264,8 +3268,10 @@ export declare const components: {
                     | "createdAt"
                     | "email"
                     | "emailVerified"
+                    | "firstName"
                     | "image"
                     | "isAnonymous"
+                    | "lastName"
                     | "name"
                     | "tier"
                     | "updatedAt"
@@ -3533,8 +3539,10 @@ export declare const components: {
                   createdAt?: number;
                   email?: string;
                   emailVerified?: boolean;
+                  firstName?: string;
                   image?: null | string;
                   isAnonymous?: null | boolean;
+                  lastName?: null | string;
                   name?: string;
                   tier?: null | string;
                   updatedAt?: number;
@@ -3546,8 +3554,10 @@ export declare const components: {
                     | "createdAt"
                     | "email"
                     | "emailVerified"
+                    | "firstName"
                     | "image"
                     | "isAnonymous"
+                    | "lastName"
                     | "name"
                     | "tier"
                     | "updatedAt"
@@ -3758,8 +3768,10 @@ export declare const components: {
                   createdAt?: number;
                   email?: string;
                   emailVerified?: boolean;
+                  firstName?: string;
                   image?: null | string;
                   isAnonymous?: null | boolean;
+                  lastName?: null | string;
                   name?: string;
                   tier?: null | string;
                   updatedAt?: number;
@@ -3771,8 +3783,10 @@ export declare const components: {
                     | "createdAt"
                     | "email"
                     | "emailVerified"
+                    | "firstName"
                     | "image"
                     | "isAnonymous"
+                    | "lastName"
                     | "name"
                     | "tier"
                     | "updatedAt"

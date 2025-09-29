@@ -2,7 +2,7 @@
 
 import { Tooltip as BaseTooltip } from "@base-ui-components/react/tooltip";
 import type { ComponentProps } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "~/lib/utils";
 
 function TooltipProvider(props: ComponentProps<typeof BaseTooltip.Provider>) {
 	return <BaseTooltip.Provider {...props} />;

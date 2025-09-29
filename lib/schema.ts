@@ -12,6 +12,10 @@ export const draftSchema = z.object({
 				.string()
 				.max(300, { message: "Must be under 300 characters" })
 				.optional(),
+			linkedin: z
+				.string()
+				.max(3000, { message: "Must be under 3000 characters" })
+				.optional(),
 			threads: z
 				.string()
 				.max(10000, { message: "Must be under 10000 characters" })

@@ -82,8 +82,10 @@ export type Mounts = {
                 createdAt: number;
                 email: string;
                 emailVerified: boolean;
+                firstName: string;
                 image?: null | string;
                 isAnonymous?: null | boolean;
+                lastName?: null | string;
                 name: string;
                 tier?: null | string;
                 updatedAt: number;
@@ -215,8 +217,10 @@ export type Mounts = {
                   | "createdAt"
                   | "email"
                   | "emailVerified"
+                  | "firstName"
                   | "image"
                   | "isAnonymous"
+                  | "lastName"
                   | "name"
                   | "tier"
                   | "updatedAt"
@@ -394,8 +398,10 @@ export type Mounts = {
                   | "createdAt"
                   | "email"
                   | "emailVerified"
+                  | "firstName"
                   | "image"
                   | "isAnonymous"
+                  | "lastName"
                   | "name"
                   | "tier"
                   | "updatedAt"
@@ -663,8 +669,10 @@ export type Mounts = {
                 createdAt?: number;
                 email?: string;
                 emailVerified?: boolean;
+                firstName?: string;
                 image?: null | string;
                 isAnonymous?: null | boolean;
+                lastName?: null | string;
                 name?: string;
                 tier?: null | string;
                 updatedAt?: number;
@@ -676,8 +684,10 @@ export type Mounts = {
                   | "createdAt"
                   | "email"
                   | "emailVerified"
+                  | "firstName"
                   | "image"
                   | "isAnonymous"
+                  | "lastName"
                   | "name"
                   | "tier"
                   | "updatedAt"
@@ -888,8 +898,10 @@ export type Mounts = {
                 createdAt?: number;
                 email?: string;
                 emailVerified?: boolean;
+                firstName?: string;
                 image?: null | string;
                 isAnonymous?: null | boolean;
+                lastName?: null | string;
                 name?: string;
                 tier?: null | string;
                 updatedAt?: number;
@@ -901,8 +913,10 @@ export type Mounts = {
                   | "createdAt"
                   | "email"
                   | "emailVerified"
+                  | "firstName"
                   | "image"
                   | "isAnonymous"
+                  | "lastName"
                   | "name"
                   | "tier"
                   | "updatedAt"

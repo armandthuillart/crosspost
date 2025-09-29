@@ -1,10 +1,9 @@
 "use client";
 
-import { usePaginatedQuery } from "convex/react";
+import { usePaginatedQuery, useQuery } from "convex/react";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
-import { Button } from "~/components/ui/button";
-import { AppIcon, SearchIcon } from "~/components/ui/icons";
+import { AppIcon, MoreIcon, SearchIcon } from "~/components/ui/icons";
 import {
 	Sidebar,
 	SidebarContent,
@@ -22,8 +21,9 @@ import { appName } from "~/lib/constants";
 
 export function AppSidebar() {
 	const { push } = useRouter();
-
 	const pathname = usePathname();
+
+	const user = useQuery(api.auth.getUser);
 
 	return (
 		<Sidebar>
@@ -58,20 +58,20 @@ export function AppSidebar() {
 				</SidebarGroup>
 			</SidebarContent>
 
-			<SidebarFooter className="flex-row items-center justify-between">
-				<div className="flex items-center gap-2">
-					<Avatar className="size-6 shrink-0">
-						<AvatarFallback className="bg-primary">A</AvatarFallback>
-					</Avatar>
-
-					<div className="flex w-full flex-col">
-						<span className="text-sm">Armand</span>
-						<span className="text-muted-foreground text-xs">Free</span>
+			<SidebarFooter>
+				<SidebarMenuButton className="h-auto justify-between pr-4">
+					<div className="flex items-center gap-2.5 overflow-hidden">
+						<Avatar>
+							<AvatarFallback>
+								{user!.firstName?.charAt(0) + user?.lastName?.charAt(0)}
+							</AvatarFallback>
+						</Avatar>
+						<span className="truncate font-medium text-sm">
+							{user?.firstName} {user?.lastName}
+						</span>
 					</div>
-				</div>
-				<Button className="rounded-full" size="sm" variant="outline">
-					Upgrade
-				</Button>
+					<MoreIcon className="size-6" />
+				</SidebarMenuButton>
 			</SidebarFooter>
 		</Sidebar>
 	);

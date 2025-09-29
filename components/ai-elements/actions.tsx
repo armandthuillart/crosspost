@@ -1,8 +1,8 @@
 "use client";
 
 import type { HTMLAttributes } from "react";
-import { Button, type ButtonProps } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { Button, type ButtonProps } from "~/components/ui/button";
+import { cn } from "~/lib/utils";
 
 type ActionsProps = HTMLAttributes<HTMLDivElement>;
 

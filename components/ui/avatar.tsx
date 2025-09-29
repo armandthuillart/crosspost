@@ -1,16 +1,19 @@
 "use client";
 
-import { Avatar as AvatarPrimitive } from "radix-ui";
-import { cn } from "@/lib/utils";
+import { Avatar as BaseAvatar } from "@base-ui-components/react/avatar";
+import type { ComponentProps } from "react";
+import { cn } from "~/lib/utils";
 
-function Avatar({ className, ...props }: AvatarPrimitive.AvatarProps) {
+function Avatar({
+	className,
+	...props
+}: ComponentProps<typeof BaseAvatar.Root>) {
 	return (
-		<AvatarPrimitive.Root
+		<BaseAvatar.Root
 			className={cn(
-				"relative flex size-8 shrink-0 overflow-hidden rounded-full",
+				"relative flex size-7 shrink-0 overflow-hidden rounded-full",
 				className,
 			)}
-			data-slot="avatar"
 			{...props}
 		/>
 	);
@@ -19,11 +22,10 @@ function Avatar({ className, ...props }: AvatarPrimitive.AvatarProps) {
 function AvatarImage({
 	className,
 	...props
-}: AvatarPrimitive.AvatarImageProps) {
+}: ComponentProps<typeof BaseAvatar.Image>) {
 	return (
-		<AvatarPrimitive.Image
+		<BaseAvatar.Image
 			className={cn("aspect-square size-full", className)}
-			data-slot="avatar-image"
 			{...props}
 		/>
 	);
@@ -32,17 +34,16 @@ function AvatarImage({
 function AvatarFallback({
 	className,
 	...props
-}: AvatarPrimitive.AvatarFallbackProps) {
+}: ComponentProps<typeof BaseAvatar.Fallback>) {
 	return (
-		<AvatarPrimitive.Fallback
+		<BaseAvatar.Fallback
 			className={cn(
-				"flex size-full items-center justify-center rounded-full border bg-background text-muted-foreground",
+				"flex size-full items-center justify-center bg-avatar font-semibold text-avatar-foreground text-sm",
 				className,
 			)}
-			data-slot="avatar-fallback"
 			{...props}
 		/>
 	);
 }
 
-export { Avatar, AvatarFallback, AvatarImage };
+export { Avatar, AvatarImage, AvatarFallback };

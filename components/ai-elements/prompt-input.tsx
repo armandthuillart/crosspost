@@ -2,12 +2,8 @@
 
 import { type HTMLMotionProps, motion } from "motion/react";
 import { type ComponentProps, memo } from "react";
-import {
-	Button,
-	type ButtonProps,
-	buttonVariants,
-} from "~/components/ui/button";
-import { ArrowUpIcon, StopIcon } from "~/components/ui/icons";
+import { Button, type ButtonProps } from "~/components/ui/button";
+import { SendIcon, StopIcon } from "~/components/ui/icons";
 import {
 	Tooltip,
 	TooltipContent,
@@ -83,7 +79,7 @@ function PurePromptInputSubmit({
 			transition={{ layout: { duration: 0.5, ease: [0.32, 0.72, 0, 1] } }}
 		>
 			<Button className="rounded-full" size="icon" type="submit" {...props}>
-				<ArrowUpIcon className="size-5" />
+				<SendIcon className="size-5" />
 			</Button>
 		</motion.div>
 	);
@@ -112,19 +108,30 @@ function PromptInputStop({ className, ...props }: ComponentProps<"button">) {
 	);
 }
 
-function PromptInputTool({ children, className, ...props }: ButtonProps) {
+function PromptInputButton({
+	className,
+	children,
+	tooltip,
+	kbd,
+	...props
+}: ButtonProps & { kbd: string; tooltip: string }) {
 	return (
 		<TooltipProvider>
 			<Tooltip>
 				<motion.div
 					className="h-9 [grid-area:left]"
 					layout="position"
-					layoutId="prompt-input-tools"
+					layoutId="prompt-input-button"
 					transition={{ layout: { duration: 0.5, ease: [0.32, 0.72, 0, 1] } }}
 				>
 					<TooltipTrigger {...props}>{children}</TooltipTrigger>
 				</motion.div>
-				<TooltipContent side="bottom">Search the web</TooltipContent>
+				<TooltipContent className="flex gap-1.5" side="bottom">
+					{tooltip}{" "}
+					<kbd className="-mr-1 flex size-4 items-center justify-center rounded bg-white/20 text-muted-foreground">
+						{kbd}
+					</kbd>
+				</TooltipContent>
 			</Tooltip>
 		</TooltipProvider>
 	);
@@ -133,7 +140,7 @@ function PromptInputTool({ children, className, ...props }: ButtonProps) {
 export {
 	PromptInput,
 	PromptInputStop,
-	PromptInputTool,
+	PromptInputButton,
 	PromptInputSubmit,
 	PromptInputTextarea,
 };

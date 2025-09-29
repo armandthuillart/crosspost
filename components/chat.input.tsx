@@ -15,12 +15,13 @@ import {
 } from "react";
 import {
 	PromptInput,
+	PromptInputButton,
 	PromptInputStop,
 	PromptInputSubmit,
 	PromptInputTextarea,
-	PromptInputTool,
 } from "~/components/ai-elements/prompt-input";
-import { InternetIcon } from "~/components/ui/icons";
+import { Button } from "~/components/ui/button";
+import { PlusIcon } from "~/components/ui/icons";
 import { api } from "~/convex/generated/api";
 import { useAutoFocus } from "~/hooks/use-auto-focus";
 import { useTypewriter } from "~/hooks/use-typewriter";
@@ -28,7 +29,6 @@ import { showBannerAtom } from "~/lib/atoms";
 import { authClient } from "~/lib/auth-client";
 import type { User } from "~/lib/types";
 import { attr } from "~/lib/utils";
-import { Toggle } from "./ui/toggle";
 
 const TEXTAREA_MIN_HEIGHT = 24;
 const TEXTAREA_EXPANDED_MIN_HEIGHT = 48;
@@ -233,11 +233,14 @@ export function ChatInput({
 
 	return (
 		<PromptInput {...attr("expanded", isExpanded)} onSubmit={handleSubmit}>
-			<PromptInputTool asChild>
-				<Toggle className="cursor-pointer rounded-full bg-background text-muted-foreground hover:bg-background data-pressed:text-interactive-foreground">
-					<InternetIcon className="size-5" />
-				</Toggle>
-			</PromptInputTool>
+			<PromptInputButton asChild kbd="/" tooltip="Add files and more">
+				<Button
+					className="rounded-full bg-background text-muted-foreground hover:bg-background"
+					size="icon"
+				>
+					<PlusIcon className="size-5" />
+				</Button>
+			</PromptInputButton>
 
 			<PromptInputTextarea
 				onChange={handleChange}

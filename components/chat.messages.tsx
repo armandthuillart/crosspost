@@ -99,7 +99,7 @@ export function ChatMessages({
 										/>
 									))}
 									<Actions>
-										<Action onClick={() => handleCopy(message)}>
+										<Action onClick={() => handleCopy(message)} tooltip="Copy">
 											<AnimatePresence mode="wait">
 												{hasCopied ? (
 													<TickIcon
@@ -107,7 +107,7 @@ export function ChatMessages({
 														exit={{ opacity: 0 }}
 														initial={{ opacity: 0 }}
 														key="tick"
-														transition={{ duration: 0.1 }}
+														transition={{ duration: 0.15 }}
 													/>
 												) : (
 													<CopyIcon
@@ -115,7 +115,7 @@ export function ChatMessages({
 														exit={{ opacity: 0 }}
 														initial={{ opacity: 0 }}
 														key="copy"
-														transition={{ duration: 0.1 }}
+														transition={{ duration: 0.15 }}
 													/>
 												)}
 											</AnimatePresence>

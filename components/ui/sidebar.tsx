@@ -20,7 +20,7 @@ import {
 	DrawerHeader,
 	DrawerTitle,
 } from "~/components/ui/drawer";
-import { MenuTwoLineIcon } from "~/components/ui/icons";
+import { MenuIcon } from "~/components/ui/icons";
 import { useIsMobile } from "~/hooks/use-mobile";
 import { cn } from "~/lib/utils";
 
@@ -262,7 +262,7 @@ function SidebarTrigger({ className, onClick, ...props }: ButtonProps) {
 			variant="ghost"
 			{...props}
 		>
-			<MenuTwoLineIcon className="size-5" />
+			<MenuIcon className="size-5" />
 		</Button>
 	);
 }

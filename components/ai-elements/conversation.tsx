@@ -11,7 +11,7 @@ import {
 } from "react";
 import { StickToBottom, useStickToBottomContext } from "use-stick-to-bottom";
 import { Button, type ButtonProps } from "~/components/ui/button";
-import { ArrowDownIcon } from "~/components/ui/icons";
+import { ScrollIcon } from "~/components/ui/icons";
 import { showBannerAtom } from "~/lib/atoms";
 import { cn } from "~/lib/utils";
 
@@ -78,7 +78,7 @@ function PureConversationScrollButton({ className, ...props }: ButtonProps) {
 						variant="outline"
 						{...props}
 					>
-						<ArrowDownIcon className="size-5" />
+						<ScrollIcon className="size-5" />
 					</Button>
 				</motion.div>
 			)}

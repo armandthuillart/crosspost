@@ -47,6 +47,8 @@
 	--color-selection-foreground: var(--selection-foreground);
 	--color-avatar: var(--avatar);
 	--color-avatar-foreground: var(--avatar-foreground);
+	--color-interactive: var(--interactive);
+	--color-interactive-foreground: var(--interactive-foreground);
 }
 
 
@@ -57,7 +59,7 @@
   --accent-foreground: oklch(15% 0 0);
 	--primary: oklch(15% 0 0);
 	--primary-foreground: oklch(100% 0 0);
-	--secondary: oklch(90% 0 0);
+	--secondary: oklch(96% 0 0);
 	--secondary-foreground: oklch(15% 0 0);
 	--muted: oklch(96% 0 0);
 	--muted-foreground: oklch(63% 0 0);
@@ -83,6 +85,8 @@
   --selection-foreground: oklch(53% 0.190 280);
 	--avatar: oklch(67% 0.175 275);
 	--avatar-foreground: oklch(100% 0 0);
+	--interactive: oklch(96% 0 0);
+	--interactive-foreground: oklch(62.5% 0.205 255);
 }
 
 .dark {

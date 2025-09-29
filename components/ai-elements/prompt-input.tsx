@@ -48,7 +48,7 @@ function PromptInputTextarea({
 	return (
 		<motion.div
 			className={cn(
-				"-my-2.5 flex min-h-14 w-full px-2.5 [grid-area:center]",
+				"-my-2.5 flex min-h-14 w-full px-2.5 [grid-area:center] group-data-expanded/prompt-input:mb-0",
 				className,
 			)}
 			layout="position"
@@ -112,28 +112,17 @@ function PromptInputStop({ className, ...props }: ComponentProps<"button">) {
 	);
 }
 
-function PromptInputButton({ children, className, ...props }: ButtonProps) {
+function PromptInputTool({ children, className, ...props }: ButtonProps) {
 	return (
 		<TooltipProvider>
 			<Tooltip>
 				<motion.div
 					className="h-9 [grid-area:left]"
 					layout="position"
-					layoutId="prompt-input-button"
+					layoutId="prompt-input-tools"
 					transition={{ layout: { duration: 0.5, ease: [0.32, 0.72, 0, 1] } }}
 				>
-					<TooltipTrigger
-						className={cn(
-							buttonVariants({
-								size: "icon",
-								variant: "ghost",
-								...props,
-							}),
-							"rounded-full bg-background",
-						)}
-					>
-						{children}
-					</TooltipTrigger>
+					<TooltipTrigger {...props}>{children}</TooltipTrigger>
 				</motion.div>
 				<TooltipContent side="bottom">Search the web</TooltipContent>
 			</Tooltip>
@@ -144,7 +133,7 @@ function PromptInputButton({ children, className, ...props }: ButtonProps) {
 export {
 	PromptInput,
 	PromptInputStop,
-	PromptInputButton,
+	PromptInputTool,
 	PromptInputSubmit,
 	PromptInputTextarea,
 };

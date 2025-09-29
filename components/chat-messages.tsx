@@ -2,7 +2,7 @@
 
 import type { UIMessage } from "@convex-dev/agent/react";
 import { AnimatePresence } from "motion/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Action, Actions } from "@/components/ai-elements/actions";
 import {
 	Conversation,
@@ -32,6 +32,9 @@ export function ChatMessages({
 	hasSentMessage,
 }: ChatMessagesProps) {
 	const [isCopied, setIsCopied] = useState<string | null>(null);
+	const [isThinking, setIsThinking] = useState(false);
+
+	console.log(messages);
 
 	async function handleCopy(message: UIMessage) {
 		await navigator.clipboard.writeText(message.text);
@@ -43,6 +46,22 @@ export function ChatMessages({
 	}
 
 	const isLast = messages.at(-1)?.role === "user";
+
+	function handleUserMessageAnimationComplete() {
+		if (isLast && hasSentMessage) {
+			setIsThinking(true);
+		}
+	}
+
+	useEffect(() => {
+		const condition = messages.some(
+			({ role, status }) => role === "assistant" && status === "streaming",
+		);
+
+		if (condition) {
+			setIsThinking(false);
+		}
+	}, [messages]);
 
 	return (
 		<Conversation>
@@ -66,6 +85,11 @@ export function ChatMessages({
 								animate={fromUser && isPending}
 								from={message.role}
 								key={message.id}
+								onAnimationComplete={
+									fromUser && isLast
+										? handleUserMessageAnimationComplete
+										: undefined
+								}
 							>
 								<MessageContent>
 									{message.parts.map((part, i) => (
@@ -103,7 +127,7 @@ export function ChatMessages({
 						);
 					})}
 
-					{isLast && hasSentMessage && (
+					{isLast && isThinking && (
 						<Message from="assistant">
 							<MessageContent>
 								<ShiningText text="Thinking..." />

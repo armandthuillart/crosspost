@@ -25,9 +25,16 @@ const transition: Transition = {
 interface MessageProps extends HTMLMotionProps<"div"> {
 	from: UIMessage["role"];
 	animate?: boolean;
+	onAnimationComplete?: () => void;
 }
 
-function Message({ from, animate = false, className, ...props }: MessageProps) {
+function Message({
+	from,
+	animate = false,
+	className,
+	onAnimationComplete,
+	...props
+}: MessageProps) {
 	return (
 		<motion.div
 			animate={animate ? "animate" : undefined}
@@ -37,6 +44,7 @@ function Message({ from, animate = false, className, ...props }: MessageProps) {
 			)}
 			exit={animate ? "exit" : undefined}
 			initial={animate ? "initial" : undefined}
+			onAnimationComplete={onAnimationComplete}
 			transition={transition}
 			variants={variants}
 			{...props}

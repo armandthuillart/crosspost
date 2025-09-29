@@ -61,21 +61,21 @@ function PureConversationScrollButton({ className, ...props }: ButtonProps) {
 		<AnimatePresence>
 			{!isAtBottom && (
 				<motion.div
-					animate={{ opacity: 1, scale: 1 }}
+					animate={{ opacity: 1 }}
 					className="origin-bottom"
-					exit={{ opacity: 0, scale: 0 }}
-					initial={{ opacity: 0, scale: 0 }}
+					exit={{ opacity: 0 }}
+					initial={{ opacity: 0 }}
 					transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
 				>
 					<Button
 						className={cn(
-							"-translate-x-1/2 absolute bottom-12 left-1/2 z-20 rounded-full dark:bg-muted",
+							"-translate-x-1/2 absolute bottom-12 left-1/2 z-20 rounded-full hover:bg-muted",
 							isVisible && "bottom-32",
 							className,
 						)}
 						onClick={handleScroll}
 						size="icon"
-						variant="outline"
+						variant="secondary"
 						{...props}
 					>
 						<ScrollIcon className="size-5" />

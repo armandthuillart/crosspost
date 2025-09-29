@@ -1,4 +1,5 @@
 import type { GatewayModelId } from "@ai-sdk/gateway";
+import type { XaiProviderOptions } from "@ai-sdk/xai";
 import { Agent, stepCountIs } from "@convex-dev/agent";
 import { components } from "~/convex/generated/api";
 import { draft, post, rename } from "~/convex/tools";
@@ -19,7 +20,22 @@ export const agent = new Agent(components.agent, {
 	},
 	instructions: AGENT_PROMPT,
 	languageModel: "xai/grok-4-fast-non-reasoning" as GatewayModelId,
+
 	name: appName,
+	providerOptions: {
+		xai: {
+			searchParameters: {
+				maxSearchResults: 15,
+				mode: "auto",
+				returnCitations: true,
+				sources: [
+					{ safeSearch: true, type: "web" },
+					{ type: "x" },
+					{ safeSearch: true, type: "news" },
+				],
+			},
+		} satisfies XaiProviderOptions,
+	},
 	stopWhen: stepCountIs(3),
 	textEmbeddingModel: "openai/text-embedding-3-small",
 	tools: { draft, post, rename },

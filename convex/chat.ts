@@ -213,7 +213,9 @@ export const migrateChats = mutation({
 			userId: anonymousUserId,
 		});
 
-		await rateLimiter.reset(ctx, "anonymous", { key: anonymousUserId });
+		await rateLimiter.reset(ctx, "anonymous", {
+			key: anonymousUserId,
+		});
 	},
 	returns: v.null(),
 });

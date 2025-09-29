@@ -6,6 +6,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ConvexClientProvider } from "~/app/convex-client-provider";
 import { ThemeProvider } from "~/app/theme-provider";
+import { appName } from "~/lib/constants";
 import { cn } from "~/lib/utils";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -22,7 +23,7 @@ export const metadata: Metadata = {
 		"social media",
 		"post scheduler",
 	],
-	title: "Crosspost",
+	title: appName,
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

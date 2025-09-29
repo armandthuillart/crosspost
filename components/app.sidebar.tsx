@@ -63,7 +63,9 @@ export function AppSidebar() {
 					<div className="flex items-center gap-2.5 overflow-hidden">
 						<Avatar>
 							<AvatarFallback>
-								{user!.firstName?.charAt(0) + user?.lastName?.charAt(0)}
+								{user?.firstName && user?.lastName
+									? user.firstName.charAt(0) + user.lastName.charAt(0)
+									: (user?.email?.charAt(0) ?? "?")}
 							</AvatarFallback>
 						</Avatar>
 						<span className="truncate font-medium text-sm">

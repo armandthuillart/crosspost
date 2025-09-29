@@ -4,6 +4,7 @@ import { optimisticallySendMessage } from "@convex-dev/agent/react";
 import { isRateLimitError } from "@convex-dev/rate-limiter";
 import { useMutation } from "convex/react";
 import { useAtom } from "jotai";
+import { useRouter } from "next/navigation";
 import {
 	type FormEvent,
 	type KeyboardEvent,
@@ -49,6 +50,7 @@ export function ChatInput({
 	isStreaming,
 	hasSubmitted,
 }: ChatInputProps) {
+	const { replace } = useRouter();
 	const [threadId, setThreadId] = useState(chatId);
 
 	const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -93,7 +95,7 @@ export function ChatInput({
 
 			if (!chatId) {
 				threadId = await createChat();
-				window.history.replaceState(null, "", `/c/${threadId}`);
+				replace(`/c/${threadId}`);
 				setThreadId(threadId);
 			}
 
@@ -121,6 +123,7 @@ export function ChatInput({
 			chatId,
 			prompt,
 			isDirty,
+			replace,
 			createChat,
 			sendMessage,
 			resetHeight,

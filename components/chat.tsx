@@ -3,6 +3,7 @@
 import { useUIMessages } from "@convex-dev/agent/react";
 import { type Preloaded, usePreloadedQuery } from "convex/react";
 import { LayoutGroup } from "motion/react";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ChatGreetings } from "@/components/chat-greetings";
 import { ChatHeader } from "@/components/chat-header";
@@ -12,14 +13,17 @@ import { ChatStreamer } from "@/components/chat-streamer";
 import { PostGallery } from "@/components/post-gallery";
 import { api } from "@/convex/_generated/api";
 import { attr } from "@/lib/utils";
+import type { ParamsOf } from "../.next/types/routes";
 
 interface ChatProps {
-	chatId: string | null;
 	preloadedUser: Preloaded<typeof api.auth.getUser>;
 }
 
-export function Chat({ chatId, preloadedUser }: ChatProps) {
+export function Chat({ preloadedUser }: ChatProps) {
 	const user = usePreloadedQuery(preloadedUser);
+	const { chatId } = useParams<ParamsOf<"/c/[chatId]">>();
+
+	const isChat = Boolean(chatId);
 
 	const {
 		status,
@@ -33,7 +37,6 @@ export function Chat({ chatId, preloadedUser }: ChatProps) {
 	const isPro = user?.tier === "pro";
 	const order = messages.find((m) => m.status === "streaming")?.order ?? 0;
 	const isFree = user?.tier === "free";
-	const isChat = messages.length > 0;
 	const canLoadMore = status === "CanLoadMore";
 	const isStreaming = messages.some((m) => m.status === "streaming");
 	const isAnonymous = user?.tier === "anonymous" || !user;

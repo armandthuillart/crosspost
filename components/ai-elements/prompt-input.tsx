@@ -23,7 +23,7 @@ function PromptInput({
 }: HTMLMotionProps<"form">) {
 	return (
 		<motion.form
-			className="group/prompt-input overflow-hidden not-dark:border bg-background shadow-xs transition-[box-shadow,border-color,background-color] ease-snappy not-dark:has-focus-visible:border-input dark:bg-muted"
+			className="group/prompt-input overflow-hidden border bg-background shadow-xs transition-[box-shadow,border-color,background-color] ease-snappy has-focus-visible:border-input dark:bg-muted"
 			layout
 			layoutId="prompt-input-outer"
 			style={{ borderRadius: 28 }}

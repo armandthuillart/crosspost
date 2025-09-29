@@ -42,6 +42,7 @@ export function PostGallery() {
 	return (
 		<motion.div
 			className="mx-auto mt-24 flex w-full max-w-7xl flex-col gap-4 pb-24"
+			exit={{ opacity: 0 }}
 			layoutId="post-gallery"
 			transition={{ layout: { duration: 0.5, ease: [0.32, 0.72, 0, 1] } }}
 		>

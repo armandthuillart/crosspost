@@ -17,7 +17,6 @@ const variants: Variants = {
 };
 
 const transition: Transition = {
-	default: { duration: 0.15 },
 	duration: 0.5,
 	ease: [0.32, 0.72, 0, 1],
 	layout: { bounce: 0.4, duration: 1, type: "spring" },

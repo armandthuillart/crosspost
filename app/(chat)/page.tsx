@@ -7,5 +7,5 @@ export default async function Page() {
 	const token = await getToken();
 	const preloadedUser = await preloadQuery(api.auth.getUser, {}, { token });
 
-	return <Chat chatId={null} preloadedUser={preloadedUser} />;
+	return <Chat preloadedUser={preloadedUser} />;
 }

@@ -1,3 +1,4 @@
+import { openai } from "@ai-sdk/openai";
 import {
 	abortStream,
 	createThread,
@@ -16,6 +17,7 @@ import { agent } from "~/convex/agents";
 import { api, components, internal } from "~/convex/generated/api";
 import { internalAction, mutation, query } from "~/convex/generated/server";
 import { rateLimiter } from "~/convex/rateLimiting";
+import { draftPost, renameChat } from "~/convex/tools";
 import { verifyOwnership } from "~/convex/utils";
 import { ChatSDKError } from "~/lib/errors";
 import { AGENT_PROMPT } from "~/lib/prompts";
@@ -91,8 +93,26 @@ export const streamChat = internalAction({
 		const { consumeStream } = await agent.streamText(
 			ctx,
 			{ threadId, userId },
-			{ promptMessageId, system: AGENT_PROMPT({ city, countryCode }) },
-			{ saveStreamDeltas: { chunking: "word", throttleMs: 100 } },
+			{
+				promptMessageId,
+				system: AGENT_PROMPT({ city, countryCode }),
+				tools: {
+					draft_post: draftPost,
+					rename_chat: renameChat,
+					web_search: openai.tools.webSearch({
+						searchContextSize: "medium",
+						...(city &&
+							countryCode && {
+								userLocation: {
+									city,
+									country: countryCode,
+									type: "approximate",
+								},
+							}),
+					}),
+				},
+			},
+			{ saveStreamDeltas: true },
 		);
 
 		await consumeStream();

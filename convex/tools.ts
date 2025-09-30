@@ -6,7 +6,7 @@ import type { Id } from "~/convex/generated/dataModel";
 import { draftSchema, postSchema } from "~/lib/schema";
 import type { Platform } from "~/lib/types";
 
-export const draft = createTool({
+export const draftPost = createTool({
 	args: draftSchema,
 	description:
 		"Create a new post draft. It will return the draft id if successful.",
@@ -26,6 +26,7 @@ export const draft = createTool({
 	},
 });
 
+// For the URL generation, a simple function is enough, based on a button click. For the post creation, a simple mutation is enough.
 export const post = createTool({
 	args: postSchema,
 	description:
@@ -77,7 +78,7 @@ export const post = createTool({
 	},
 });
 
-export const rename = createTool({
+export const renameChat = createTool({
 	args: z.object({
 		title: z
 			.string()

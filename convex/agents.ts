@@ -1,8 +1,7 @@
 import type { GatewayModelId } from "@ai-sdk/gateway";
-import type { XaiProviderOptions } from "@ai-sdk/xai";
+import type { OpenAIResponsesProviderOptions } from "@ai-sdk/openai";
 import { Agent, stepCountIs } from "@convex-dev/agent";
 import { components } from "~/convex/generated/api";
-import { draft, post, rename } from "~/convex/tools";
 
 export const agent = new Agent(components.agent, {
 	contextOptions: {
@@ -16,23 +15,14 @@ export const agent = new Agent(components.agent, {
 		},
 		searchOtherThreads: true,
 	},
-	languageModel: "xai/grok-4-fast-non-reasoning" as GatewayModelId,
+	languageModel: "openai/gpt-5-mini" as GatewayModelId,
 	name: "chat",
 	providerOptions: {
-		xai: {
-			searchParameters: {
-				maxSearchResults: 15,
-				mode: "auto",
-				returnCitations: true,
-				sources: [
-					{ safeSearch: true, type: "web" },
-					{ type: "x" },
-					{ safeSearch: true, type: "news" },
-				],
-			},
-		} satisfies XaiProviderOptions,
+		openai: {
+			reasoningEffort: "medium",
+			textVerbosity: "medium",
+		} satisfies OpenAIResponsesProviderOptions,
 	},
 	stopWhen: stepCountIs(3),
 	textEmbeddingModel: "openai/text-embedding-3-small",
-	tools: { draft, post, rename },
 });

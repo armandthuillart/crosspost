@@ -11,7 +11,7 @@ import { ChatGreetings } from "~/components/chat.greetings";
 import { ChatHeader } from "~/components/chat.header";
 import { ChatInput } from "~/components/chat.input";
 import { ChatMessages } from "~/components/chat.messages";
-import { PostGallery } from "~/components/post-gallery";
+import { ChatSuggestions } from "~/components/chat.suggestions";
 import { api } from "~/convex/generated/api";
 import type { MyMessage } from "~/lib/types";
 import { attr } from "~/lib/utils";
@@ -68,7 +68,7 @@ export function Chat({ city, countryCode, preloadedUser }: ChatProps) {
 			<ChatHeader isAnonymous={isAnonymous} isFree={isFree} />
 
 			<div className="flex h-full flex-col overflow-y-scroll group-data-chat/chat:gap-32">
-				<div className="flex h-full flex-col group-data-chat/chat:h-full group-data-chat/chat:justify-center group-data-chat/chat:overflow-hidden max-md:shrink-0 group-not-data-chat/chat:md:gap-6 group-not-data-chat/chat:md:pt-44 group-not-data-chat/chat:lg:pt-60">
+				<div className="flex h-full flex-col group-data-chat/chat:h-full group-data-chat/chat:justify-center group-data-chat/chat:overflow-hidden max-md:shrink-0 group-not-data-chat/chat:md:gap-6 group-not-data-chat/chat:md:pt-44 group-not-data-chat/chat:lg:pt-78">
 					{!isChat ? (
 						<ChatGreetings />
 					) : (
@@ -83,7 +83,7 @@ export function Chat({ city, countryCode, preloadedUser }: ChatProps) {
 
 					<div className="px-2">
 						<LayoutGroup>
-							<div className="relative mx-auto flex w-full max-w-(--chat-content-max-width) flex-col gap-4 pb-2 @[34rem]:[--chat-content-max-width:40rem] @[64rem]:[--chat-content-max-width:48rem] [--chat-content-max-width:32rem] md:pb-4 md:group-not-data-chat/chat:pb-0">
+							<div className="relative mx-auto flex w-full max-w-(--chat-content-max-width) flex-col gap-4 pb-2 @[34rem]:[--chat-content-max-width:40rem] @[64rem]:[--chat-content-max-width:48rem] [--chat-content-max-width:32rem] md:flex-col-reverse md:pb-4 md:group-not-data-chat/chat:pb-0">
 								{isChat && (
 									<ChatBanner
 										isAnonymous={isAnonymous}
@@ -91,6 +91,8 @@ export function Chat({ city, countryCode, preloadedUser }: ChatProps) {
 										isPro={isPro}
 									/>
 								)}
+
+								{!isChat && <ChatSuggestions />}
 
 								<ChatInput
 									chatId={chatId}
@@ -103,7 +105,6 @@ export function Chat({ city, countryCode, preloadedUser }: ChatProps) {
 									user={user}
 								/>
 							</div>
-							{!isChat && <PostGallery />}
 						</LayoutGroup>
 					</div>
 				</div>

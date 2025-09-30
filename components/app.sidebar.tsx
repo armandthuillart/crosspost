@@ -1,7 +1,18 @@
 "use client";
 
-import { useMutation, useQuery } from "convex/react";
-import { AnimatePresence, stagger, useAnimate } from "motion/react";
+import {
+	type Preloaded,
+	useMutation,
+	usePreloadedQuery,
+	useQuery,
+} from "convex/react";
+import {
+	AnimatePresence,
+	type AnimationOptions,
+	stagger,
+	type Target,
+	useAnimate,
+} from "motion/react";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { type MouseEvent, useState } from "react";
 import type { ParamsOf } from "~/.next/types/routes";
@@ -29,7 +40,11 @@ import { api } from "~/convex/generated/api";
 import { appName } from "~/lib/constants";
 import { Button } from "./ui/button";
 
-export function AppSidebar() {
+export function AppSidebar({
+	preloadedChats,
+}: {
+	preloadedChats: Preloaded<typeof api.chat.listChats>;
+}) {
 	const { push } = useRouter();
 	const pathname = usePathname();
 	const user = useQuery(api.auth.getUser);
@@ -68,6 +83,7 @@ export function AppSidebar() {
 					<SidebarGroupContent>
 						<SidebarMenu>
 							<SibebarHistory
+								preloadedChats={preloadedChats}
 								setThreadIds={setThreadIds}
 								threadIds={threadIds}
 							/>
@@ -175,17 +191,17 @@ function SibebarHistorySearch({
 function SibebarHistory({
 	threadIds,
 	setThreadIds,
+	preloadedChats,
 }: {
 	threadIds: string[] | null;
 	setThreadIds: (threadIds: string[] | null) => void;
+	preloadedChats: Preloaded<typeof api.chat.listChats>;
 }) {
 	const [ref, animate] = useAnimate();
 	const { chatId: paramsChatId } = useParams<ParamsOf<"/c/[chatId]">>();
 	const { push } = useRouter();
 
-	const chats = useQuery(api.chat.listChats, {
-		paginationOpts: { cursor: null, numItems: 10 },
-	});
+	const chats = usePreloadedQuery(preloadedChats);
 
 	const activeChats =
 		chats?.page.filter(({ status }) => status === "active") || [];
@@ -201,46 +217,52 @@ function SibebarHistory({
 
 		setThreadIds(newIds.length > 0 ? newIds : null);
 
-		if (newIds.length === activeChats.length && activeChats.length > 0) {
-			const lastCompletedIndex = activeChats.findIndex(
-				(chat) => !currentIds.includes(chat._id),
-			);
-			const random = Math.random();
+		const hasMultipleCheckboxes = activeChats.length > 1;
+		const allSelected = newIds.length === activeChats.length;
 
-			if (random < 1 / 3) {
+		if (hasMultipleCheckboxes && allSelected) {
+			const lastCompletedIndex = activeChats.findIndex(
+				({ _id: chatId }) => !currentIds.includes(chatId),
+			);
+
+			const { floor, random } = Math;
+
+			const animations: Array<{
+				options: AnimationOptions;
+				keyframes: Target;
+			}> = [
 				// Scale animation
-				animate(
-					'[data-slot="checkbox"]',
-					{ scale: [1, 1.25, 1] },
-					{
+				{
+					keyframes: { scale: [1, 1.25, 1] },
+					options: {
 						delay: stagger(0.075, { from: lastCompletedIndex }),
 						duration: 0.35,
-						ease: [0.32, 0.72, 0, 1],
 					},
-				);
-			} else if (random < 2 / 3) {
+				},
 				// Shimmy animation
-				animate(
-					'[data-slot="checkbox"]',
-					{ x: [0, 2, -2, 0] },
-					{
+				{
+					keyframes: { x: [0, 2, -2, 0] },
+					options: {
 						delay: stagger(0.1, { from: lastCompletedIndex }),
 						duration: 0.4,
-						ease: [0.32, 0.72, 0, 1],
 					},
-				);
-			} else {
+				},
 				// Shake animation
-				animate(
-					'[data-slot="checkbox"]',
-					{ rotate: [0, 10, -10, 0] },
-					{
+				{
+					keyframes: { rotate: [0, 10, -10, 0] },
+					options: {
 						delay: stagger(0.1, { from: lastCompletedIndex }),
 						duration: 0.5,
-						ease: [0.32, 0.72, 0, 1],
 					},
-				);
-			}
+				},
+			];
+
+			const selected = animations[floor(random() * animations.length)];
+
+			animate('[data-slot="checkbox"]', selected.keyframes, {
+				...selected.options,
+				ease: [0.32, 0.72, 0, 1],
+			});
 		}
 	}
 

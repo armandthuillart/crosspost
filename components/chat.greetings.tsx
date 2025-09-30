@@ -2,7 +2,7 @@
 
 export function ChatGreetings() {
 	return (
-		<div className="mx-auto">
+		<div className="m-auto md:my-0">
 			<svg
 				aria-hidden="true"
 				className="size-16"

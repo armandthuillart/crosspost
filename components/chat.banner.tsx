@@ -83,7 +83,7 @@ export function ChatBanner({ isPro, isFree, isAnonymous }: ChatBannerProps) {
 							initial={{ opacity: 0, y: 8 }}
 							transition={{ bounce: 0.1, duration: 0.35, type: "spring" }}
 						>
-							<div className="flex items-center justify-between gap-3 rounded-xl border bg-material p-3 pl-4 shadow-2xs">
+							<div className="flex items-center justify-between gap-3 rounded-xl border bg-muted p-3 pl-4 shadow-2xs">
 								<div className="flex flex-col text-sm">
 									<span className="font-medium">
 										{remainingCount === 0

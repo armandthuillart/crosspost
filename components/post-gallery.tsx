@@ -72,8 +72,11 @@ interface PostCardProps {
 
 function PostCard({ title, postedAt }: PostCardProps) {
 	return (
-		<div className="flex w-full flex-col gap-2 has-focus-visible:ring-3 has-focus-visible:ring-ring/50">
-			<div className="aspect-video overflow-hidden rounded-md border" />
+		<div className="flex w-full flex-col gap-2">
+			<button
+				className="aspect-video overflow-hidden rounded-md bg-muted outline-none transition-[opacity,box-shadow,background-color] ease-snappy focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+				type="button"
+			/>
 			<div className="flex items-center gap-3">
 				<Avatar className="size-9">
 					<AvatarFallback className="font-medium">AT</AvatarFallback>

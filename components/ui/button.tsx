@@ -5,7 +5,7 @@ import { LoaderIcon } from "~/components/ui/icons";
 import { cn } from "~/lib/utils";
 
 const buttonVariants = cva(
-	"relative inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium text-sm outline-none outline-none transition-[opacity,box-shadow,background-color] ease-snappy focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+	"relative inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium text-sm outline-none transition-[opacity,box-shadow,background-color] ease-snappy focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
 	{
 		compoundVariants: [
 			{
@@ -38,7 +38,7 @@ const buttonVariants = cva(
 			variant: {
 				default: "bg-primary text-primary-foreground hover:bg-primary/90",
 				destructive:
-					"bg-destructive-foreground text-white shadow-xs hover:bg-destructive-foreground/90",
+					"bg-destructive text-destructive-foreground hover:bg-destructive/90",
 				ghost: "hover:bg-accent hover:text-accent-foreground",
 				link: "rounded-xs text-primary underline-offset-4 hover:underline",
 				outline: "border border-input bg-background hover:bg-accent",

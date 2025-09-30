@@ -4,7 +4,7 @@ import type { Route } from "next";
 import Link from "next/link";
 import { memo } from "react";
 import { Streamdown, type StreamdownProps } from "streamdown";
-import { ArrowUpRightIcon } from "~/components/ui/icons";
+import { ExternalLinkIcon } from "~/components/ui/icons";
 import { cn } from "~/lib/utils";
 
 const components: StreamdownProps["components"] = {
@@ -17,7 +17,7 @@ const components: StreamdownProps["components"] = {
 			{...props}
 		>
 			{children}
-			<ArrowUpRightIcon className="ms-0.5 inline-block size-3 align-middle" />
+			<ExternalLinkIcon className="ms-0.5 inline-block size-3 align-middle" />
 		</Link>
 	),
 	h1: ({ node, children, ...props }) => (

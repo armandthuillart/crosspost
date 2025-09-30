@@ -69,7 +69,7 @@ function PureConversationScrollButton({ className, ...props }: ButtonProps) {
 				>
 					<Button
 						className={cn(
-							"-translate-x-1/2 absolute bottom-12 left-1/2 z-20 rounded-full hover:bg-muted",
+							"-translate-x-1/2 absolute bottom-12 left-1/2 z-50 rounded-full hover:bg-muted",
 							isVisible && "bottom-32",
 							className,
 						)}

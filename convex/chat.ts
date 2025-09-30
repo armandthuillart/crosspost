@@ -233,3 +233,24 @@ export const migrateChats = mutation({
 	},
 	returns: v.null(),
 });
+
+export const archiveChats = mutation({
+	args: {
+		threadIds: v.array(v.string()),
+	},
+	handler: async (ctx, { threadIds }) => {
+		const user = await ctx.runQuery(api.auth.getUser, {});
+
+		if (!user) {
+			throw new ChatSDKError("unauthorized:auth");
+		}
+
+		for (const threadId of threadIds) {
+			await ctx.runMutation(components.agent.threads.updateThread, {
+				patch: { status: "archived" },
+				threadId,
+			});
+		}
+	},
+	returns: v.null(),
+});

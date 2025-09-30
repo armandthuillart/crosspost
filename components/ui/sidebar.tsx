@@ -1,6 +1,7 @@
 "use client";
 
 import { cva, type VariantProps } from "class-variance-authority";
+import { type HTMLMotionProps, motion } from "motion/react";
 import { Slot as SlotPrimitive } from "radix-ui";
 import {
 	type ComponentProps,
@@ -289,9 +290,9 @@ function SidebarGroupContent({ className, ...props }: ComponentProps<"div">) {
 	);
 }
 
-function SidebarMenu({ className, ...props }: ComponentProps<"ul">) {
+function SidebarMenu({ className, ...props }: HTMLMotionProps<"ul">) {
 	return (
-		<ul
+		<motion.ul
 			className={cn("flex w-full min-w-0 flex-col gap-1", className)}
 			data-sidebar="menu"
 			data-slot="sidebar-menu"
@@ -300,10 +301,10 @@ function SidebarMenu({ className, ...props }: ComponentProps<"ul">) {
 	);
 }
 
-function SidebarMenuItem({ className, ...props }: ComponentProps<"li">) {
+function SidebarMenuItem({ className, ...props }: HTMLMotionProps<"li">) {
 	return (
-		<li
-			className={cn("group/menu-item relative", className)}
+		<motion.li
+			className={cn("group/menu-item relative overflow-hidden", className)}
 			data-sidebar="menu-item"
 			data-slot="sidebar-menu-item"
 			{...props}
@@ -312,7 +313,7 @@ function SidebarMenuItem({ className, ...props }: ComponentProps<"li">) {
 }
 
 const sidebarMenuButtonVariants = cva(
-	"peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 px-2.5 text-left text-sm outline-hidden ring-sidebar-ring transition-all ease-snappy hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-data-[sidebar=menu-action]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-2! [&>span:last-child]:truncate [&>svg]:shrink-0",
+	"peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 px-2.5 text-left text-sm outline-hidden ring-sidebar-ring transition-all ease-snappy hover:bg-sidebar-accent/70 hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent/70 active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-data-[sidebar=menu-action]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent/70 data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-2! [&>span:last-child]:truncate [&>svg]:shrink-0",
 	{
 		defaultVariants: {
 			size: "default",
@@ -325,7 +326,7 @@ const sidebarMenuButtonVariants = cva(
 				sm: "h-7 text-xs",
 			},
 			variant: {
-				default: "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+				default: "hover:bg-sidebar-accent/70 hover:text-sidebar-accent-foreground",
 				outline:
 					"bg-background shadow-[0_0_0_1px_hsl(var(--sidebar-border))] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:shadow-[0_0_0_1px_hsl(var(--sidebar-accent))]",
 			},

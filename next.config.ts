@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
 	},
 	experimental: {
 		browserDebugInfoInTerminal: true,
-		turbopackPersistentCaching: true,
+		turbopackPersistentCachingForDev: true,
 	},
 	typedRoutes: true,
 };

@@ -7,8 +7,10 @@ import { useAtom } from "jotai";
 import { useRouter } from "next/navigation";
 import {
 	type FormEvent,
+	forwardRef,
 	type KeyboardEvent,
 	useCallback,
+	useImperativeHandle,
 	useLayoutEffect,
 	useRef,
 	useState,
@@ -33,6 +35,10 @@ import { attr } from "~/lib/utils";
 const TEXTAREA_MIN_HEIGHT = 24;
 const TEXTAREA_EXPANDED_MIN_HEIGHT = 48;
 
+export interface InputRef {
+	onSubmit: (prompt: string) => void;
+}
+
 interface ChatInputProps {
 	user: User | null;
 	city?: string;
@@ -44,226 +50,246 @@ interface ChatInputProps {
 	hasSubmitted: boolean;
 }
 
-export function ChatInput({
-	city,
-	user,
-	order,
-	chatId,
-	isChat,
-	countryCode,
-	isStreaming,
-	hasSubmitted,
-}: ChatInputProps) {
-	const { replace } = useRouter();
-	const [threadId, setThreadId] = useState(chatId);
+export const ChatInput = forwardRef<InputRef, ChatInputProps>(
+	(
+		{
+			city,
+			user,
+			order,
+			chatId,
+			isChat,
+			countryCode,
+			isStreaming,
+			hasSubmitted,
+		},
+		ref,
+	) => {
+		const { replace } = useRouter();
+		const [threadId, setThreadId] = useState(chatId);
 
-	const inputRef = useRef<HTMLTextAreaElement>(null);
+		const inputRef = useRef<HTMLTextAreaElement>(null);
 
-	const [, showBanner] = useAtom(showBannerAtom);
-	const [prompt, setPrompt] = useState("");
-	const [threshold, setThreshold] = useState<number | null>(null);
-	const [isExpanded, setIsExpanded] = useState(false);
+		const [, showBanner] = useAtom(showBannerAtom);
+		const [prompt, setPrompt] = useState("");
+		const [threshold, setThreshold] = useState<number | null>(null);
+		const [isExpanded, setIsExpanded] = useState(false);
 
-	const isDirty = prompt.trim().length > 0;
+		const isDirty = prompt.trim().length > 0;
 
-	const createChat = useMutation(api.chat.createChat);
+		const createChat = useMutation(api.chat.createChat);
 
-	const sendMessage = useMutation(api.chat.sendMessage).withOptimisticUpdate(
-		optimisticallySendMessage(api.chat.loadChat),
-	);
+		const sendMessage = useMutation(api.chat.sendMessage).withOptimisticUpdate(
+			optimisticallySendMessage(api.chat.loadChat),
+		);
 
-	const abortStreamByOrder = useMutation(api.chat.abortStreamByOrder);
+		const abortStreamByOrder = useMutation(api.chat.abortStreamByOrder);
 
-	const resetHeight = useCallback(() => {
-		if (inputRef.current) {
-			inputRef.current.style.height = "auto";
-			inputRef.current.style.height = "24px";
-		}
-	}, []);
+		const resetHeight = useCallback(() => {
+			if (inputRef.current) {
+				inputRef.current.style.height = "auto";
+				inputRef.current.style.height = "24px";
+			}
+		}, []);
 
-	const handleSubmit = useCallback(
-		async (event: FormEvent<HTMLFormElement>) => {
-			event.preventDefault();
-			if (!isDirty) return;
+		const handleSubmit = useCallback(
+			async (event: FormEvent<HTMLFormElement>) => {
+				event.preventDefault();
+				if (!isDirty) return;
 
-			if (!user) {
-				const { error } = await authClient.signIn.anonymous();
+				if (!user) {
+					const { error } = await authClient.signIn.anonymous();
 
-				if (error) {
-					console.error("Failed to sign in anonymously", error);
+					if (error) {
+						console.error("Failed to sign in anonymously", error);
+						return;
+					}
+				}
+
+				let threadId = chatId;
+
+				if (!chatId) {
+					threadId = await createChat();
+					replace(`/c/${threadId}`);
+					setThreadId(threadId);
+				}
+
+				if (!threadId) {
 					return;
 				}
-			}
 
-			let threadId = chatId;
+				void sendMessage({
+					city,
+					countryCode,
+					prompt,
+					threadId,
+				}).catch((e) => {
+					if (isRateLimitError(e)) {
+						showBanner(true);
+					}
+				});
 
-			if (!chatId) {
-				threadId = await createChat();
-				replace(`/c/${threadId}`);
-				setThreadId(threadId);
-			}
-
-			if (!threadId) {
-				console.error(
-					"Should not happen, chatId is null but no threadId was created",
-				);
-				return;
-			}
-
-			void sendMessage({
+				setPrompt("");
+				resetHeight();
+			},
+			[
+				user,
 				city,
-				countryCode,
+				chatId,
 				prompt,
-				threadId,
-			}).catch((e) => {
-				if (isRateLimitError(e)) {
-					showBanner(true);
-				}
-			});
+				isDirty,
+				replace,
+				showBanner,
+				createChat,
+				countryCode,
+				sendMessage,
+				resetHeight,
+			],
+		);
 
-			setPrompt("");
-			resetHeight();
-		},
-		[
-			user,
-			city,
-			chatId,
-			prompt,
-			isDirty,
-			replace,
-			showBanner,
-			createChat,
-			countryCode,
-			sendMessage,
-			resetHeight,
-		],
-	);
+		// biome-ignore lint/correctness/useExhaustiveDependencies: intentionally depend only on prompt to avoid feedback loops from setState
+		useLayoutEffect(() => {
+			const textarea = inputRef.current;
+			if (!textarea) return;
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: intentionally depend only on prompt to avoid feedback loops from setState
-	useLayoutEffect(() => {
-		const textarea = inputRef.current;
-		if (!textarea) return;
+			textarea.style.height = "auto";
+			const scrollHeight = textarea.scrollHeight;
+			const isOverflowing = scrollHeight > TEXTAREA_MIN_HEIGHT;
 
-		textarea.style.height = "auto";
-		const scrollHeight = textarea.scrollHeight;
-		const isOverflowing = scrollHeight > TEXTAREA_MIN_HEIGHT;
+			let nextIsExpanded = isExpanded;
+			let nextThreshold = threshold;
 
-		let nextIsExpanded = isExpanded;
-		let nextThreshold = threshold;
+			const shouldExpand = isOverflowing && !isExpanded;
 
-		const shouldExpand = isOverflowing && !isExpanded;
+			const shouldCollapse =
+				isExpanded &&
+				!isOverflowing &&
+				(threshold == null || prompt.length < threshold);
 
-		const shouldCollapse =
-			isExpanded &&
-			!isOverflowing &&
-			(threshold == null || prompt.length < threshold);
-
-		if (shouldExpand) {
-			nextIsExpanded = true;
-			if (nextThreshold == null) {
-				nextThreshold = prompt.length;
-			}
-		}
-
-		if (shouldCollapse) {
-			nextThreshold = null;
-			nextIsExpanded = false;
-		}
-
-		const currentHeight = isOverflowing ? scrollHeight : TEXTAREA_MIN_HEIGHT;
-
-		const newHeight = nextIsExpanded
-			? Math.max(currentHeight, TEXTAREA_EXPANDED_MIN_HEIGHT)
-			: currentHeight;
-
-		const newHeightPx = `${newHeight}px`;
-		if (textarea.style.height !== newHeightPx) {
-			textarea.style.height = newHeightPx;
-		}
-
-		if (nextThreshold !== threshold) setThreshold(nextThreshold);
-		if (nextIsExpanded !== isExpanded) setIsExpanded(nextIsExpanded);
-	}, [prompt]);
-
-	const handleChange = useCallback(
-		(event: React.ChangeEvent<HTMLTextAreaElement>) => {
-			setPrompt(event.currentTarget.value);
-		},
-		[],
-	);
-
-	const handleKeyDown = useCallback(
-		(event: KeyboardEvent<HTMLTextAreaElement>) => {
-			const isEnter = event.key === "Enter";
-			const isShiftKey = event.shiftKey;
-			const isComposing = event.nativeEvent.isComposing;
-
-			if (isEnter && !isShiftKey && !isComposing) {
-				event.preventDefault();
-
-				if (prompt.length > 0) {
-					const form = event.currentTarget.form;
-					if (form) form.requestSubmit();
+			if (shouldExpand) {
+				nextIsExpanded = true;
+				if (nextThreshold == null) {
+					nextThreshold = prompt.length;
 				}
 			}
-		},
-		[prompt.length],
-	);
 
-	useAutoFocus({
-		onValueChange: setPrompt,
-		targetRef: inputRef,
-		value: prompt,
-	});
+			if (shouldCollapse) {
+				nextThreshold = null;
+				nextIsExpanded = false;
+			}
 
-	const typewriter = useTypewriter({
-		enabled: !isChat && !isDirty,
-		loop: true,
-		pauseDuration: 2000,
-		texts: [
-			"yourself...",
-			"your app...",
-			"anything...",
-			"your day...",
-			"your life...",
-			"your week...",
-			"your work...",
-			"your goals...",
-			"your business...",
-			"your thoughts...",
-		],
-		typingSpeed: 100,
-	});
+			const currentHeight = isOverflowing ? scrollHeight : TEXTAREA_MIN_HEIGHT;
 
-	const placeholder = isChat
-		? "Ask to post about anything..."
-		: `Ask to post about ${typewriter}`;
+			const newHeight = nextIsExpanded
+				? Math.max(currentHeight, TEXTAREA_EXPANDED_MIN_HEIGHT)
+				: currentHeight;
 
-	return (
-		<PromptInput {...attr("expanded", isExpanded)} onSubmit={handleSubmit}>
-			<PromptInputButton asChild kbd="/" tooltip="Add files and more">
-				<Button
-					className="rounded-full bg-background text-muted-foreground hover:bg-background"
-					size="icon"
-				>
-					<PlusIcon className="size-5" />
-				</Button>
-			</PromptInputButton>
+			const newHeightPx = `${newHeight}px`;
+			if (textarea.style.height !== newHeightPx) {
+				textarea.style.height = newHeightPx;
+			}
 
-			<PromptInputTextarea
-				onChange={handleChange}
-				onKeyDown={handleKeyDown}
-				placeholder={placeholder}
-				ref={inputRef}
-				value={prompt}
-			/>
-			{isStreaming ? (
-				<PromptInputStop
-					onClick={() => threadId && abortStreamByOrder({ order, threadId })}
+			if (nextThreshold !== threshold) setThreshold(nextThreshold);
+			if (nextIsExpanded !== isExpanded) setIsExpanded(nextIsExpanded);
+		}, [prompt]);
+
+		const handleChange = useCallback(
+			(event: React.ChangeEvent<HTMLTextAreaElement>) => {
+				setPrompt(event.currentTarget.value);
+			},
+			[],
+		);
+
+		const handleKeyDown = useCallback(
+			(event: KeyboardEvent<HTMLTextAreaElement>) => {
+				const isEnter = event.key === "Enter";
+				const isShiftKey = event.shiftKey;
+				const isComposing = event.nativeEvent.isComposing;
+
+				if (isEnter && !isShiftKey && !isComposing) {
+					event.preventDefault();
+
+					if (prompt.length > 0) {
+						const form = event.currentTarget.form;
+						if (form) form.requestSubmit();
+					}
+				}
+			},
+			[prompt.length],
+		);
+
+		useAutoFocus({
+			onValueChange: setPrompt,
+			targetRef: inputRef,
+			value: prompt,
+		});
+
+		const typewriter = useTypewriter({
+			enabled: !isChat && !isDirty,
+			loop: true,
+			pauseDuration: 2000,
+			texts: [
+				"yourself...",
+				"your app...",
+				"anything...",
+				"your day...",
+				"your life...",
+				"your week...",
+				"your work...",
+				"your goals...",
+				"your business...",
+				"your thoughts...",
+			],
+			typingSpeed: 100,
+		});
+
+		const placeholder = isChat
+			? "Ask to post about anything..."
+			: `Ask to post about ${typewriter}`;
+
+		useImperativeHandle(
+			ref,
+			() => ({
+				onSubmit: (prompt: string) => {
+					setPrompt(prompt);
+					setTimeout(() => {
+						const form = inputRef.current?.form;
+						if (form) form.requestSubmit();
+					}, 0);
+				},
+			}),
+			[],
+		);
+
+		return (
+			<PromptInput {...attr("expanded", isExpanded)} onSubmit={handleSubmit}>
+				<PromptInputButton asChild kbd="/" tooltip="Add files and more">
+					<Button
+						className="rounded-full bg-background text-muted-foreground hover:bg-background"
+						size="icon"
+					>
+						<PlusIcon className="size-5" />
+					</Button>
+				</PromptInputButton>
+
+				<PromptInputTextarea
+					onChange={handleChange}
+					onKeyDown={handleKeyDown}
+					placeholder={placeholder}
+					ref={inputRef}
+					value={prompt}
 				/>
-			) : (
-				<PromptInputSubmit disabled={!isDirty || hasSubmitted} />
-			)}
-		</PromptInput>
-	);
-}
+				{isStreaming ? (
+					<PromptInputStop
+						onClick={() => threadId && abortStreamByOrder({ order, threadId })}
+					/>
+				) : (
+					<PromptInputSubmit disabled={!isDirty || hasSubmitted} />
+				)}
+			</PromptInput>
+		);
+	},
+);
+
+ChatInput.displayName = "ChatInput";
+
+export default ChatInput;

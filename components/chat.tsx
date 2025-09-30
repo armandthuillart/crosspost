@@ -4,12 +4,12 @@ import { useUIMessages } from "@convex-dev/agent/react";
 import { type Preloaded, usePreloadedQuery } from "convex/react";
 import { LayoutGroup } from "motion/react";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { ParamsOf } from "~/.next/types/routes";
 import { ChatBanner } from "~/components/chat.banner";
 import { ChatGreetings } from "~/components/chat.greetings";
 import { ChatHeader } from "~/components/chat.header";
-import { ChatInput } from "~/components/chat.input";
+import { ChatInput, type InputRef } from "~/components/chat.input";
 import { ChatMessages } from "~/components/chat.messages";
 import { ChatSuggestions } from "~/components/chat.suggestions";
 import { api } from "~/convex/generated/api";
@@ -60,6 +60,12 @@ export function Chat({ city, countryCode, preloadedUser }: ChatProps) {
 		}
 	}, [hasSubmitted]);
 
+	const inputRef = useRef<InputRef>(null);
+
+	const handleSubmit = useCallback((prompt: string) => {
+		inputRef.current?.onSubmit(prompt);
+	}, []);
+
 	return (
 		<main
 			className="group/chat @container/chat relative flex size-full flex-col"
@@ -92,7 +98,7 @@ export function Chat({ city, countryCode, preloadedUser }: ChatProps) {
 									/>
 								)}
 
-								{!isChat && <ChatSuggestions />}
+								{!isChat && <ChatSuggestions onSubmit={handleSubmit} />}
 
 								<ChatInput
 									chatId={chatId}
@@ -102,6 +108,7 @@ export function Chat({ city, countryCode, preloadedUser }: ChatProps) {
 									isChat={isChat}
 									isStreaming={isStreaming}
 									order={order}
+									ref={inputRef}
 									user={user}
 								/>
 							</div>

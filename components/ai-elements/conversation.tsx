@@ -1,7 +1,6 @@
 "use client";
 
 import { useAtom } from "jotai";
-import { AnimatePresence, motion } from "motion/react";
 import {
 	type ComponentProps,
 	memo,
@@ -58,31 +57,21 @@ function PureConversationScrollButton({ className, ...props }: ButtonProps) {
 	}, [scrollToBottom]);
 
 	return (
-		<AnimatePresence>
-			{!isAtBottom && (
-				<motion.div
-					animate={{ opacity: 1 }}
-					className="origin-bottom"
-					exit={{ opacity: 0 }}
-					initial={{ opacity: 0 }}
-					transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
-				>
-					<Button
-						className={cn(
-							"-translate-x-1/2 absolute bottom-12 left-1/2 z-50 rounded-full hover:bg-muted",
-							isVisible && "bottom-32",
-							className,
-						)}
-						onClick={handleScroll}
-						size="icon"
-						variant="secondary"
-						{...props}
-					>
-						<ScrollIcon className="size-5" />
-					</Button>
-				</motion.div>
-			)}
-		</AnimatePresence>
+		!isAtBottom && (
+			<Button
+				className={cn(
+					"-translate-x-1/2 absolute bottom-12 left-1/2 z-50 rounded-full hover:bg-muted",
+					isVisible && "bottom-32",
+					className,
+				)}
+				onClick={handleScroll}
+				size="icon"
+				variant="secondary"
+				{...props}
+			>
+				<ScrollIcon className="size-5" />
+			</Button>
+		)
 	);
 }
 

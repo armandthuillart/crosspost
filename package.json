@@ -2,11 +2,9 @@
 	"dependencies": {
 		"@ai-sdk/gateway": "^1.0.32",
 		"@ai-sdk/openai": "^2.0.42",
-		"@base-ui-components/react": "^1.0.0-beta.3",
 		"@convex-dev/agent": "^0.2.11-alpha.2",
 		"@convex-dev/better-auth": "^0.8.6",
 		"@convex-dev/rate-limiter": "^0.2.13",
-		"@paper-design/shaders-react": "^0.0.55",
 		"@polar-sh/better-auth": "^1.1.7",
 		"@polar-sh/sdk": "^0.35.4",
 		"@vercel/analytics": "^1.5.0",

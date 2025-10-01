@@ -1,16 +1,15 @@
 "use client";
 
 import { useControllableState } from "@radix-ui/react-use-controllable-state";
-import { BrainIcon, ChevronDownIcon } from "lucide-react";
 import type { ComponentProps } from "react";
 import { createContext, memo, useContext, useEffect, useState } from "react";
+import { Response } from "~/components/ai-elements/response";
 import {
 	Collapsible,
 	CollapsibleContent,
 	CollapsibleTrigger,
 } from "~/components/ui/collapsible";
 import { cn } from "~/lib/utils";
-import { Response } from "./response";
 
 type ReasoningContextValue = {
 	isStreaming: boolean;
@@ -136,14 +135,14 @@ export const ReasoningTrigger = memo(
 			>
 				{children ?? (
 					<>
-						<BrainIcon className="size-4" />
+						{/* <BrainIcon className="size-4" /> */}
 						{getThinkingMessage(isStreaming, duration)}
-						<ChevronDownIcon
+						{/* <ChevronDownIcon
 							className={cn(
 								"size-4 transition-transform",
 								isOpen ? "rotate-180" : "rotate-0",
 							)}
-						/>
+						/> */}
 					</>
 				)}
 			</CollapsibleTrigger>

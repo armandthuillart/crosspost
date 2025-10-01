@@ -13,14 +13,13 @@ import {
 import { cn } from "~/lib/utils";
 
 function PromptInput({
-	children,
 	className,
+	children,
 	...props
 }: HTMLMotionProps<"form">) {
 	return (
 		<motion.form
-			className="group/prompt-input overflow-hidden bg-muted transition-colors ease-snappy"
-			layout
+			className="group/prompt-input bg-muted"
 			layoutId="prompt-input-outer"
 			style={{ borderRadius: 28 }}
 			transition={{ layout: { duration: 0.5, ease: [0.32, 0.72, 0, 1] } }}

@@ -261,7 +261,7 @@ export const ChatInput = forwardRef<InputRef, ChatInputProps>(
 		);
 
 		return (
-			<PromptInput {...attr("expanded", isExpanded)} onSubmit={handleSubmit}>
+			<PromptInput onSubmit={handleSubmit} {...attr("expanded", isExpanded)}>
 				<PromptInputButton asChild kbd="/" tooltip="Add files and more">
 					<Button
 						className="rounded-full bg-background text-muted-foreground hover:bg-background"

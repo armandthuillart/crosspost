@@ -76,6 +76,7 @@ export function ChatMessages({
 						const fromUser = message.role === "user";
 						const hasCopied = isCopied === message.id;
 						const isPending = message.status === "pending";
+						const isStreaming = message.status === "streaming";
 
 						return (
 							<Message
@@ -93,6 +94,7 @@ export function ChatMessages({
 								<MessageContent>
 									{message.parts.map((part, i) => (
 										<MessagePart
+											isStreaming={isStreaming}
 											key={`${message.id}-${i}`}
 											part={part}
 											role={message.role}

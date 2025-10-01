@@ -1,14 +1,14 @@
 import type { UIMessage } from "@convex-dev/agent/react";
 import type { InferUITool, UIDataTypes } from "ai";
 import type { z } from "zod/v3";
-import type { draft, rename } from "~/convex/tools";
+import type { draftPost, renameChat } from "~/convex/tools";
 import type { draftSchema, platformSchema, tierSchema } from "~/lib/schema";
 
 export type Tier = z.infer<typeof tierSchema>;
 
 export type Draft = z.infer<typeof draftSchema>;
 
-export type UIDraft = InferUITool<typeof draft>;
+export type UIDraft = InferUITool<typeof draftPost>;
 
 export type Platform = z.infer<typeof platformSchema>;
 
@@ -23,8 +23,8 @@ export interface User {
 }
 
 type MyUITools = {
-	draft: UIDraft;
-	rename: InferUITool<typeof rename>;
+	"draft-post": UIDraft;
+	"rename-chat": InferUITool<typeof renameChat>;
 };
 
 export type MyMessage = UIMessage<unknown, UIDataTypes, MyUITools>;

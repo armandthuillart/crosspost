@@ -9,11 +9,11 @@ import { api } from "~/convex/generated/api";
 import { getToken } from "~/lib/auth-server";
 import type { User } from "~/lib/types";
 
-export default async function ChatLayout({
-	children,
-}: {
+interface ChatLayoutProps {
 	children: ReactNode;
-}) {
+}
+
+export default async function ChatLayout({ children }: ChatLayoutProps) {
 	const [token, cookieStore] = await Promise.all([getToken(), cookies()]);
 
 	let user: User | null = null;
@@ -22,30 +22,25 @@ export default async function ChatLayout({
 		user = await fetchQuery(api.auth.getUser, {}, { token });
 	}
 
-	const sidebar = cookieStore.get("sidebar")?.value;
 	const isBack = cookieStore.has("remember");
-
+	const sidebar = cookieStore.get("sidebar")?.value;
 	const isAnonymous = user && user.tier === "anonymous";
 
-	let preloadedChats: Preloaded<typeof api.chat.listChats> | null = null;
-
-	if (!isAnonymous) {
-		preloadedChats = await preloadQuery(
-			api.chat.listChats,
-			{
-				paginationOpts: { cursor: null, numItems: 10 },
-			},
-			{ token },
-		);
+	if (!user || isAnonymous) {
+		return children;
 	}
 
-	return !isAnonymous ? (
+	const preloadedChats = await preloadQuery(
+		api.chat.listChats,
+		{ paginationOpts: { cursor: null, numItems: 10 } },
+		{ token },
+	);
+
+	return (
 		<SidebarProvider defaultOpen={sidebar === "true"}>
-			<AppSidebar preloadedChats={preloadedChats!} />
+			<AppSidebar preloadedChats={preloadedChats} />
 			{children}
 			{isBack && <WelcomeBack />}
 		</SidebarProvider>
-	) : (
-		children
 	);
 }

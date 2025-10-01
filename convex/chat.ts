@@ -90,16 +90,16 @@ export const streamChat = internalAction({
 		ctx,
 		{ city, userId, threadId, countryCode, promptMessageId },
 	) => {
-		const { consumeStream } = await agent.streamText(
+		const { consumeStream, toUIMessageStreamResponse } = await agent.streamText(
 			ctx,
 			{ threadId, userId },
 			{
 				promptMessageId,
 				system: AGENT_PROMPT({ city, countryCode }),
 				tools: {
-					draft_post: draftPost,
-					rename_chat: renameChat,
-					web_search: openai.tools.webSearch({
+					"draft-post": draftPost,
+					"rename-chat": renameChat,
+					"web-search": openai.tools.webSearch({
 						searchContextSize: "medium",
 						...(city &&
 							countryCode && {

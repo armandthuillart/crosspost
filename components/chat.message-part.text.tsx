@@ -9,11 +9,12 @@ import { attr } from "~/lib/utils";
 interface TextProps {
 	part: TextUIPart;
 	role: UIMessage["role"];
+	isStreaming: boolean;
 }
 
-export function Text({ part, role }: TextProps) {
+export function Text({ part, role, isStreaming }: TextProps) {
 	const [visibleText] = useSmoothText(part.text, {
-		startStreaming: part.state === "streaming",
+		startStreaming: isStreaming,
 	});
 
 	if (role === "user") {

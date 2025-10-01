@@ -20,6 +20,7 @@ export const agent = new Agent(components.agent, {
 	providerOptions: {
 		openai: {
 			reasoningEffort: "medium",
+			reasoningSummary: "detailed",
 			textVerbosity: "medium",
 		} satisfies OpenAIResponsesProviderOptions,
 	},

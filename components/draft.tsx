@@ -2,7 +2,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import type { MyMessage } from "~/lib/types";
 
 interface DraftProps {
-	part: MyMessage["parts"][number] & { type: "tool-draft" };
+	part: MyMessage["parts"][number] & { type: "tool-draft-post" };
 }
 
 export function Draft({ part }: DraftProps) {

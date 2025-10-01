@@ -37,6 +37,8 @@ export function Chat({ city, countryCode, preloadedUser }: ChatProps) {
 		stream: true,
 	});
 
+	console.log(messages);
+
 	const isPro = user?.tier === "pro";
 	const order = messages.find((m) => m.status === "streaming")?.order ?? 0;
 	const isFree = user?.tier === "free";

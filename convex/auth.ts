@@ -72,6 +72,11 @@ export const createAuth = (
 					newUser: { user: newUser },
 					anonymousUser: { user: anonymousUser },
 				}) => {
+					console.log("onLinkAccount", {
+						anonymousUser,
+						newUser,
+					});
+
 					const paginated = await polarClient.customers.list({
 						email: newUser.email,
 						limit: 1,
@@ -112,6 +117,11 @@ export const createAuth = (
 						onCustomerStateChanged: async ({
 							data: { externalId, activeSubscriptions },
 						}) => {
+							console.log("onCustomerStateChanged", {
+								activeSubscriptions,
+								externalId,
+							});
+
 							const isPro = activeSubscriptions.some(
 								(s) => s.status === "active",
 							);
@@ -171,7 +181,7 @@ export const getUser = query({
 		const tainted: User | null = user
 			? {
 					email: user.email,
-					firstName: user.firstName ?? "",
+					firstName: user.firstName!,
 					id: user._id,
 					lastName: user.lastName ?? undefined,
 					tier: user.tier as Tier,

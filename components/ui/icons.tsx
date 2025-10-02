@@ -456,3 +456,122 @@ export const TrashIcon = (props: SVGProps<SVGSVGElement>) => {
 		</svg>
 	);
 };
+
+export const AssistantsIcon = (props: SVGProps<SVGSVGElement>) => {
+	return (
+		<svg
+			aria-hidden="true"
+			fill="none"
+			stroke="currentColor"
+			viewBox="0 0 24 24"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<path
+				d="M5.44505 14.7749C5.60832 14.4695 5.88358 14.2462 6.22227 14.1851C6.56095 14.124 6.89427 14.2375 7.14978 14.4674M11.2356 17.7768C10.909 18.3876 10.3585 18.8342 9.68113 18.9564C9.00377 19.0786 8.33713 18.8516 7.82611 18.3919M10.5592 13.8523C10.7225 13.5469 10.9978 13.3235 11.3365 13.2624C11.6751 13.2013 12.0085 13.3149 12.264 13.5447M13.0697 7.64205C11.9191 8.7281 10.171 9.59181 8.13072 9.95991C6.09043 10.328 4.15906 10.1281 2.7148 9.51019C2.62237 9.47065 2.52281 9.45715 2.42629 9.47456C2.14172 9.5259 1.95507 9.82308 2.0094 10.1383L2.94728 15.5805C3.64672 19.6391 7.04654 21.5881 8.62355 22.2854C9.14604 22.5165 9.72177 22.546 10.2823 22.4449C10.8429 22.3437 11.374 22.1145 11.7877 21.7146C13.0366 20.5074 15.5798 17.4863 14.8804 13.4276L13.9425 7.98545C13.8882 7.6702 13.6135 7.45627 13.3289 7.50761C13.2324 7.52502 13.1433 7.57255 13.0697 7.64205Z"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="2"
+			/>
+			<path
+				d="M14.3157 17.5C14.6792 17.4998 15.039 17.4347 15.3764 17.2854C16.9535 16.5881 20.3533 14.6391 21.0527 10.5805L21.9906 5.13832C22.0449 4.82308 21.8583 4.5259 21.5737 4.47456C21.4772 4.45715 21.3776 4.47065 21.2852 4.51019C19.8409 5.1281 17.9096 5.328 15.8693 4.95991C13.829 4.59181 12.0809 3.7281 10.9303 2.64205C10.8567 2.57255 10.7676 2.52502 10.6711 2.50761C10.3865 2.45627 10.1118 2.6702 10.0575 2.98545L9.1196 8.42763C9.0374 8.90465 8.99998 9.36734 9 9.81444"
+				strokeLinejoin="round"
+				strokeWidth="2"
+			/>
+		</svg>
+	);
+};
+
+export const LifeBuoyIcon = (props: SVGProps<SVGSVGElement>) => {
+	return (
+		<svg
+			aria-hidden="true"
+			fill="none"
+			stroke="currentColor"
+			strokeLinecap="round"
+			strokeLinejoin="round"
+			strokeWidth="2"
+			viewBox="0 0 24 24"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<circle cx="12" cy="12" r="10" />
+			<path d="m4.93 4.93 4.24 4.24" />
+			<path d="m14.83 9.17 4.24-4.24" />
+			<path d="m14.83 14.83 4.24 4.24" />
+			<path d="m9.17 14.83-4.24 4.24" />
+			<circle cx="12" cy="12" r="4" />
+		</svg>
+	);
+};
+
+export const SignatureIcon = (props: SVGProps<SVGSVGElement>) => {
+	return (
+		<svg
+			aria-hidden="true"
+			fill="none"
+			stroke="currentColor"
+			viewBox="0 0 24 24"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<path
+				d="M22 12.6344C18 16.1465 17.4279 10.621 15.3496 11.0165C13 11.4637 11.5 16.4445 13 16.4445C14.5 16.4445 12.5 10.5 10.5 12.5556C8.5 14.6111 7.85936 17.2946 6.23526 15.3025C-1.5 5.81446 4.99998 -1.14994 8.16322 3.45685C10.1653 6.37256 6.5 16.9769 2 22"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="2"
+			/>
+			<path
+				d="M9 21H19"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="2"
+			/>
+		</svg>
+	);
+};
+
+export const KeyboardKeyIcon = (props: SVGProps<SVGSVGElement>) => {
+	return (
+		<svg
+			aria-hidden="true"
+			fill="none"
+			stroke="currentColor"
+			viewBox="0 0 24 24"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<path
+				d="M8.12901 11.5977L12.128 6.20791C12.4407 5.78638 13.027 6.04874 13.027 6.61024V10.7819C13.027 11.1183 13.2569 11.391 13.5405 11.391H15.4855C15.9273 11.391 16.1629 12.0089 15.871 12.4023L11.872 17.7921C11.5593 18.2136 10.973 17.9513 10.973 17.3897V13.2181C10.973 12.8817 10.7431 12.609 10.4595 12.609H8.51449C8.07263 12.609 7.83711 11.9911 8.12901 11.5977Z"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="1.5"
+			/>
+			<path
+				d="M2.5 12C2.5 7.52166 2.5 5.28249 3.89124 3.89124C5.28249 2.5 7.52166 2.5 12 2.5C16.4783 2.5 18.7175 2.5 20.1088 3.89124C21.5 5.28249 21.5 7.52166 21.5 12C21.5 16.4783 21.5 18.7175 20.1088 20.1088C18.7175 21.5 16.4783 21.5 12 21.5C7.52166 21.5 5.28249 21.5 3.89124 20.1088C2.5 18.7175 2.5 16.4783 2.5 12Z"
+				strokeWidth="2"
+			/>
+		</svg>
+	);
+};
+
+export const ChevronRightIcon = (props: SVGProps<SVGSVGElement>) => {
+	return (
+		<svg
+			aria-hidden="true"
+			fill="none"
+			stroke="currentColor"
+			viewBox="0 0 24 24"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<path
+				d="M9.00005 6L15 12L9 18"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeMiterlimit="16"
+				strokeWidth="2"
+			/>
+		</svg>
+	);
+};

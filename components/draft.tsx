@@ -2,25 +2,52 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import type { MyMessage } from "~/lib/types";
 
 interface DraftProps {
-	part: MyMessage["parts"][number] & { type: "tool-draft-post" };
+	part: MyMessage["parts"][number] & { type: "tool-get-draft" };
 }
 
 export function Draft({ part }: DraftProps) {
-	if (!part.input?.versions) return null;
+	const { state, input } = part;
 
-	return (
+	if (state === "output-available") {
+		if (!input?.versions) {
+			return null;
+		}
+
+		return (
+			<Tabs className="not-first:mt-4 mb-4 w-full">
+				<TabsList>
+					{Object.entries(part.input.versions).map(([platform]) => (
+						<TabsTrigger disabled key={platform} value={platform}>
+							{platform}
+						</TabsTrigger>
+					))}
+				</TabsList>
+				{Object.entries(part.input.versions).map(([platform]) => (
+					<TabsContent key={platform} value={platform}>
+						{part.input.versions[platform as keyof typeof part.input.versions]}
+					</TabsContent>
+				))}
+			</Tabs>
+		);
+	}
+
+	return state === "input-available" ? (
 		<Tabs className="not-first:mt-4 mb-4 w-full">
+			<div>{input.title}</div>
+
 			<TabsList>
-				{Object.entries(part.input.versions).map(([platform, version]) => (
+				{Object.entries(input.versions).map(([platform]) => (
 					<TabsTrigger key={platform} value={platform}>
 						{platform}
 					</TabsTrigger>
 				))}
 			</TabsList>
-			<TabsContent value="threads">Threads</TabsContent>
-			<TabsContent value="linkedin">Linkedin</TabsContent>
-			<TabsContent value="bluesky">Bluesky</TabsContent>
-			<TabsContent value="x">X</TabsContent>
+
+			{Object.entries(input.versions).map(([platform]) => (
+				<TabsContent key={platform} value={platform}>
+					{input.versions[platform as keyof typeof input.versions]}
+				</TabsContent>
+			))}
 		</Tabs>
-	);
+	) : null;
 }

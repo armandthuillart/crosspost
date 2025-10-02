@@ -2,11 +2,16 @@ import { fetchQuery, preloadQuery } from "convex/nextjs";
 import { headers } from "next/headers";
 import { Chat } from "~/components/chat";
 import { api } from "~/convex/generated/api";
-import { getToken } from "~/lib/auth-server";
+import { getAuthToken } from "~/lib/auth-server";
 
 export default async function Page({ params }: PageProps<"/c/[chatId]">) {
-	const token = await getToken();
-	const preloadedUser = await preloadQuery(api.auth.getUser, {}, { token });
+	const authToken = await getAuthToken();
+
+	const preloadedUser = await preloadQuery(
+		api.auth.getUser,
+		{},
+		{ token: authToken },
+	);
 
 	const { get } = await headers();
 	const city = get("x-user-city") ?? undefined;
@@ -18,7 +23,7 @@ export default async function Page({ params }: PageProps<"/c/[chatId]">) {
 	const preloadedChat = await fetchQuery(
 		api.chat.loadChat,
 		{ paginationOpts: { cursor: null, numItems: 10 }, threadId: chatId },
-		{ token },
+		{ token: authToken },
 	);
 
 	return (

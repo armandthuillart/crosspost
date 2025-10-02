@@ -47,7 +47,6 @@
 	--color-avatar-foreground: var(--avatar-foreground);
 }
 
-
 :root {
 	--background: oklch(100% 0 0);
   --foreground: oklch(15% 0 0);

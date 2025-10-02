@@ -38,8 +38,11 @@ export function Chat({
 		{ initialNumItems: 10, stream: true },
 	);
 
+	
 	const messages = status === "LoadingFirstPage" ? initialMessages : results;
-
+	
+	console.log("messages", messages);
+	
 	const isPro = user?.tier === "pro";
 	const order = messages.find((m) => m.status === "streaming")?.order ?? 0;
 	const isFree = user?.tier === "free";

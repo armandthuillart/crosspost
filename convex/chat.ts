@@ -1,4 +1,5 @@
-import { anthropic } from "@ai-sdk/anthropic";
+import { type AnthropicProviderOptions, anthropic } from "@ai-sdk/anthropic";
+import type { GatewayProviderOptions } from "@ai-sdk/gateway";
 import {
 	abortStream,
 	createThread,
@@ -71,6 +72,7 @@ export const sendMessage = mutation({
 		await ctx.scheduler.runAfter(0, internal.chat.streamChat, {
 			city,
 			country,
+			isPro: user.tier === "pro",
 			promptMessageId,
 			region,
 			threadId,
@@ -84,6 +86,7 @@ export const streamChat = internalAction({
 	args: {
 		city: v.optional(v.string()),
 		country: v.optional(v.string()),
+		isPro: v.boolean(),
 		promptMessageId: v.string(),
 		region: v.optional(v.string()),
 		threadId: v.string(),
@@ -91,13 +94,25 @@ export const streamChat = internalAction({
 	},
 	handler: async (
 		ctx,
-		{ city, userId, threadId, country, region, promptMessageId },
+		{ isPro, city, userId, threadId, country, region, promptMessageId },
 	) => {
 		const { consumeStream } = await chatAgent.streamText(
 			ctx,
 			{ threadId, userId },
 			{
 				promptMessageId,
+				providerOptions: {
+					anthropic: {
+						thinking: {
+							budgetTokens: 0.001,
+							type: isPro ? "enabled" : "disabled",
+						},
+					} as AnthropicProviderOptions,
+					gateway: {
+						only: ["vertex", "anthropic"],
+						order: ["anthropic", "vertex"],
+					} as GatewayProviderOptions,
+				},
 				system: CHAT_PROMPT({ city, country }),
 				tools: {
 					"get-draft": getDraft,

@@ -14,7 +14,7 @@ export const chatAgent = new Agent(components.agent, {
 		},
 		searchOtherThreads: true,
 	},
-	languageModel: "anthropic/claude-sonnet-4" as GatewayModelId,
+	languageModel: "anthropic/claude-sonnet-4.5" satisfies GatewayModelId,
 	name: "chat",
 	stopWhen: stepCountIs(3),
 	textEmbeddingModel: "mistral/mistral-embed",

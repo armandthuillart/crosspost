@@ -5,7 +5,7 @@ import { AppSidebar } from "~/components/app.sidebar";
 import { SidebarProvider } from "~/components/ui/sidebar";
 import { WelcomeBack } from "~/components/welcome-back";
 import { api } from "~/convex/generated/api";
-import { getToken } from "~/lib/auth-server";
+import { getAuthToken } from "~/lib/auth-server";
 import type { User } from "~/lib/types";
 
 interface ChatLayoutProps {
@@ -13,33 +13,34 @@ interface ChatLayoutProps {
 }
 
 export default async function ChatLayout({ children }: ChatLayoutProps) {
-	const [token, cookieStore] = await Promise.all([getToken(), cookies()]);
+	const [authToken, cookieStore] = await Promise.all([
+		getAuthToken(),
+		cookies(),
+	]);
 
 	let user: User | null = null;
 
-	if (token) {
-		user = await fetchQuery(api.auth.getUser, {}, { token });
+	if (authToken) {
+		user = await fetchQuery(api.auth.getUser, {}, { token: authToken });
 	}
 
 	const isBack = cookieStore.has("remember");
 	const sidebar = cookieStore.get("sidebar")?.value;
 	const isAnonymous = user && user.tier === "anonymous";
 
-	let preloadedChats = null;
-
-	if (user && !isAnonymous && token) {
-		preloadedChats = await preloadQuery(
-			api.chat.listChats,
-			{ paginationOpts: { cursor: null, numItems: 10 } },
-			{ token },
-		);
+	if (!user || isAnonymous) {
+		return children;
 	}
+
+	const preloadedChats = await preloadQuery(
+		api.chat.listChats,
+		{ paginationOpts: { cursor: null, numItems: 10 } },
+		{ token: authToken },
+	);
 
 	return (
 		<SidebarProvider defaultOpen={sidebar === "true"}>
-			{user && !isAnonymous && preloadedChats && (
-				<AppSidebar preloadedChats={preloadedChats} />
-			)}
+			<AppSidebar preloadedChats={preloadedChats} />
 			{children}
 			{isBack && <WelcomeBack />}
 		</SidebarProvider>

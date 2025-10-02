@@ -16,20 +16,17 @@ import type { Tier, User } from "~/lib/types";
 
 const siteUrl = process.env.SITE_URL;
 
-export const {
-	adapter,
-	getHeaders,
-	triggersApi,
-	registerRoutes,
-	safeGetAuthUser,
-} = createClient<DataModel, typeof authSchema>(components.betterAuth, {
-	local: {
-		schema: authSchema,
+export const authComponent = createClient<DataModel, typeof authSchema>(
+	components.betterAuth,
+	{
+		local: {
+			schema: authSchema,
+		},
+		verbose: false,
 	},
-	verbose: false,
-});
+);
 
-export const { onCreate, onUpdate, onDelete } = triggersApi();
+export const { onCreate, onUpdate, onDelete } = authComponent.triggersApi();
 
 export const createAuth = (
 	ctx: GenericCtx<DataModel>,
@@ -42,7 +39,7 @@ export const createAuth = (
 			},
 		},
 		baseURL: siteUrl,
-		database: adapter(ctx),
+		database: authComponent.adapter(ctx),
 		databaseHooks: {
 			user: {
 				create: {
@@ -72,11 +69,6 @@ export const createAuth = (
 					newUser: { user: newUser },
 					anonymousUser: { user: anonymousUser },
 				}) => {
-					console.log("onLinkAccount", {
-						anonymousUser,
-						newUser,
-					});
-
 					const paginated = await polarClient.customers.list({
 						email: newUser.email,
 						limit: 1,
@@ -177,7 +169,7 @@ export const createAuth = (
 export const getUser = query({
 	args: {},
 	handler: async (ctx): Promise<User | null> => {
-		const user = await safeGetAuthUser(ctx);
+		const user = await authComponent.safeGetAuthUser(ctx);
 
 		const tainted: User | null = user
 			? {

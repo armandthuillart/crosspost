@@ -8,6 +8,7 @@ import { ConvexClientProvider } from "~/app/convex-client-provider";
 import { ThemeProvider } from "~/app/theme-provider";
 import { appName } from "~/lib/constants";
 import { cn } from "~/lib/utils";
+import "default-passive-events";
 
 const inter = Inter({ subsets: ["latin"] });
 

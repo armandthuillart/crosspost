@@ -2,7 +2,7 @@
 	"dependencies": {
 		"@ai-sdk/anthropic": "^2.0.23",
 		"@ai-sdk/gateway": "^1.0.32",
-		"@convex-dev/agent": "^0.2.10",
+		"@convex-dev/agent": "^0.2.11-alpha.2",
 		"@convex-dev/better-auth": "^0.8.8",
 		"@convex-dev/rate-limiter": "^0.2.13",
 		"@polar-sh/better-auth": "^1.1.7",

@@ -14,9 +14,9 @@ export default async function Page() {
 	);
 
 	const { get } = await headers();
-	const city = get("x-user-city") ?? undefined;
-	const region = get("x-user-region") ?? undefined;
-	const country = get("x-user-country") ?? undefined;
+	const city = get("x-user-city") ? decodeURIComponent(get("x-user-city")!) : undefined;
+	const region = get("x-user-region") ? decodeURIComponent(get("x-user-region")!) : undefined;
+	const country = get("x-user-country") ? decodeURIComponent(get("x-user-country")!) : undefined;
 
 	return (
 		<Chat

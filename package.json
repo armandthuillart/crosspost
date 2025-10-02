@@ -17,6 +17,7 @@
 		"convex": "^1.27.3",
 		"convex-helpers": "^0.1.104",
 		"date-fns": "^4.1.0",
+		"default-passive-events": "^4.0.0",
 		"i18n-iso-countries": "^7.14.0",
 		"jotai": "^2.15.0",
 		"motion": "^12.23.22",

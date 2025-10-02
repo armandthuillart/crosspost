@@ -1,6 +1,6 @@
 "use client";
 
-import { useUIMessages } from "@convex-dev/agent/react";
+import { type UIMessage, useUIMessages } from "@convex-dev/agent/react";
 import { type Preloaded, usePreloadedQuery } from "convex/react";
 import { LayoutGroup } from "motion/react";
 import { useParams } from "next/navigation";
@@ -17,27 +17,28 @@ import type { MyMessage } from "~/lib/types";
 import { attr } from "~/lib/utils";
 
 interface ChatProps {
-	city?: string;
-	countryCode?: string;
+	userLocation: { city?: string; country?: string; region?: string };
 	preloadedUser: Preloaded<typeof api.auth.getUser>;
+	initialMessages: UIMessage[];
 }
 
-export function Chat({ city, countryCode, preloadedUser }: ChatProps) {
+export function Chat({
+	initialMessages,
+	preloadedUser,
+	userLocation,
+}: ChatProps) {
 	const user = usePreloadedQuery(preloadedUser);
 
 	const { chatId } = useParams<ParamsOf<"/c/[chatId]">>();
 	const isChat = Boolean(chatId);
 
-	const {
-		status,
-		results: messages,
-		loadMore,
-	} = useUIMessages(api.chat.loadChat, chatId ? { threadId: chatId } : "skip", {
-		initialNumItems: 10,
-		stream: true,
-	});
+	const { status, results, loadMore } = useUIMessages(
+		api.chat.loadChat,
+		chatId ? { threadId: chatId } : "skip",
+		{ initialNumItems: 10, stream: true },
+	);
 
-	console.log(messages);
+	const messages = status === "LoadingFirstPage" ? initialMessages : results;
 
 	const isPro = user?.tier === "pro";
 	const order = messages.find((m) => m.status === "streaming")?.order ?? 0;
@@ -104,14 +105,13 @@ export function Chat({ city, countryCode, preloadedUser }: ChatProps) {
 
 								<ChatInput
 									chatId={chatId}
-									city={city}
-									countryCode={countryCode}
 									hasSubmitted={hasSubmitted}
 									isChat={isChat}
 									isStreaming={isStreaming}
 									order={order}
 									ref={inputRef}
 									user={user}
+									userLocation={userLocation}
 								/>
 							</div>
 						</LayoutGroup>

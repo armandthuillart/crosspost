@@ -1,4 +1,4 @@
-import { openai } from "@ai-sdk/openai";
+import { anthropic } from "@ai-sdk/anthropic";
 import {
 	abortStream,
 	createThread,
@@ -13,14 +13,14 @@ import {
 import { MINUTE } from "@convex-dev/rate-limiter";
 import { type PaginationResult, paginationOptsValidator } from "convex/server";
 import { v } from "convex/values";
-import { agent } from "~/convex/agents";
+import { chatAgent } from "~/convex/agents";
 import { api, components, internal } from "~/convex/generated/api";
 import { internalAction, mutation, query } from "~/convex/generated/server";
 import { rateLimiter } from "~/convex/rateLimiting";
-import { draftPost, renameChat } from "~/convex/tools";
+import { getDraft, renameChat } from "~/convex/tools";
 import { verifyOwnership } from "~/convex/utils";
 import { ChatSDKError } from "~/lib/errors";
-import { AGENT_PROMPT } from "~/lib/prompts";
+import { CHAT_PROMPT } from "~/lib/prompts";
 
 export const createChat = mutation({
 	args: {},
@@ -42,11 +42,12 @@ export const createChat = mutation({
 export const sendMessage = mutation({
 	args: {
 		city: v.optional(v.string()),
-		countryCode: v.optional(v.string()),
+		country: v.optional(v.string()),
 		prompt: v.string(),
+		region: v.optional(v.string()),
 		threadId: v.string(),
 	},
-	handler: async (ctx, { city, prompt, threadId, countryCode }) => {
+	handler: async (ctx, { city, prompt, threadId, country, region }) => {
 		const user = await verifyOwnership(ctx, threadId);
 
 		if (!user) {
@@ -60,7 +61,7 @@ export const sendMessage = mutation({
 			throws: true,
 		});
 
-		const { messageId: promptMessageId } = await agent.saveMessage(ctx, {
+		const { messageId: promptMessageId } = await chatAgent.saveMessage(ctx, {
 			prompt,
 			skipEmbeddings: true,
 			threadId,
@@ -69,8 +70,9 @@ export const sendMessage = mutation({
 
 		await ctx.scheduler.runAfter(0, internal.chat.streamChat, {
 			city,
-			countryCode,
+			country,
 			promptMessageId,
+			region,
 			threadId,
 			userId,
 		});
@@ -81,34 +83,33 @@ export const sendMessage = mutation({
 export const streamChat = internalAction({
 	args: {
 		city: v.optional(v.string()),
-		countryCode: v.optional(v.string()),
+		country: v.optional(v.string()),
 		promptMessageId: v.string(),
+		region: v.optional(v.string()),
 		threadId: v.string(),
 		userId: v.string(),
 	},
 	handler: async (
 		ctx,
-		{ city, userId, threadId, countryCode, promptMessageId },
+		{ city, userId, threadId, country, region, promptMessageId },
 	) => {
-		const { consumeStream, toUIMessageStreamResponse } = await agent.streamText(
+		const { consumeStream } = await chatAgent.streamText(
 			ctx,
 			{ threadId, userId },
 			{
 				promptMessageId,
-				system: AGENT_PROMPT({ city, countryCode }),
+				system: CHAT_PROMPT({ city, country }),
 				tools: {
-					"draft-post": draftPost,
+					"get-draft": getDraft,
 					"rename-chat": renameChat,
-					"web-search": openai.tools.webSearch({
-						searchContextSize: "medium",
-						...(city &&
-							countryCode && {
-								userLocation: {
-									city,
-									country: countryCode,
-									type: "approximate",
-								},
-							}),
+					"web-search": anthropic.tools.webSearch_20250305({
+						maxUses: 5,
+						userLocation: {
+							city,
+							country,
+							region,
+							type: "approximate",
+						},
 					}),
 				},
 			},
@@ -226,7 +227,7 @@ export const migrateChats = mutation({
 		const wasChattingRecently = createdAt && createdAt > now - MINUTE * 5;
 
 		if (wasChattingRecently) {
-			await agent.updateThreadMetadata(ctx, {
+			await chatAgent.updateThreadMetadata(ctx, {
 				patch: { userId: newUserId },
 				threadId,
 			});

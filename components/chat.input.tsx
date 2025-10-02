@@ -41,27 +41,18 @@ export interface InputRef {
 
 interface ChatInputProps {
 	user: User | null;
-	city?: string;
 	order: number;
 	isChat: boolean;
 	chatId: string | null;
 	countryCode?: string;
 	isStreaming: boolean;
 	hasSubmitted: boolean;
+	userLocation: { city?: string; country?: string; region?: string };
 }
 
 export const ChatInput = forwardRef<InputRef, ChatInputProps>(
 	(
-		{
-			city,
-			user,
-			order,
-			chatId,
-			isChat,
-			countryCode,
-			isStreaming,
-			hasSubmitted,
-		},
+		{ user, order, chatId, isChat, isStreaming, userLocation, hasSubmitted },
 		ref,
 	) => {
 		const { replace } = useRouter();
@@ -118,9 +109,10 @@ export const ChatInput = forwardRef<InputRef, ChatInputProps>(
 				}
 
 				void sendMessage({
-					city,
-					countryCode,
+					city: userLocation.city,
+					country: userLocation.country,
 					prompt,
+					region: userLocation.region,
 					threadId,
 				}).catch((e) => {
 					if (isRateLimitError(e)) {
@@ -133,16 +125,15 @@ export const ChatInput = forwardRef<InputRef, ChatInputProps>(
 			},
 			[
 				user,
-				city,
 				chatId,
 				prompt,
 				isDirty,
 				replace,
 				showBanner,
 				createChat,
-				countryCode,
 				sendMessage,
 				resetHeight,
+				userLocation,
 			],
 		);
 

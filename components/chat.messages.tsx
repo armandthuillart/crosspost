@@ -1,6 +1,5 @@
 "use client";
 
-import type { UIMessage } from "@convex-dev/agent/react";
 import { AnimatePresence } from "motion/react";
 import { useEffect, useState } from "react";
 import { Action, Actions } from "~/components/ai-elements/actions";
@@ -16,6 +15,13 @@ import { CopyIcon, TickIcon } from "~/components/ui/icons";
 import { ShiningText } from "~/components/ui/shining-text";
 import type { MyMessage } from "~/lib/types";
 import { attr } from "~/lib/utils";
+
+type ReasoningPart = Extract<MyMessage["parts"][number], { type: "reasoning" }>;
+
+const isReasoningPart = (
+	part: MyMessage["parts"][number],
+): part is ReasoningPart =>
+	part.type === "reasoning" && Boolean(part.text?.trim().length);
 
 interface ChatMessagesProps {
 	messages: Array<MyMessage>;
@@ -35,7 +41,11 @@ export function ChatMessages({
 	const [isCopied, setIsCopied] = useState<string | null>(null);
 	const [isThinking, setIsThinking] = useState(false);
 
-	async function handleCopy(message: UIMessage) {
+	const hasActiveAssistantMessage = messages.some(
+		({ role, status }) => role === "assistant" && status !== "pending",
+	);
+
+	async function handleCopy(message: MyMessage) {
 		await navigator.clipboard.writeText(message.text);
 		setIsCopied(message.id);
 
@@ -44,23 +54,17 @@ export function ChatMessages({
 		}, 2000);
 	}
 
-	const isLast = messages.at(-1)?.role === "user";
-
-	function handleUserMessageAnimationComplete() {
-		if (isLast && hasSentMessage) {
+	function handleUserMessageAnimationComplete(isLastMessage: boolean) {
+		if (isLastMessage && hasSentMessage) {
 			setIsThinking(true);
 		}
 	}
 
 	useEffect(() => {
-		const condition = messages.some(
-			({ role, status }) => role === "assistant" && status === "streaming",
-		);
-
-		if (condition) {
+		if (hasActiveAssistantMessage || messages.length === 0) {
 			setIsThinking(false);
 		}
-	}, [messages]);
+	}, [hasActiveAssistantMessage, messages.length]);
 
 	return (
 		<Conversation>
@@ -77,29 +81,50 @@ export function ChatMessages({
 						const hasCopied = isCopied === message.id;
 						const isPending = message.status === "pending";
 						const isStreaming = message.status === "streaming";
+						const reasoningParts = message.parts.filter(isReasoningPart);
+						let hasRenderedReasoning = false;
 
 						return (
 							<Message
 								{...attr("scroll-padding", isLast && hasSentMessage)}
 								{...attr("user", message.role === "user")}
-								animate={fromUser && isPending}
+								animate={isLast && fromUser}
 								from={message.role}
-								key={message.id}
+								key={message.key}
 								onAnimationComplete={
-									fromUser && isLast
-										? handleUserMessageAnimationComplete
+									fromUser && isPending
+										? () => handleUserMessageAnimationComplete(isLast)
 										: undefined
 								}
 							>
 								<MessageContent>
-									{message.parts.map((part, i) => (
-										<MessagePart
-											isStreaming={isStreaming}
-											key={`${message.id}-${i}`}
-											part={part}
-											role={message.role}
-										/>
-									))}
+									{message.parts.map((part, partIndex) => {
+										if (part.type === "reasoning") {
+											if (!reasoningParts.length || hasRenderedReasoning) {
+												return null;
+											}
+											hasRenderedReasoning = true;
+
+											return (
+												<MessagePart
+													isStreaming={isStreaming}
+													key={`${message.key}-reasoning`}
+													part={part}
+													reasoningParts={reasoningParts}
+													role={message.role}
+												/>
+											);
+										}
+
+										return (
+											<MessagePart
+												isStreaming={isStreaming}
+												key={`${message.key}-${partIndex}`}
+												part={part}
+												role={message.role}
+											/>
+										);
+									})}
 									<Actions>
 										<Action onClick={() => handleCopy(message)} tooltip="Copy">
 											<AnimatePresence mode="wait">
@@ -128,7 +153,7 @@ export function ChatMessages({
 						);
 					})}
 
-					{isLast && isThinking && (
+					{isThinking && !hasActiveAssistantMessage && (
 						<Message from="assistant">
 							<MessageContent>
 								<ShiningText text="Thinking..." />

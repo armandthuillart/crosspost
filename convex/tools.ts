@@ -1,12 +1,12 @@
 import { createTool } from "@convex-dev/agent";
 import { z } from "zod/v3";
-import { agent } from "~/convex/agents";
+import { chatAgent } from "~/convex/agents";
 import { api, internal } from "~/convex/generated/api";
 import type { Id } from "~/convex/generated/dataModel";
 import { draftSchema, postSchema } from "~/lib/schema";
 import type { Platform } from "~/lib/types";
 
-export const draftPost = createTool({
+export const getDraft = createTool({
 	args: draftSchema,
 	description:
 		"Create a new post draft. It will return the draft id if successful.",
@@ -94,7 +94,7 @@ export const renameChat = createTool({
 			throw new Error("No threadId in context");
 		}
 
-		await agent.updateThreadMetadata(ctx, {
+		await chatAgent.updateThreadMetadata(ctx, {
 			patch: { title },
 			threadId,
 		});

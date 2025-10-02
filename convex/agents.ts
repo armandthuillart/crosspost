@@ -1,9 +1,8 @@
 import type { GatewayModelId } from "@ai-sdk/gateway";
-import type { OpenAIResponsesProviderOptions } from "@ai-sdk/openai";
 import { Agent, stepCountIs } from "@convex-dev/agent";
 import { components } from "~/convex/generated/api";
 
-export const agent = new Agent(components.agent, {
+export const chatAgent = new Agent(components.agent, {
 	contextOptions: {
 		recentMessages: 40,
 		searchOptions: {
@@ -15,15 +14,8 @@ export const agent = new Agent(components.agent, {
 		},
 		searchOtherThreads: true,
 	},
-	languageModel: "openai/gpt-5-mini" as GatewayModelId,
+	languageModel: "anthropic/claude-sonnet-4" as GatewayModelId,
 	name: "chat",
-	providerOptions: {
-		openai: {
-			reasoningEffort: "medium",
-			reasoningSummary: "detailed",
-			textVerbosity: "medium",
-		} satisfies OpenAIResponsesProviderOptions,
-	},
 	stopWhen: stepCountIs(3),
-	textEmbeddingModel: "openai/text-embedding-3-small",
+	textEmbeddingModel: "mistral/mistral-embed",
 });

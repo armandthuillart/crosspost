@@ -10,9 +10,14 @@ export default async function Page() {
 
 	const { get } = await headers();
 	const city = get("x-user-city") ?? undefined;
-	const countryCode = get("x-user-country") ?? undefined;
+	const region = get("x-user-region") ?? undefined;
+	const country = get("x-user-country") ?? undefined;
 
 	return (
-		<Chat city={city} countryCode={countryCode} preloadedUser={preloadedUser} />
+		<Chat
+			initialMessages={[]}
+			preloadedUser={preloadedUser}
+			userLocation={{ city, country, region }}
+		/>
 	);
 }

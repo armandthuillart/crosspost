@@ -119,12 +119,14 @@ export const streamChat = internalAction({
 					"rename-chat": renameChat,
 					"web-search": anthropic.tools.webSearch_20250305({
 						maxUses: 5,
-						userLocation: {
-							city,
-							country,
-							region,
-							type: "approximate",
-						},
+						...((city || country || region) && {
+							userLocation: {
+								...(city && { city }),
+								...(country && { country }),
+								...(region && { region }),
+								type: "approximate",
+							},
+						}),
 					}),
 				},
 			},

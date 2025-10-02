@@ -8,9 +8,9 @@ export function middleware(request: NextRequest) {
 	const headers = new Headers(request.headers);
 
 	if (city && region && country) {
-		headers.set("x-user-city", city);
-		headers.set("x-user-region", region);
-		headers.set("x-user-country", country);
+		headers.set("x-user-city", encodeURIComponent(city));
+		headers.set("x-user-region", encodeURIComponent(region));
+		headers.set("x-user-country", encodeURIComponent(country));
 	}
 
 	return next({ request: { headers } });

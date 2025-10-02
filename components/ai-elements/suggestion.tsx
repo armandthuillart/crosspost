@@ -70,4 +70,4 @@ function Suggestion({
 	);
 }
 
-export { Suggestion, Suggestions, type SuggestionProps, type SuggestionsProps };
+export { Suggestion, Suggestions };

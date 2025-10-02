@@ -50,7 +50,7 @@
 :root {
 	--background: oklch(100% 0 0);
   --foreground: oklch(15% 0 0);
-  --accent: oklch(98% 0 0);
+  --accent: oklch(97% 0 0);
   --accent-foreground: oklch(15% 0 0);
 	--primary: oklch(15% 0 0);
 	--primary-foreground: oklch(100% 0 0);

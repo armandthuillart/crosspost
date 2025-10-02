@@ -1,12 +1,7 @@
 "use client";
 
 import type { ThreadDoc } from "@convex-dev/agent/validators";
-import {
-	type Preloaded,
-	useMutation,
-	usePreloadedQuery,
-	useQuery,
-} from "convex/react";
+import { type Preloaded, useMutation, usePreloadedQuery } from "convex/react";
 import type { PaginationResult } from "convex/server";
 import {
 	AnimatePresence,
@@ -40,11 +35,13 @@ import { AppMenu } from "./app.menu";
 
 export function AppSidebar({
 	preloadedChats,
+	preloadedUser,
 }: {
 	preloadedChats: Preloaded<typeof api.chat.listChats>;
+	preloadedUser: Preloaded<typeof api.auth.getUser>;
 }) {
 	const chats = usePreloadedQuery(preloadedChats);
-	const user = useQuery(api.auth.getUser);
+	const user = usePreloadedQuery(preloadedUser);
 
 	const { push } = useRouter();
 	const pathname = usePathname();

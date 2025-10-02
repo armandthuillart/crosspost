@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import { Badge } from "~/components/ui/badge";
 import {
@@ -21,7 +21,7 @@ import {
 	SignatureIcon,
 } from "~/components/ui/icons";
 import { SidebarMenuButton } from "~/components/ui/sidebar";
-import { authClient } from "~/lib/auth-client";
+import { signOut } from "~/lib/auth-client";
 import type { User } from "~/lib/types";
 
 interface AppMenuProps {
@@ -29,16 +29,17 @@ interface AppMenuProps {
 }
 
 export function AppMenu({ user }: AppMenuProps) {
-	const { push } = useRouter();
+	const { push, refresh } = useRouter();
+	const pathname = usePathname();
 
 	async function handleSignOut() {
-		await authClient.signOut({
-			fetchOptions: {
-				onSuccess: async () => {
-					push("/");
-				},
-			},
-		});
+		await signOut();
+
+		if (pathname.startsWith("/c")) {
+			push("/");
+		} else {
+			refresh();
+		}
 	}
 
 	return (

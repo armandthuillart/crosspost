@@ -7,12 +7,12 @@
         "@ai-sdk/anthropic": "^2.0.23",
         "@ai-sdk/gateway": "^1.0.32",
         "@convex-dev/agent": "^0.2.10",
-        "@convex-dev/better-auth": "0.8.6",
+        "@convex-dev/better-auth": "^0.8.8",
         "@convex-dev/rate-limiter": "^0.2.13",
         "@polar-sh/better-auth": "^1.1.7",
         "@polar-sh/sdk": "^0.35.4",
         "@vercel/analytics": "^1.5.0",
-        "@vercel/functions": "^3.1.0",
+        "@vercel/functions": "^3.1.1",
         "@vercel/speed-insights": "^1.2.0",
         "ai": "^5.0.59",
         "better-auth": "1.3.8",
@@ -100,7 +100,7 @@
 
     "@convex-dev/agent": ["@convex-dev/agent@0.2.10", "", { "optionalDependencies": { "@ungap/structured-clone": "^1.3.0" }, "peerDependencies": { "@ai-sdk/provider-utils": "^3.0.7", "ai": "^5.0.29", "convex": "^1.23.0", "convex-helpers": "^0.1.103", "react": "^18.3.1 || ^19.0.0" }, "optionalPeers": ["react"] }, "sha512-6xVB9pUGMk7tYmcrYVR4K5eRSyJifQzMRfrsgGTE0/w0CinARJ6Kz1A3D4zjZJcQn6FZT15GgCtv8X750fXhZg=="],
 
-    "@convex-dev/better-auth": ["@convex-dev/better-auth@0.8.6", "", { "dependencies": { "@better-fetch/fetch": "^1.1.18", "common-tags": "^1.8.2", "convex-helpers": "^0.1.95", "is-network-error": "^1.1.0", "type-fest": "^4.39.1", "zod": "^3.24.4" }, "peerDependencies": { "better-auth": "1.3.8", "convex": "^1.26.2", "react": "^18.3.1 || ^19.0.0", "react-dom": "^18.3.1 || ^19.0.0" } }, "sha512-iP2erc4YKz0HzrWSdaSRv2ck3gsdb2yBwUdSOsM0ebvNMcTsoWEBuu07cq6lUGMyJ97qxOnZDtN7CemTXKpSpA=="],
+    "@convex-dev/better-auth": ["@convex-dev/better-auth@0.8.8", "", { "dependencies": { "@better-fetch/fetch": "^1.1.18", "common-tags": "^1.8.2", "convex-helpers": "^0.1.95", "is-network-error": "^1.1.0", "type-fest": "^4.39.1", "zod": "^3.24.4" }, "peerDependencies": { "better-auth": "1.3.8", "convex": "^1.26.2", "react": "^18.3.1 || ^19.0.0", "react-dom": "^18.3.1 || ^19.0.0" } }, "sha512-seEOclBnMPwd5YoW0No51JpkP0QVktE7OumU2PxTWD9R1DyeOQndZiER2Efp5n7A8xQtWGljlqBFUToNSbVSKA=="],
 
     "@convex-dev/rate-limiter": ["@convex-dev/rate-limiter@0.2.13", "", { "peerDependencies": { "convex": "~1.16.5 || >=1.17.0 <1.35.0", "react": "^18.2.0 || ^19.0.0" }, "optionalPeers": ["react"] }, "sha512-zDRxTGTEkTlHB/c0Yzq7RoSJcTSdjeKBD1WbzeZgPmzPNAvtSSwdvuMPrWmOZ345KkzaLPGkofzidkM2Xpb6SA=="],
 
@@ -550,9 +550,9 @@
 
     "@vercel/analytics": ["@vercel/analytics@1.5.0", "", { "peerDependencies": { "@remix-run/react": "^2", "@sveltejs/kit": "^1 || ^2", "next": ">= 13", "react": "^18 || ^19 || ^19.0.0-rc", "svelte": ">= 4", "vue": "^3", "vue-router": "^4" }, "optionalPeers": ["@remix-run/react", "@sveltejs/kit", "next", "react", "svelte", "vue", "vue-router"] }, "sha512-MYsBzfPki4gthY5HnYN7jgInhAZ7Ac1cYDoRWFomwGHWEX7odTEzbtg9kf/QSo7XEsEAqlQugA6gJ2WS2DEa3g=="],
 
-    "@vercel/functions": ["@vercel/functions@3.1.0", "", { "dependencies": { "@vercel/oidc": "3.0.0" }, "peerDependencies": { "@aws-sdk/credential-provider-web-identity": "*" }, "optionalPeers": ["@aws-sdk/credential-provider-web-identity"] }, "sha512-V+p8dO+sg1VjiJJUO5rYPp1KG17SzDcR74OWwW7Euyde6L8U5wuTMe9QfEOfLTiWPUPzN1MXZvLcYxqSYhKc4Q=="],
+    "@vercel/functions": ["@vercel/functions@3.1.1", "", { "dependencies": { "@vercel/oidc": "3.0.1" }, "peerDependencies": { "@aws-sdk/credential-provider-web-identity": "*" }, "optionalPeers": ["@aws-sdk/credential-provider-web-identity"] }, "sha512-pMum41m6DtMGWZuCPy99mCE40shLvoxawOhetkTGq/HslY7J7weMOV+TeWcfWO6acDabDqDcb6bapWBQ+tNA3w=="],
 
-    "@vercel/oidc": ["@vercel/oidc@3.0.0", "", { "dependencies": { "@types/ms": "2.1.0", "ms": "2.1.3" } }, "sha512-XOoUcf/1VfGArUAfq0ELxk6TD7l4jGcrOsWjQibj4wYM74uNihzZ9gA46ywWegoqKWWdph4y5CKxGI9823deoA=="],
+    "@vercel/oidc": ["@vercel/oidc@3.0.1", "", {}, "sha512-V/YRVrJDqM6VaMBjRUrd6qRMrTKvZjHdVdEmdXsOZMulTa3iK98ijKTc3wldBmst6W5rHpqMoKllKcBAHgN7GQ=="],
 
     "@vercel/speed-insights": ["@vercel/speed-insights@1.2.0", "", { "peerDependencies": { "@sveltejs/kit": "^1 || ^2", "next": ">= 13", "react": "^18 || ^19 || ^19.0.0-rc", "svelte": ">= 4", "vue": "^3", "vue-router": "^4" }, "optionalPeers": ["@sveltejs/kit", "next", "react", "svelte", "vue", "vue-router"] }, "sha512-y9GVzrUJ2xmgtQlzFP2KhVRoCglwfRQgjyfY607aU0hh0Un6d0OUyrJkjuAlsV18qR4zfoFPs/BiIj9YDS6Wzw=="],
 

@@ -1,5 +1,4 @@
 import { fetchQuery, preloadQuery } from "convex/nextjs";
-import type { Preloaded } from "convex/react";
 import { cookies } from "next/headers";
 import type { ReactNode } from "react";
 import { AppSidebar } from "~/components/app.sidebar";
@@ -26,19 +25,21 @@ export default async function ChatLayout({ children }: ChatLayoutProps) {
 	const sidebar = cookieStore.get("sidebar")?.value;
 	const isAnonymous = user && user.tier === "anonymous";
 
-	if (!user || isAnonymous) {
-		return children;
-	}
+	let preloadedChats = null;
 
-	const preloadedChats = await preloadQuery(
-		api.chat.listChats,
-		{ paginationOpts: { cursor: null, numItems: 10 } },
-		{ token },
-	);
+	if (user && !isAnonymous && token) {
+		preloadedChats = await preloadQuery(
+			api.chat.listChats,
+			{ paginationOpts: { cursor: null, numItems: 10 } },
+			{ token },
+		);
+	}
 
 	return (
 		<SidebarProvider defaultOpen={sidebar === "true"}>
-			<AppSidebar preloadedChats={preloadedChats} />
+			{user && !isAnonymous && preloadedChats && (
+				<AppSidebar preloadedChats={preloadedChats} />
+			)}
 			{children}
 			{isBack && <WelcomeBack />}
 		</SidebarProvider>

@@ -1,9 +1,9 @@
 import { createClient, type GenericCtx } from "@convex-dev/better-auth";
 import { convex } from "@convex-dev/better-auth/plugins";
+import { requireActionCtx } from "@convex-dev/better-auth/utils";
 import { checkout, polar, portal, webhooks } from "@polar-sh/better-auth";
 import { type BetterAuthOptions, betterAuth } from "better-auth";
 import { anonymous } from "better-auth/plugins";
-import { ConvexHttpClient } from "convex/browser";
 import { v } from "convex/values";
 import { zodToConvex } from "convex-helpers/server/zod";
 import authSchema from "~/convex/betterAuth/schema";
@@ -15,9 +15,6 @@ import { tierSchema } from "~/lib/schema";
 import type { Tier, User } from "~/lib/types";
 
 const siteUrl = process.env.SITE_URL;
-
-// For some reasons, using env variable is not working.
-const convexUrl = "https://content-boar-853.convex.cloud";
 
 export const {
 	adapter,
@@ -90,9 +87,7 @@ export const createAuth = (
 						});
 					}
 
-					const convex = new ConvexHttpClient(convexUrl);
-
-					await convex.mutation(api.chat.migrateChats, {
+					await requireActionCtx(ctx).runMutation(api.chat.migrateChats, {
 						anonymousUserId: anonymousUser.id,
 						newUserId: newUser.id,
 					});
@@ -110,6 +105,7 @@ export const createAuth = (
 								slug: "pro" satisfies Tier,
 							},
 						],
+						successUrl: siteUrl,
 					}),
 					portal(),
 					webhooks({
@@ -120,19 +116,17 @@ export const createAuth = (
 								(s) => s.status === "active",
 							);
 
-							const convex = new ConvexHttpClient(convexUrl);
-
 							if (externalId) {
 								if (isPro) {
-									await convex.mutation(api.betterAuth.auth.updateTier, {
-										tier: "pro",
-										userId: externalId,
-									});
+									await requireActionCtx(ctx).runMutation(
+										api.betterAuth.auth.updateTier,
+										{ tier: "pro", userId: externalId },
+									);
 								} else {
-									await convex.mutation(api.betterAuth.auth.updateTier, {
-										tier: "free",
-										userId: externalId,
-									});
+									await requireActionCtx(ctx).runMutation(
+										api.betterAuth.auth.updateTier,
+										{ tier: "free", userId: externalId },
+									);
 								}
 							}
 						},

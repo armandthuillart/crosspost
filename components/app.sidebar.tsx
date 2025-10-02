@@ -13,9 +13,9 @@ import {
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { type MouseEvent, useState } from "react";
 import type { ParamsOf } from "~/.next/types/routes";
+import { AppMenu } from "~/components/app.menu";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
-
 import { AppIcon, SearchIcon, TrashIcon } from "~/components/ui/icons";
 import {
 	Sidebar,
@@ -31,7 +31,6 @@ import {
 } from "~/components/ui/sidebar";
 import { api } from "~/convex/generated/api";
 import { appName } from "~/lib/constants";
-import { AppMenu } from "./app.menu";
 
 export function AppSidebar({
 	preloadedChats,

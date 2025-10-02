@@ -154,6 +154,7 @@ export const createAuth = (
 				prompt: "select_account consent",
 			},
 		},
+		trustedOrigins: [siteUrl as string],
 		user: {
 			additionalFields: {
 				firstName: {

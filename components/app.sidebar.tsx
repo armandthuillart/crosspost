@@ -1,11 +1,13 @@
 "use client";
 
+import type { ThreadDoc } from "@convex-dev/agent/validators";
 import {
 	type Preloaded,
 	useMutation,
 	usePreloadedQuery,
 	useQuery,
 } from "convex/react";
+import type { PaginationResult } from "convex/server";
 import {
 	AnimatePresence,
 	type AnimationOptions,
@@ -17,12 +19,13 @@ import { useParams, usePathname, useRouter } from "next/navigation";
 import { type MouseEvent, useState } from "react";
 import type { ParamsOf } from "~/.next/types/routes";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
+import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
 import {
 	AppIcon,
-	ArchiveIcon,
 	MoreIcon,
 	SearchIcon,
+	TrashIcon,
 } from "~/components/ui/icons";
 import {
 	Sidebar,
@@ -38,18 +41,20 @@ import {
 } from "~/components/ui/sidebar";
 import { api } from "~/convex/generated/api";
 import { appName } from "~/lib/constants";
-import { Button } from "./ui/button";
 
 export function AppSidebar({
 	preloadedChats,
 }: {
 	preloadedChats: Preloaded<typeof api.chat.listChats>;
 }) {
+	const chats = usePreloadedQuery(preloadedChats);
+
 	const { push } = useRouter();
 	const pathname = usePathname();
 	const user = useQuery(api.auth.getUser);
 
 	const [threadIds, setThreadIds] = useState<string[] | null>(null);
+	const hasThreadIds = !!threadIds;
 
 	return (
 		<Sidebar>
@@ -79,11 +84,31 @@ export function AppSidebar({
 				</SidebarGroup>
 
 				<SidebarGroup>
-					<SidebarGroupLabel>Chats</SidebarGroupLabel>
+					<SidebarGroupLabel className="justify-between">
+						Chats
+						{hasThreadIds && (
+							<Button
+								onClick={() => {
+									if (threadIds && threadIds.length === chats?.page.length) {
+										setThreadIds(null);
+									} else {
+										setThreadIds(
+											chats?.page.map(({ _id: chatId }) => chatId) || [],
+										);
+									}
+								}}
+								variant="link"
+							>
+								{threadIds && threadIds.length === chats?.page.length
+									? "Clear"
+									: "All"}
+							</Button>
+						)}
+					</SidebarGroupLabel>
 					<SidebarGroupContent>
 						<SidebarMenu>
 							<SibebarHistory
-								preloadedChats={preloadedChats}
+								chats={chats}
 								setThreadIds={setThreadIds}
 								threadIds={threadIds}
 							/>
@@ -125,7 +150,7 @@ function SibebarHistorySearch({
 	const { chatId } = useParams<ParamsOf<"/c/[chatId]">>();
 	const { push } = useRouter();
 
-	const archiveChats = useMutation(api.chat.archiveChats).withOptimisticUpdate(
+	const deleteChats = useMutation(api.chat.deleteChats).withOptimisticUpdate(
 		(localStore, { threadIds }) => {
 			const currentChats = localStore.getQuery(api.chat.listChats, {
 				paginationOpts: { cursor: null, numItems: 10 },
@@ -134,10 +159,8 @@ function SibebarHistorySearch({
 			if (currentChats !== undefined) {
 				const updatedResults = {
 					...currentChats,
-					page: currentChats.page.map((chat) =>
-						threadIds.includes(chat._id)
-							? { ...chat, status: "archived" as const }
-							: chat,
+					page: currentChats.page.filter(
+						({ _id: chatId }) => !threadIds.includes(chatId),
 					),
 				};
 
@@ -150,14 +173,14 @@ function SibebarHistorySearch({
 		},
 	);
 
-	async function handleArchive() {
+	async function handleDelete() {
 		if (!threadIds) return;
 
 		if (chatId && threadIds.includes(chatId as string)) {
 			push("/");
 		}
 
-		void archiveChats({ threadIds });
+		void deleteChats({ threadIds });
 		setThreadIds(null);
 	}
 
@@ -177,11 +200,11 @@ function SibebarHistorySearch({
 			{hasThreadIds && (
 				<Button
 					className="shrink-0 text-muted-foreground"
-					onClick={handleArchive}
+					onClick={handleDelete}
 					size="icon"
 					variant="ghost"
 				>
-					<ArchiveIcon className="size-5" />
+					<TrashIcon className="size-5" />
 				</Button>
 			)}
 		</div>
@@ -189,19 +212,17 @@ function SibebarHistorySearch({
 }
 
 function SibebarHistory({
+	chats,
 	threadIds,
 	setThreadIds,
-	preloadedChats,
 }: {
+	chats: PaginationResult<ThreadDoc>;
 	threadIds: string[] | null;
 	setThreadIds: (threadIds: string[] | null) => void;
-	preloadedChats: Preloaded<typeof api.chat.listChats>;
 }) {
 	const [ref, animate] = useAnimate();
 	const { chatId: paramsChatId } = useParams<ParamsOf<"/c/[chatId]">>();
 	const { push } = useRouter();
-
-	const chats = usePreloadedQuery(preloadedChats);
 
 	const activeChats =
 		chats?.page.filter(({ status }) => status === "active") || [];

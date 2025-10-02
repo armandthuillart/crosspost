@@ -255,7 +255,7 @@ export const migrateChats = mutation({
 	returns: v.null(),
 });
 
-export const archiveChats = mutation({
+export const deleteChats = mutation({
 	args: {
 		threadIds: v.array(v.string()),
 	},
@@ -267,10 +267,27 @@ export const archiveChats = mutation({
 		}
 
 		for (const threadId of threadIds) {
-			await ctx.runMutation(components.agent.threads.updateThread, {
-				patch: { status: "archived" },
+			await chatAgent.deleteThreadAsync(ctx, {
 				threadId,
 			});
+
+			const drafts = await ctx.db
+				.query("drafts")
+				.withIndex("by_thread", (q) => q.eq("threadId", threadId))
+				.collect();
+
+			for (const { _id: draftId } of drafts) {
+				const versions = await ctx.db
+					.query("versions")
+					.withIndex("by_draft", (q) => q.eq("draftId", draftId))
+					.collect();
+
+				for (const version of versions) {
+					await ctx.db.delete(version._id);
+				}
+
+				await ctx.db.delete(draftId);
+			}
 		}
 	},
 	returns: v.null(),

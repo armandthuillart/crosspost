@@ -15,3 +15,5 @@ export const authClient = createAuthClient({
 		polarClient(),
 	],
 });
+
+export const { checkout } = authClient;

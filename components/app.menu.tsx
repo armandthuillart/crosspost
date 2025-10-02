@@ -2,29 +2,30 @@
 
 import { useRouter } from "next/navigation";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
-import { Button } from "~/components/ui/button";
+import { Badge } from "~/components/ui/badge";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
-	DropdownMenuSeparator,
 	DropdownMenuSub,
 	DropdownMenuSubContent,
 	DropdownMenuSubTrigger,
 	DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import {
-	KeyIcon,
-	LegalDocumentIcon,
+	AssistantsIcon,
+	KeyboardKeyIcon,
 	LifeBuoyIcon,
 	LogOutIcon,
-	SettingsIcon,
+	MoreIcon,
+	SignatureIcon,
 } from "~/components/ui/icons";
+import { SidebarMenuButton } from "~/components/ui/sidebar";
 import { authClient } from "~/lib/auth-client";
 import type { User } from "~/lib/types";
 
 interface AppMenuProps {
-	user: User;
+	user: User | null;
 }
 
 export function AppMenu({ user }: AppMenuProps) {
@@ -43,52 +44,52 @@ export function AppMenu({ user }: AppMenuProps) {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button
-					className="rounded-full shadow-none hover:bg-accent"
-					size="icon"
-					variant="ghost"
-				>
-					<Avatar className="size-6">
-						<AvatarFallback className="border-primary bg-primary text-primary-foreground text-xs uppercase">
-							{user.name.charAt(0) || user.email.charAt(0)}
-						</AvatarFallback>
-					</Avatar>
-				</Button>
+				<SidebarMenuButton className="h-auto justify-between rounded-full pr-4">
+					<div className="flex items-center gap-2.5 overflow-hidden">
+						<Avatar>
+							<AvatarFallback>
+								{user?.firstName && user?.lastName
+									? user.firstName.charAt(0) + user.lastName.charAt(0)
+									: (user?.email?.charAt(0) ?? "?")}
+							</AvatarFallback>
+						</Avatar>
+						<span className="truncate font-medium text-sm">
+							{user?.firstName} {user?.lastName}
+						</span>
+					</div>
+					<MoreIcon className="size-6" />
+				</SidebarMenuButton>
 			</DropdownMenuTrigger>
-
-			<DropdownMenuContent
-				align="end"
-				alignOffset={-2}
-				className="w-80"
-				side="top"
-			>
-				<DropdownMenuItem>
-					<SettingsIcon className="size-5" />
-					Settings
+			<DropdownMenuContent align="start" className="w-64" side="top">
+				<DropdownMenuItem disabled>
+					<AssistantsIcon className="size-4" />
+					Customize
+					<Badge className="ml-auto rounded-full" variant="selection">
+						Soon
+					</Badge>
 				</DropdownMenuItem>
-
-				<DropdownMenuSeparator />
 
 				<DropdownMenuSub>
 					<DropdownMenuSubTrigger>
-						<LifeBuoyIcon className="size-5" />
+						<LifeBuoyIcon className="size-4" />
 						Help
 					</DropdownMenuSubTrigger>
 
 					<DropdownMenuSubContent>
 						<DropdownMenuItem>
-							<LegalDocumentIcon className="size-5" />
+							<SignatureIcon className="size-4" />
 							Terms & policies
 						</DropdownMenuItem>
-						<DropdownMenuItem>
-							<KeyIcon className="size-5" />
+
+						<DropdownMenuItem className="w-full">
+							<KeyboardKeyIcon className="size-4" />
 							Keyboard shortcuts
 						</DropdownMenuItem>
 					</DropdownMenuSubContent>
 				</DropdownMenuSub>
 
 				<DropdownMenuItem onClick={handleSignOut}>
-					<LogOutIcon className="size-5" />
+					<LogOutIcon className="size-4" />
 					Log out
 				</DropdownMenuItem>
 			</DropdownMenuContent>

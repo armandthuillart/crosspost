@@ -110,7 +110,6 @@ export function ChatMessages({
 													isStreaming={isStreaming}
 													key={`${message.key}-reasoning`}
 													part={part}
-													reasoningParts={reasoningParts}
 													role={message.role}
 												/>
 											);

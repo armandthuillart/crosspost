@@ -11,7 +11,8 @@
 		"noEmit": true,
 		"paths": {
 			"~/*": ["./*"],
-			"~/convex/generated/*": ["./convex/_generated/*"]
+			"~/convex/generated/*": ["./convex/_generated/*"],
+			"~/convex/betterAuth/generated/*": ["./convex/betterAuth/_generated/*"]
 		},
 		"plugins": [{ "name": "next" }],
 		"resolveJsonModule": true,

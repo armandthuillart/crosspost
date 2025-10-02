@@ -18,30 +18,10 @@ import {
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { type MouseEvent, useState } from "react";
 import type { ParamsOf } from "~/.next/types/routes";
-import { Avatar, AvatarFallback } from "~/components/ui/avatar";
-import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuSub,
-	DropdownMenuSubContent,
-	DropdownMenuSubTrigger,
-	DropdownMenuTrigger,
-} from "~/components/ui/dropdown-menu";
-import {
-	AppIcon,
-	AssistantsIcon,
-	KeyboardKeyIcon,
-	LifeBuoyIcon,
-	LogOutIcon,
-	MoreIcon,
-	SearchIcon,
-	SignatureIcon,
-	TrashIcon,
-} from "~/components/ui/icons";
+
+import { AppIcon, SearchIcon, TrashIcon } from "~/components/ui/icons";
 import {
 	Sidebar,
 	SidebarContent,
@@ -55,8 +35,8 @@ import {
 	SidebarMenuItem,
 } from "~/components/ui/sidebar";
 import { api } from "~/convex/generated/api";
-import { authClient } from "~/lib/auth-client";
 import { appName } from "~/lib/constants";
+import { AppMenu } from "./app.menu";
 
 export function AppSidebar({
 	preloadedChats,
@@ -64,23 +44,13 @@ export function AppSidebar({
 	preloadedChats: Preloaded<typeof api.chat.listChats>;
 }) {
 	const chats = usePreloadedQuery(preloadedChats);
+	const user = useQuery(api.auth.getUser);
 
 	const { push } = useRouter();
 	const pathname = usePathname();
-	const user = useQuery(api.auth.getUser);
 
 	const [threadIds, setThreadIds] = useState<string[] | null>(null);
 	const hasThreadIds = !!threadIds;
-
-	async function handleSignOut() {
-		await authClient.signOut({
-			fetchOptions: {
-				onSuccess: async () => {
-					push("/");
-				},
-			},
-		});
-	}
 
 	return (
 		<Sidebar>
@@ -145,58 +115,7 @@ export function AppSidebar({
 			</SidebarContent>
 
 			<SidebarFooter>
-				<DropdownMenu>
-					<DropdownMenuTrigger asChild>
-						<SidebarMenuButton className="h-auto justify-between rounded-full pr-4">
-							<div className="flex items-center gap-2.5 overflow-hidden">
-								<Avatar>
-									<AvatarFallback>
-										{user?.firstName && user?.lastName
-											? user.firstName.charAt(0) + user.lastName.charAt(0)
-											: (user?.email?.charAt(0) ?? "?")}
-									</AvatarFallback>
-								</Avatar>
-								<span className="truncate font-medium text-sm">
-									{user?.firstName} {user?.lastName}
-								</span>
-							</div>
-							<MoreIcon className="size-6" />
-						</SidebarMenuButton>
-					</DropdownMenuTrigger>
-					<DropdownMenuContent align="start" className="w-64" side="top">
-						<DropdownMenuItem disabled>
-							<AssistantsIcon className="size-4" />
-							Customize
-							<Badge className="ml-auto rounded-full" variant="selection">
-								Soon
-							</Badge>
-						</DropdownMenuItem>
-
-						<DropdownMenuSub>
-							<DropdownMenuSubTrigger>
-								<LifeBuoyIcon className="size-4" />
-								Help
-							</DropdownMenuSubTrigger>
-
-							<DropdownMenuSubContent>
-								<DropdownMenuItem>
-									<SignatureIcon className="size-4" />
-									Terms & policies
-								</DropdownMenuItem>
-
-								<DropdownMenuItem className="w-full">
-									<KeyboardKeyIcon className="size-4" />
-									Keyboard shortcuts
-								</DropdownMenuItem>
-							</DropdownMenuSubContent>
-						</DropdownMenuSub>
-
-						<DropdownMenuItem onClick={handleSignOut}>
-							<LogOutIcon className="size-4" />
-							Log out
-						</DropdownMenuItem>
-					</DropdownMenuContent>
-				</DropdownMenu>
+				<AppMenu user={user ?? null} />
 			</SidebarFooter>
 		</Sidebar>
 	);

@@ -38,6 +38,22 @@ export const createAuth = (
 		databaseHooks: {
 			user: {
 				create: {
+					after: async ({ id: userId, name, email }) => {
+						const paginated = await polarClient.customers.list({
+							email,
+							limit: 1,
+						});
+
+						const customer = paginated.result.items[0];
+
+						if (!customer) {
+							await polarClient.customers.create({
+								email,
+								externalId: userId,
+								name,
+							});
+						}
+					},
 					before: async ({ name, isAnonymous, ...rest }) => {
 						const tier: Tier = isAnonymous ? "anonymous" : "free";
 						const firstName = name.split(" ")[0];
@@ -64,11 +80,6 @@ export const createAuth = (
 					newUser: { user: newUser },
 					anonymousUser: { user: anonymousUser },
 				}) => {
-					console.log("onLinkAccount", {
-						anonymousUser,
-						newUser,
-					});
-
 					const paginated = await polarClient.customers.list({
 						email: newUser.email,
 						limit: 1,

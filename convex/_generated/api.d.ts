@@ -3855,14 +3855,6 @@ export declare const components: {
         any
       >;
     };
-    auth: {
-      updateTier: FunctionReference<
-        "mutation",
-        "internal",
-        { tier: "anonymous" | "free" | "pro"; userId: string },
-        null
-      >;
-    };
   };
   rateLimiter: {
     lib: {

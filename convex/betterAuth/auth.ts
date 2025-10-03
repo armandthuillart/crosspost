@@ -40,7 +40,7 @@ export const tidyUpAnonymousUsers = internalMutation({
 	returns: v.null(),
 });
 
-export const updateTier = mutation({
+export const updateUserTier = mutation({
 	args: {
 		tier: zodToConvex(tierSchema),
 		userId: v.string(),
@@ -50,5 +50,4 @@ export const updateTier = mutation({
 			tier,
 		});
 	},
-	returns: v.null(),
 });

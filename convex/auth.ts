@@ -1,7 +1,7 @@
 import { createClient, type GenericCtx } from "@convex-dev/better-auth";
 import { convex } from "@convex-dev/better-auth/plugins";
 import { requireActionCtx } from "@convex-dev/better-auth/utils";
-import { checkout, polar, portal, webhooks } from "@polar-sh/better-auth";
+import { checkout, polar, portal } from "@polar-sh/better-auth";
 import { type BetterAuthOptions, betterAuth } from "better-auth";
 import { anonymous } from "better-auth/plugins";
 import { v } from "convex/values";
@@ -9,24 +9,28 @@ import { zodToConvex } from "convex-helpers/server/zod";
 import authSchema from "~/convex/betterAuth/schema";
 import { api, components } from "~/convex/generated/api";
 import type { DataModel } from "~/convex/generated/dataModel";
-import { query } from "~/convex/generated/server";
+import { mutation, query } from "~/convex/generated/server";
 import { polarClient } from "~/lib/polar";
 import { tierSchema } from "~/lib/schema";
 import type { Tier, User } from "~/lib/types";
 
 const siteUrl = process.env.SITE_URL;
 
-export const authComponent = createClient<DataModel, typeof authSchema>(
-	components.betterAuth,
-	{
-		local: {
-			schema: authSchema,
-		},
-		verbose: false,
+export const {
+	adapter,
+	getHeaders,
+	triggersApi,
+	registerRoutes,
+	getAnyUserById,
+	safeGetAuthUser,
+} = createClient<DataModel, typeof authSchema>(components.betterAuth, {
+	local: {
+		schema: authSchema,
 	},
-);
+	verbose: false,
+});
 
-export const { onCreate, onUpdate, onDelete } = authComponent.triggersApi();
+export const { onCreate, onUpdate, onDelete } = triggersApi();
 
 export const createAuth = (
 	ctx: GenericCtx<DataModel>,
@@ -34,7 +38,7 @@ export const createAuth = (
 ) => {
 	return betterAuth({
 		baseURL: siteUrl,
-		database: authComponent.adapter(ctx),
+		database: adapter(ctx),
 		databaseHooks: {
 			user: {
 				create: {
@@ -116,35 +120,6 @@ export const createAuth = (
 						successUrl: siteUrl,
 					}),
 					portal(),
-					webhooks({
-						onCustomerStateChanged: async ({
-							data: { externalId, activeSubscriptions },
-						}) => {
-							console.log("onCustomerStateChanged", {
-								activeSubscriptions,
-								externalId,
-							});
-
-							const isPro = activeSubscriptions.some(
-								(s) => s.status === "active",
-							);
-
-							if (externalId) {
-								if (isPro) {
-									await requireActionCtx(ctx).runMutation(
-										api.betterAuth.auth.updateTier,
-										{ tier: "pro", userId: externalId },
-									);
-								} else {
-									await requireActionCtx(ctx).runMutation(
-										api.betterAuth.auth.updateTier,
-										{ tier: "free", userId: externalId },
-									);
-								}
-							}
-						},
-						secret: process.env.POLAR_WEBHOOK_SECRET as string,
-					}),
 				],
 			}),
 			convex(),
@@ -180,7 +155,7 @@ export const createAuth = (
 export const getUser = query({
 	args: {},
 	handler: async (ctx): Promise<User | null> => {
-		const user = await authComponent.safeGetAuthUser(ctx);
+		const user = await safeGetAuthUser(ctx);
 
 		const tainted: User | null = user
 			? {

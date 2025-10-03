@@ -16,8 +16,6 @@ import type { Tier, User } from "~/lib/types";
 
 const siteUrl = process.env.SITE_URL;
 
-console.log("siteUrl", siteUrl);
-
 export const authComponent = createClient<DataModel, typeof authSchema>(
 	components.betterAuth,
 	{
@@ -66,6 +64,11 @@ export const createAuth = (
 					newUser: { user: newUser },
 					anonymousUser: { user: anonymousUser },
 				}) => {
+					console.log("onLinkAccount", {
+						anonymousUser,
+						newUser,
+					});
+
 					const paginated = await polarClient.customers.list({
 						email: newUser.email,
 						limit: 1,

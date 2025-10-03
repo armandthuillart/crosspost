@@ -14,6 +14,7 @@ export default async function Page() {
 	);
 
 	const { get } = await headers();
+
 	const city = get("x-user-city")
 		? decodeURIComponent(get("x-user-city")!)
 		: undefined;

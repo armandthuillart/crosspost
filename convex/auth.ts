@@ -35,11 +35,6 @@ export const createAuth = (
 	{ optionsOnly } = { optionsOnly: false },
 ) => {
 	return betterAuth({
-		account: {
-			accountLinking: {
-				updateUserInfoOnLink: true,
-			},
-		},
 		baseURL: siteUrl,
 		database: authComponent.adapter(ctx),
 		databaseHooks: {

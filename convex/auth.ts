@@ -9,7 +9,7 @@ import { zodToConvex } from "convex-helpers/server/zod";
 import authSchema from "~/convex/betterAuth/schema";
 import { api, components } from "~/convex/generated/api";
 import type { DataModel } from "~/convex/generated/dataModel";
-import { mutation, query } from "~/convex/generated/server";
+import { query } from "~/convex/generated/server";
 import { polarClient } from "~/lib/polar";
 import { tierSchema } from "~/lib/schema";
 import type { Tier, User } from "~/lib/types";

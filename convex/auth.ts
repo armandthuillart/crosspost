@@ -16,6 +16,8 @@ import type { Tier, User } from "~/lib/types";
 
 const siteUrl = process.env.SITE_URL;
 
+console.log("siteUrl", siteUrl);
+
 export const authComponent = createClient<DataModel, typeof authSchema>(
 	components.betterAuth,
 	{

@@ -86,7 +86,7 @@ function Page({ children, className, ...props }: ComponentProps<"div">) {
 
 function Header() {
 	return (
-		<div className="sticky top-0 z-10 grid h-13 w-full grid-cols-2 border-b bg-background/85 backdrop-blur-md">
+		<div className="sticky top-0 z-1 grid h-13 w-full grid-cols-2 border-b bg-background/85 backdrop-blur-md">
 			{["For you", "Following"].map((title, index) => (
 				<div className="flex items-center justify-center px-4" key={title}>
 					<div className="flex flex-col">
@@ -143,27 +143,25 @@ function Post({
 	const centerPost = useCallback(() => {
 		const post = postRef.current;
 
-		if (!post) {
+		if (!post || !children) {
 			return;
 		}
 
-		if (!children) {
+		const cardContent = post.closest(
+			'[data-slot="card-content"]',
+		) as HTMLElement;
+
+		if (!cardContent) {
 			return;
 		}
 
-		const pageElement = post.closest(".x");
-		if (!pageElement) return;
-
-		const flexContainer = pageElement.querySelector("[data-feed]");
-		if (!flexContainer) return;
-
-		const flexHeight = (flexContainer as HTMLElement).offsetHeight;
-
+		const cardHeight = cardContent.offsetHeight;
 		const postHeight = post.offsetHeight;
+		const postOffsetTop = post.offsetTop - cardContent.offsetTop;
 
-		const marginAdjustment = flexHeight / 2 - postHeight / 2;
+		const marginAdjustment = (cardHeight - postHeight) / 2 - postOffsetTop;
 
-		setPostMarginTop(-marginAdjustment / 2);
+		setPostMarginTop(marginAdjustment);
 	}, [setPostMarginTop, children]);
 
 	useLayoutEffect(() => {
@@ -185,7 +183,7 @@ function Post({
 	return (
 		<motion.div
 			className={cn(
-				"flex gap-x-2 border-b px-4 pt-3 transition-colors ease-snappy hover:bg-muted",
+				"z-0 flex gap-x-2 border-b px-4 pt-3 transition-colors ease-snappy hover:bg-muted",
 				className,
 			)}
 			ref={postRef}

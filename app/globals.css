@@ -12,8 +12,8 @@
 	--radius-3xl: 1.5rem; 
 	--radius-4xl: 1.75rem; 
 	--ease-snappy: cubic-bezier(0.32, 0.72, 0, 1);
-	--font-mono: var(--font-cascadia-code);
-	--font-sans: var(--font-inter);
+	--font-mono: var(--font-geist-mono);
+	--font-sans: var(--font-geist);
 	--container-8xl: 96rem;
 	--color-background: var(--background);
 	--color-foreground: var(--foreground);
@@ -117,18 +117,6 @@
 	--avatar-foreground: oklch(92.2% 0 0);
 }
 
-.bluesky .prose :where(p) {
-	margin: 0;
-	font-size: 15px;
-	line-height: 20px;
-}
-
-.bluesky .prose :where(img) {
-	margin: 0;
-	border: 1px solid var(--border);
-	border-radius: 0.75rem;
-}
-
 .bluesky {
 	--border: oklch(88.8% 0.0123 248);
 	--background: oklch(100% 0 0);
@@ -149,12 +137,6 @@
 	--muted-foreground: oklch(71.4% 0.0332 248);
 }
 
-.threads .prose :where(p) {
-	margin: 0;
-	font-size: 15px;
-	line-height: 21px;
-}
-
 .threads {
 	--background: oklch(98.5% 0 0);
 	--foreground: oklch(0% 0 0);
@@ -164,6 +146,7 @@
 	--muted-foreground: oklch(68.3% 0 0);
 	--shadow-lg: 0 0 12px 0 oklch(0 0 0 / 4%);
 	--text-base: 0.9375rem;
+	--text-base--line-height: 1.3125rem;
 	--radius-3xl: 1.5rem;
 	--primary: oklch(0% 0 0);
 	--primary-foreground: oklch(100% 0 0);
@@ -178,6 +161,7 @@
 	--muted-foreground: oklch(56.9% 0 0);
 	--shadow-lg: 0 0 12px 0 oklch(0 0 0 / 4%);
 	--text-base: 0.9375rem;
+	--text-base--line-height: 1.3125rem;
 	--radius-3xl: 1.5rem;
 	--primary: oklch(100% 0 0);
 	--primary-foreground: oklch(0% 0 0);
@@ -191,6 +175,7 @@
 	--muted: oklch(98.8% 0.000000000000000663 0);
 	--muted-foreground: oklch(49.4% 0.0294 241);
 	--text-base: 0.9375rem;
+	--text-base--line-height: 1.25rem;
 	--text-sm: 0.8125rem;
 }
 
@@ -202,6 +187,7 @@
 	--muted: oklch(13.4% 0.0000000000000000703 0);
 	--muted-foreground: oklch(56.3% 0.00981 248);
 	--text-base: 0.9375rem;
+	--text-base--line-height: 1.25rem;
 	--text-sm: 0.8125rem
 }
 

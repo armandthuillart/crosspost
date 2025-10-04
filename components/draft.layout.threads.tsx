@@ -46,68 +46,71 @@ function Page({ children, className, avatar, ...props }: PageProps) {
 			className={cn("flex flex-1 items-center justify-center px-5", className)}
 			{...props}
 		>
-			<div
-				className="flex max-w-160 flex-col"
-				data-feed
-				style={{ marginTop: `-${postMarginTop / 2}px` }}
-			>
+			<div className="flex max-w-160 flex-col">
 				<Header />
+				<div
+					className="h-full overflow-hidden rounded-t-3xl border border-b-0 bg-card shadow-lg"
+					data-feed
+				>
+					<div
+						className="flex size-full flex-col"
+						style={{ marginTop: `-${postMarginTop / 2}px` }}
+					>
+						<div className="flex items-center justify-between border-b p-6">
+							<div className="flex items-center gap-3">
+								<Avatar className="size-9">
+									<AvatarImage
+										src={
+											avatar ??
+											"https://static.cdninstagram.com/rsrc.php/v1/yb/r/5OTfmveiK1K.jpg"
+										}
+									/>
+								</Avatar>
 
-				<div className="flex size-full flex-col rounded-t-3xl border border-b-0 bg-card shadow-lg">
-					<div className="flex items-center justify-between border-b p-6">
-						<div className="flex items-center gap-3">
-							<Avatar className="size-9">
-								<AvatarImage
-									src={
-										avatar ??
-										"https://static.cdninstagram.com/rsrc.php/v1/yb/r/5OTfmveiK1K.jpg"
-									}
-								/>
-							</Avatar>
+								<span className="text-muted-foreground leading-5.25">
+									What&apos;s new?
+								</span>
+							</div>
 
-							<span className="text-muted-foreground leading-5.25">
-								What&apos;s new?
-							</span>
+							<Button
+								className="bg-card px-4 font-semibold text-base hover:bg-card"
+								variant="outline"
+							>
+								Post
+							</Button>
 						</div>
-
-						<Button
-							className="bg-card px-4 font-semibold text-base hover:bg-card"
-							variant="outline"
-						>
-							Post
-						</Button>
+						<Threads.Post
+							avatar="https://scontent-cdg4-1.cdninstagram.com/v/t51.2885-19/551809203_17926750872102532_5163118229326285868_n.jpg?stp=dst-jpg_s150x150_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLmRqYW5nby4xMDgwLmMyIn0&_nc_ht=scontent-cdg4-1.cdninstagram.com&_nc_cat=1&_nc_oc=Q6cZ2QFBfAx0P5xSaA91x04dymdcKtccZT48l9iRouvaU1Dx_1DZdJwKEIrVoEqD_AckbK8&_nc_ohc=epefFUZjesQQ7kNvwEQWSg1&_nc_gid=a2ax6odihR1SCLTXBN-Ayw&edm=AFH_I_IBAAAA&ccb=7-5&oh=00_AfdOJQw8mn5UAUHmQSIyH4eFhDYOwhS7tS346FqN3UUn0Q&oe=68E72D77&_nc_sid=58c7ce"
+							content="How do you take your toast? 🧈"
+							handle="threads"
+							isVerified
+							likesCount={1400}
+							postedAt="2h"
+							repliesCount={636}
+							repostsCount={59}
+						/>
+						{children}
+						<Threads.Post
+							avatar="https://scontent-cdg4-1.cdninstagram.com/v/t51.2885-19/551809203_17926750872102532_5163118229326285868_n.jpg?stp=dst-jpg_s150x150_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLmRqYW5nby4xMDgwLmMyIn0&_nc_ht=scontent-cdg4-1.cdninstagram.com&_nc_cat=1&_nc_oc=Q6cZ2QFBfAx0P5xSaA91x04dymdcKtccZT48l9iRouvaU1Dx_1DZdJwKEIrVoEqD_AckbK8&_nc_ohc=epefFUZjesQQ7kNvwEQWSg1&_nc_gid=a2ax6odihR1SCLTXBN-Ayw&edm=AFH_I_IBAAAA&ccb=7-5&oh=00_AfdOJQw8mn5UAUHmQSIyH4eFhDYOwhS7tS346FqN3UUn0Q&oe=68E72D77&_nc_sid=58c7ce"
+							content="One underrated form of self-care: threading"
+							handle="threads"
+							isVerified
+							likesCount={5900}
+							postedAt="1d"
+							repliesCount={752}
+							repostsCount={459}
+						/>
+						<Threads.Post
+							avatar="https://scontent-cdg4-1.cdninstagram.com/v/t51.2885-19/551809203_17926750872102532_5163118229326285868_n.jpg?stp=dst-jpg_s150x150_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLmRqYW5nby4xMDgwLmMyIn0&_nc_ht=scontent-cdg4-1.cdninstagram.com&_nc_cat=1&_nc_oc=Q6cZ2QFBfAx0P5xSaA91x04dymdcKtccZT48l9iRouvaU1Dx_1DZdJwKEIrVoEqD_AckbK8&_nc_ohc=epefFUZjesQQ7kNvwEQWSg1&_nc_gid=a2ax6odihR1SCLTXBN-Ayw&edm=AFH_I_IBAAAA&ccb=7-5&oh=00_AfdOJQw8mn5UAUHmQSIyH4eFhDYOwhS7tS346FqN3UUn0Q&oe=68E72D77&_nc_sid=58c7ce"
+							content="If we made you a bowl of pasta shaped like Threads, would you eat it? 🍝"
+							handle="threads"
+							isVerified
+							likesCount={2600}
+							postedAt="2d"
+							repliesCount={603}
+							repostsCount={101}
+						/>
 					</div>
-					<Threads.Post
-						avatar="https://scontent-cdg4-1.cdninstagram.com/v/t51.2885-19/532425827_17922468903102532_3119748025702625018_n.jpg?stp=dst-jpg_s640x640_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLmRqYW5nby4xMDgwLmMyIn0&_nc_ht=scontent-cdg4-1.cdninstagram.com&_nc_cat=1&_nc_oc=Q6cZ2QE8wR4Z0joPLkiyCpyOf5E-MU10n210ZUJKd74a1dz2dkK36dBCfiECi-SrLjFDc58&_nc_ohc=0fgGJKlEKo0Q7kNvwEgSsAE&_nc_gid=ipBe9Ju-XUmeq0LtdtdhwA&edm=AAZTMJEBAAAA&ccb=7-5&oh=00_AfUlKMSyJhY1hvScM8r9YtUb5qc_4hT3JPmI76Y6uwoxLg&oe=68B4DC2B&_nc_sid=49cb7f"
-						content="How do you take your toast? 🧈"
-						handle="threads"
-						isVerified
-						likesCount={1400}
-						postedAt="2h"
-						repliesCount={636}
-						repostsCount={59}
-					/>
-					{children}
-					<Threads.Post
-						avatar="https://scontent-cdg4-1.cdninstagram.com/v/t51.2885-19/532425827_17922468903102532_3119748025702625018_n.jpg?stp=dst-jpg_s640x640_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLmRqYW5nby4xMDgwLmMyIn0&_nc_ht=scontent-cdg4-1.cdninstagram.com&_nc_cat=1&_nc_oc=Q6cZ2QE8wR4Z0joPLkiyCpyOf5E-MU10n210ZUJKd74a1dz2dkK36dBCfiECi-SrLjFDc58&_nc_ohc=0fgGJKlEKo0Q7kNvwEgSsAE&_nc_gid=ipBe9Ju-XUmeq0LtdtdhwA&edm=AAZTMJEBAAAA&ccb=7-5&oh=00_AfUlKMSyJhY1hvScM8r9YtUb5qc_4hT3JPmI76Y6uwoxLg&oe=68B4DC2B&_nc_sid=49cb7f"
-						content="One underrated form of self-care: threading"
-						handle="threads"
-						isVerified
-						likesCount={5900}
-						postedAt="1d"
-						repliesCount={752}
-						repostsCount={459}
-					/>
-					<Threads.Post
-						avatar="https://scontent-cdg4-1.cdninstagram.com/v/t51.2885-19/532425827_17922468903102532_3119748025702625018_n.jpg?stp=dst-jpg_s640x640_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLmRqYW5nby4xMDgwLmMyIn0&_nc_ht=scontent-cdg4-1.cdninstagram.com&_nc_cat=1&_nc_oc=Q6cZ2QE8wR4Z0joPLkiyCpyOf5E-MU10n210ZUJKd74a1dz2dkK36dBCfiECi-SrLjFDc58&_nc_ohc=0fgGJKlEKo0Q7kNvwEgSsAE&_nc_gid=ipBe9Ju-XUmeq0LtdtdhwA&edm=AAZTMJEBAAAA&ccb=7-5&oh=00_AfUlKMSyJhY1hvScM8r9YtUb5qc_4hT3JPmI76Y6uwoxLg&oe=68B4DC2B&_nc_sid=49cb7f"
-						content="If we made you a bowl of pasta shaped like Threads, would you eat it? 🍝"
-						handle="threads"
-						isVerified
-						likesCount={2600}
-						postedAt="2d"
-						repliesCount={603}
-						repostsCount={101}
-					/>
 				</div>
 			</div>
 		</div>
@@ -116,7 +119,7 @@ function Page({ children, className, avatar, ...props }: PageProps) {
 
 function Header() {
 	return (
-		<div className="flex h-15 w-full shrink-0 items-center justify-center">
+		<div className="z-1 flex h-15 w-full shrink-0 items-center justify-center">
 			<div className="flex items-center gap-4">
 				<h1 className="font-semibold text-[0.9375rem] leading-5.25">For you</h1>
 
@@ -163,27 +166,25 @@ function Post({
 	const centerPost = useCallback(() => {
 		const post = postRef.current;
 
-		if (!post) {
+		if (!post || !children) {
 			return;
 		}
 
-		if (!children) {
+		const cardContent = post.closest(
+			'[data-slot="card-content"]',
+		) as HTMLElement;
+
+		if (!cardContent) {
 			return;
 		}
 
-		const pageElement = post.closest(".threads");
-		if (!pageElement) return;
-
-		const flexContainer = pageElement.querySelector("[data-feed]");
-		if (!flexContainer) return;
-
-		const flexHeight = (flexContainer as HTMLElement).offsetHeight;
-
+		const cardHeight = cardContent.offsetHeight;
 		const postHeight = post.offsetHeight;
+		const postOffsetTop = post.offsetTop - cardContent.offsetTop;
 
-		const marginAdjustment = flexHeight / 2 - postHeight / 2;
+		const marginAdjustment = (cardHeight - postHeight) / 2 - postOffsetTop;
 
-		setPostMarginTop(marginAdjustment);
+		setPostMarginTop(marginAdjustment + 60);
 	}, [setPostMarginTop, children]);
 
 	useLayoutEffect(() => {
@@ -256,13 +257,7 @@ function Post({
 				</div>
 
 				<div className="mt-0.75 flex flex-col items-start gap-1.5 text-left">
-					{children ? (
-						children
-					) : (
-						<div className="prose dark:prose-invert">
-							<p>{content}</p>
-						</div>
-					)}
+					{children ? children : <p>{content}</p>}
 
 					{image && (
 						<div className="relative mt-2 mb-1 aspect-video w-full">

@@ -97,7 +97,7 @@ export const Reasoning = memo(
 				value={{ duration, isOpen, isStreaming, setIsOpen }}
 			>
 				<Collapsible
-					className={cn("not-prose mb-4", className)}
+					className={cn("mb-4", className)}
 					onOpenChange={handleOpenChange}
 					open={isOpen}
 					{...props}
@@ -123,7 +123,7 @@ const getThinkingMessage = (isStreaming: boolean, duration?: number) => {
 
 export const ReasoningTrigger = memo(
 	({ className, children, ...props }: ReasoningTriggerProps) => {
-		const { isStreaming, isOpen, duration } = useReasoning();
+		const { isStreaming, duration } = useReasoning();
 
 		return (
 			<CollapsibleTrigger

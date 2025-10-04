@@ -38,7 +38,7 @@ function Page({ children, className, ...props }: ComponentProps<"div">) {
 	return (
 		<div
 			className={cn(
-				"bluesky flex h-full items-center justify-center px-4 pb-8 antialiased before:bg-background",
+				"bluesky flex h-full items-center justify-center px-4",
 				className,
 			)}
 			{...props}
@@ -99,7 +99,7 @@ function Header() {
 				</div>
 			</div>
 
-			<div className="sticky top-0 z-10 mx-auto grid h-11.75 w-full max-w-150 grid-cols-2 border border-t-0 bg-background">
+			<div className="sticky top-0 z-1 mx-auto grid h-11.75 w-full max-w-150 grid-cols-2 border border-t-0 bg-background">
 				<div className="flex justify-center p-3.5 pb-0 hover:bg-accent">
 					<div className="flex h-full flex-col items-center justify-between">
 						<p className="font-semibold text-[15px] text-foreground leading-5">
@@ -161,27 +161,25 @@ function Tweet({
 	const [, setTweetMarginTop] = useAtom(tweetMarginTopAtom);
 
 	const centerTweet = useCallback(() => {
-		const tweet = tweetRef.current;
+		const post = tweetRef.current;
 
-		if (!tweet) {
+		if (!post || !children) {
 			return;
 		}
 
-		if (!children) {
+		const cardContent = post.closest(
+			'[data-slot="card-content"]',
+		) as HTMLElement;
+
+		if (!cardContent) {
 			return;
 		}
 
-		const pageElement = tweet.closest(".bluesky");
-		if (!pageElement) return;
+		const cardHeight = cardContent.offsetHeight;
+		const postHeight = post.offsetHeight;
+		const postOffsetTop = post.offsetTop - cardContent.offsetTop;
 
-		const flexContainer = pageElement.querySelector("[data-feed]");
-		if (!flexContainer) return;
-
-		const flexHeight = (flexContainer as HTMLElement).offsetHeight;
-
-		const tweetHeight = tweet.offsetHeight;
-
-		const marginAdjustment = flexHeight / 2 - tweetHeight / 2;
+		const marginAdjustment = (cardHeight - postHeight) / 2 - postOffsetTop;
 
 		setTweetMarginTop(marginAdjustment);
 	}, [setTweetMarginTop, children]);
@@ -205,7 +203,7 @@ function Tweet({
 	return (
 		<motion.div
 			className={cn(
-				"mx-auto flex w-full max-w-150 border not-last:border-t-0 p-2.5 pr-3.75 pb-2 last:border-t-0 last:border-b-0 hover:bg-muted/45 data-[thread-end=true]:border-t-0 data-[thread-start=true]:border-b-0 data-[thread-end=true]:pt-0",
+				"z-0 mx-auto flex w-full max-w-150 border not-last:border-t-0 p-2.5 pr-3.75 pb-2 last:border-t-0 last:border-b-0 hover:bg-muted/45 data-[thread-end=true]:border-t-0 data-[thread-start=true]:border-b-0 data-[thread-end=true]:pt-0",
 				className,
 			)}
 			data-thread-end={isEndOfThread}
@@ -215,7 +213,7 @@ function Tweet({
 		>
 			<div className="flex flex-col pr-2.5 pl-2">
 				<Avatar className="size-10.5 border">
-					<AvatarImage src={avatar ?? ""} />
+					{avatar ? <AvatarImage src={avatar} /> : <AvatarIcon />}
 				</Avatar>
 
 				{isThread && (
@@ -234,7 +232,7 @@ function Tweet({
 					</span>
 				</div>
 
-				<div className="prose dark:prose-invert w-full">
+				<div className="w-full">
 					{children ? (
 						children
 					) : (
@@ -347,3 +345,26 @@ export const Bluesky = Object.assign(Page, {
 	Icon,
 	Tweet,
 });
+
+function AvatarIcon() {
+	return (
+		<svg
+			aria-hidden="true"
+			className="size-10"
+			fill="none"
+			height="80"
+			stroke="none"
+			viewBox="0 0 24 24"
+			width="80"
+		>
+			<circle cx="12" cy="12" fill="#0070ff" r="12" />
+			<circle cx="12" cy="9.5" fill="#fff" r="3.5" />
+			<path
+				d="M 12.058 22.784 C 9.422 22.784 7.007 21.836 5.137 20.262 C 5.667 17.988 8.534 16.25 11.99 16.25 C 15.494 16.25 18.391 18.036 18.864 20.357 C 17.01 21.874 14.64 22.784 12.058 22.784 Z"
+				fill="#fff"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+			/>
+		</svg>
+	);
+}

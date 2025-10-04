@@ -3,20 +3,20 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Provider as JotaiProvider } from "jotai";
 import type { Metadata } from "next";
-import { Cascadia_Code, Inter } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import { ConvexClientProvider } from "~/app/convex-client-provider";
 import { ThemeProvider } from "~/app/theme-provider";
 import { appName } from "~/lib/constants";
 import { cn } from "~/lib/utils";
 
-const sans = Inter({
+const sans = Geist({
 	subsets: ["latin"],
-	variable: "--font-inter",
+	variable: "--font-geist",
 });
 
-const mono = Cascadia_Code({
+const mono = Geist_Mono({
 	subsets: ["latin"],
-	variable: "--font-cascadia-code",
+	variable: "--font-geist-mono",
 });
 
 export const metadata: Metadata = {

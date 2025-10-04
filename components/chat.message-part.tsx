@@ -6,9 +6,9 @@ import { ShiningText } from "~/components/ui/shining-text";
 import type { MyMessage } from "~/lib/types";
 
 interface MessagePartProps {
+	isStreaming: boolean;
 	part: MyMessage["parts"][number];
 	role: MyMessage["role"];
-	isStreaming: boolean;
 }
 
 export function MessagePart({ part, role, isStreaming }: MessagePartProps) {

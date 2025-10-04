@@ -98,36 +98,31 @@ function Post({
 	repostCount = 10,
 	hasSquareAvatar,
 }: PostProps) {
-	const fallbackUrl =
-		"https://static.cdninstagram.com/rsrc.php/v1/yb/r/5OTfmveiK1K.jpg";
-
 	const postRef = useRef<HTMLDivElement>(null);
 	const [, setPostMarginTop] = useAtom(postMarginTopAtom);
 
 	const centerPost = useCallback(() => {
 		const post = postRef.current;
 
-		if (!post) {
+		if (!post || !children) {
 			return;
 		}
 
-		if (!children) {
+		const cardContent = post.closest(
+			'[data-slot="card-content"]',
+		) as HTMLElement;
+
+		if (!cardContent) {
 			return;
 		}
 
-		const pageElement = post.closest(".linkedin");
-		if (!pageElement) return;
-
-		const flexContainer = pageElement.querySelector("[data-feed]");
-		if (!flexContainer) return;
-
-		const flexHeight = (flexContainer as HTMLElement).offsetHeight;
-
+		const cardHeight = cardContent.offsetHeight;
 		const postHeight = post.offsetHeight;
+		const postOffsetTop = post.offsetTop - cardContent.offsetTop;
 
-		const marginAdjustment = flexHeight / 2 - postHeight / 2;
+		const marginAdjustment = (cardHeight - postHeight) / 2 - postOffsetTop;
 
-		setPostMarginTop(-marginAdjustment / 1.5);
+		setPostMarginTop(marginAdjustment);
 	}, [setPostMarginTop, children]);
 
 	useLayoutEffect(() => {
@@ -153,7 +148,7 @@ function Post({
 		>
 			<div className="flex items-center gap-2 pt-3 pr-18 pb-2 pl-4">
 				<Avatar className={cn("size-12", hasSquareAvatar && "rounded-none")}>
-					<AvatarImage src={avatar ?? fallbackUrl} />
+					{avatar ? <AvatarImage src={avatar} /> : <AvatarIcon />}
 				</Avatar>
 
 				<div className="flex flex-col">
@@ -503,6 +498,33 @@ function CongratsIcon() {
 					/>
 				</g>
 			</g>
+		</svg>
+	);
+}
+
+function AvatarIcon() {
+	return (
+		<svg
+			aria-hidden="true"
+			viewBox="0 0 128 128"
+			xmlns="http://www.w3.org/2000/svg"
+		>
+			<path
+				className="fill-[#e7e2dc] dark:fill-[#38434f]"
+				d="M0 0h128v128H0z"
+			/>
+			<path
+				d="M88.41 84.67a32 32 0 10-48.82 0 66.13 66.13 0 0148.82 0z"
+				fill="#788fa5"
+			/>
+			<path
+				d="M88.41 84.67a32 32 0 01-48.82 0A66.79 66.79 0 000 128h128a66.79 66.79 0 00-39.59-43.33z"
+				fill="#9db3c8"
+			/>
+			<path
+				d="M64 96a31.93 31.93 0 0024.41-11.33 66.13 66.13 0 00-48.82 0A31.93 31.93 0 0064 96z"
+				fill="#56687a"
+			/>
 		</svg>
 	);
 }

@@ -11,7 +11,7 @@ import type { Platform } from "~/lib/types";
 
 export function DraftVersions({ platforms }: { platforms: Platform[] }) {
 	return (
-		<TabsList className="-translate-x-1/2 absolute start-1/2 top-3 z-3 rounded-full bg-transparent p-1">
+		<TabsList className="">
 			{platforms.map((platform) => (
 				<TabsTrigger
 					className="data-[state=active]:bg-muted data-[state=active]:shadow-none"

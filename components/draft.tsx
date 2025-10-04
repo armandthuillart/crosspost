@@ -1,12 +1,6 @@
 "use client";
 
-import {
-	type ComponentProps,
-	type ComponentType,
-	type ReactNode,
-	useEffect,
-	useState,
-} from "react";
+import type { ComponentProps, ComponentType, ReactNode } from "react";
 import { DraftEditor } from "~/components/draft.editor";
 import { DraftHeader } from "~/components/draft.header";
 import { Bluesky } from "~/components/draft.layout.bluesky";
@@ -90,44 +84,20 @@ function renderUI(platform: Platform, content: string) {
 
 interface DraftProps {
 	title: string;
-	versions: Partial<UIDraft["versions"]>;
+	versions: UIDraft["versions"];
 }
 
 export function Draft({ title, versions }: DraftProps) {
-	const [currentPlatform, setCurrentPlatform] = useState<string>("");
-
-	// Initialize currentPlatform when versions change
-	useEffect(() => {
-		if (versions) {
-			const platforms = Object.keys(versions).sort(
-				(a, b) => a.length - b.length,
-			);
-
-			const defaultPlatform = platforms[0];
-
-			if (defaultPlatform && !currentPlatform) {
-				setCurrentPlatform(defaultPlatform);
-			}
-		}
-	}, [versions, currentPlatform]);
-
-	if (Object.keys(versions).length === 0) {
-		return null;
-	}
-
-	const platforms = Object.keys(versions).sort(
+	const platforms = (Object.keys(versions) as Platform[]).sort(
 		(a, b) => a.length - b.length,
-	) as Platform[];
+	);
 
 	const defaultPlatform = platforms[0];
 
-	function handlePublish() {
-		if (!currentPlatform || !versions) return;
-
-		const content = versions[currentPlatform as keyof typeof versions];
+	function handlePublish(platform: Platform) {
+		const content = versions[platform];
 		if (!content) return;
-
-		const url = getURL(currentPlatform as Platform, content);
+		const url = getURL(platform, content);
 		window.open(url, "_blank", "noopener,noreferrer");
 	}
 
@@ -135,7 +105,6 @@ export function Draft({ title, versions }: DraftProps) {
 		<Tabs
 			className="relative not-first:mt-4 mb-4 w-full"
 			defaultValue={defaultPlatform}
-			onValueChange={setCurrentPlatform}
 		>
 			<DraftVersions platforms={platforms} />
 
@@ -144,7 +113,10 @@ export function Draft({ title, versions }: DraftProps) {
 				return (
 					<TabsContent key={platform} value={platform}>
 						<Card className="relative h-88 overflow-hidden rounded-2xl p-0 shadow-sm">
-							<DraftHeader onPublish={handlePublish} title={title} />
+							<DraftHeader
+								onPublish={() => handlePublish(platform)}
+								title={title}
+							/>
 							<CardContent
 								className={cn("z-0 overflow-hidden bg-background", platform)}
 							>

@@ -1,3 +1,5 @@
+"use client";
+
 import { Suggestion, Suggestions } from "~/components/ai-elements/suggestion";
 
 const suggestions = [

@@ -1,3 +1,5 @@
+"use client";
+
 import { formatDistanceToNow } from "date-fns";
 import { motion } from "motion/react";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";

@@ -1,53 +1,158 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
-import type { MyMessage } from "~/lib/types";
+"use client";
 
-interface DraftProps {
-	part: MyMessage["parts"][number] & { type: "tool-get-draft" };
+import {
+	type ComponentProps,
+	type ComponentType,
+	type ReactNode,
+	useEffect,
+	useState,
+} from "react";
+import { DraftEditor } from "~/components/draft.editor";
+import { DraftHeader } from "~/components/draft.header";
+import { Bluesky } from "~/components/draft.layout.bluesky";
+import { Threads } from "~/components/draft.layout.threads";
+import { X } from "~/components/draft.layout.x";
+import { DraftVersions } from "~/components/draft.versions";
+import { Card, CardContent } from "~/components/ui/card";
+import { Tabs, TabsContent } from "~/components/ui/tabs";
+import type { Platform, UIDraft } from "~/lib/types";
+import { cn, getURL } from "~/lib/utils";
+
+interface Options {
+	maxLength: number;
+	components: {
+		layout: ComponentType<{
+			children: ReactNode;
+		}>;
+		post: {
+			component: ComponentType<{
+				children: ReactNode;
+			}>;
+			props:
+				| ComponentProps<typeof Bluesky.Tweet>
+				| ComponentProps<typeof Threads.Post>
+				| ComponentProps<typeof X.Post>;
+		};
+	};
 }
 
-export function Draft({ part }: DraftProps) {
-	const { state, input } = part;
+const PLATFORM_CONFIG: Record<Platform, Options> = {
+	bluesky: {
+		components: {
+			layout: Bluesky,
+			post: { component: Bluesky.Tweet, props: {} },
+		},
+		maxLength: 300,
+	},
+	linkedin: {
+		components: {
+			layout: Bluesky,
+			post: { component: Bluesky.Tweet, props: {} },
+		},
+		maxLength: 300,
+	},
+	threads: {
+		components: {
+			layout: Threads,
+			post: { component: Threads.Post, props: {} },
+		},
+		maxLength: 10000,
+	},
+	x: {
+		components: {
+			layout: X,
+			post: { component: X.Post, props: { hasGrok: true } },
+		},
+		maxLength: 280,
+	},
+};
 
-	if (state === "output-available") {
-		if (!input?.versions) {
-			return null;
+function renderUI(platform: Platform, content: string) {
+	const config = PLATFORM_CONFIG[platform];
+
+	const {
+		maxLength,
+		components: {
+			layout: Layout,
+			post: { component: Post, props },
+		},
+	} = config;
+
+	return (
+		<Layout>
+			<Post {...props}>
+				<DraftEditor content={content} maxLength={maxLength} />
+			</Post>
+		</Layout>
+	);
+}
+
+interface DraftProps {
+	title: string;
+	versions: Partial<UIDraft["versions"]>;
+}
+
+export function Draft({ title, versions }: DraftProps) {
+	const [currentPlatform, setCurrentPlatform] = useState<string>("");
+
+	// Initialize currentPlatform when versions change
+	useEffect(() => {
+		if (versions) {
+			const platforms = Object.keys(versions).sort(
+				(a, b) => a.length - b.length,
+			);
+
+			const defaultPlatform = platforms[0];
+
+			if (defaultPlatform && !currentPlatform) {
+				setCurrentPlatform(defaultPlatform);
+			}
 		}
+	}, [versions, currentPlatform]);
 
-		return (
-			<Tabs className="not-first:mt-4 mb-4 w-full">
-				<TabsList>
-					{Object.entries(part.input.versions).map(([platform]) => (
-						<TabsTrigger disabled key={platform} value={platform}>
-							{platform}
-						</TabsTrigger>
-					))}
-				</TabsList>
-				{Object.entries(part.input.versions).map(([platform]) => (
-					<TabsContent key={platform} value={platform}>
-						{part.input.versions[platform as keyof typeof part.input.versions]}
-					</TabsContent>
-				))}
-			</Tabs>
-		);
+	if (Object.keys(versions).length === 0) {
+		return null;
 	}
 
-	return state === "input-available" ? (
-		<Tabs className="not-first:mt-4 mb-4 w-full">
-			<div>{input.title}</div>
+	const platforms = Object.keys(versions).sort(
+		(a, b) => a.length - b.length,
+	) as Platform[];
 
-			<TabsList>
-				{Object.entries(input.versions).map(([platform]) => (
-					<TabsTrigger key={platform} value={platform}>
-						{platform}
-					</TabsTrigger>
-				))}
-			</TabsList>
+	const defaultPlatform = platforms[0];
 
-			{Object.entries(input.versions).map(([platform]) => (
-				<TabsContent key={platform} value={platform}>
-					{input.versions[platform as keyof typeof input.versions]}
-				</TabsContent>
-			))}
+	function handlePublish() {
+		if (!currentPlatform || !versions) return;
+
+		const content = versions[currentPlatform as keyof typeof versions];
+		if (!content) return;
+
+		const url = getURL(currentPlatform as Platform, content);
+		window.open(url, "_blank", "noopener,noreferrer");
+	}
+
+	return (
+		<Tabs
+			className="relative not-first:mt-4 mb-4 w-full"
+			defaultValue={defaultPlatform}
+			onValueChange={setCurrentPlatform}
+		>
+			<DraftVersions platforms={platforms} />
+
+			{platforms.map((platform) => {
+				const content = versions[platform] ?? "";
+				return (
+					<TabsContent key={platform} value={platform}>
+						<Card className="relative h-88 overflow-hidden rounded-2xl p-0 shadow-sm">
+							<DraftHeader onPublish={handlePublish} title={title} />
+							<CardContent
+								className={cn("z-0 overflow-hidden bg-background", platform)}
+							>
+								{renderUI(platform, content)}
+							</CardContent>
+						</Card>
+					</TabsContent>
+				);
+			})}
 		</Tabs>
-	) : null;
+	);
 }

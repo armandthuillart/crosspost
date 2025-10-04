@@ -4,6 +4,12 @@ const nextConfig: NextConfig = {
 	devIndicators: {
 		position: "bottom-right",
 	},
+	images: {
+		remotePatterns: [
+			{ hostname: "cdn.bsky.app" },
+			{ hostname: "*.cdninstagram.com" },
+		],
+	},
 	typedRoutes: true,
 };
 

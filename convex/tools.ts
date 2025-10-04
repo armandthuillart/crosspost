@@ -3,6 +3,7 @@ import { z } from "zod/v3";
 import { chatAgent } from "~/convex/agents";
 import { api, internal } from "~/convex/generated/api";
 import type { Id } from "~/convex/generated/dataModel";
+import { ChatSDKError } from "~/lib/errors";
 import { draftSchema, postSchema } from "~/lib/schema";
 import type { Platform } from "~/lib/types";
 
@@ -11,16 +12,21 @@ export const getDraft = createTool({
 	description:
 		"Create a new post draft. It will return the draft id if successful.",
 	handler: async (
-		{ threadId, runMutation },
+		{ threadId, runMutation, userId },
 		{ title, versions },
 	): Promise<Id<"drafts">> => {
 		if (!threadId) {
-			throw new Error("Thread ID is required");
+			throw new ChatSDKError("bad_request:draft");
+		}
+
+		if (!userId) {
+			throw new ChatSDKError("unauthorized:auth");
 		}
 
 		return await runMutation(api.drafts.createDraft, {
 			threadId,
 			title,
+			userId,
 			versions,
 		});
 	},

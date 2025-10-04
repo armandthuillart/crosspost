@@ -1,15 +1,23 @@
-import { Provider as JotaiProvider } from "jotai";
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "~/app/globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Provider as JotaiProvider } from "jotai";
+import type { Metadata } from "next";
+import { Cascadia_Code, Inter } from "next/font/google";
 import { ConvexClientProvider } from "~/app/convex-client-provider";
 import { ThemeProvider } from "~/app/theme-provider";
 import { appName } from "~/lib/constants";
 import { cn } from "~/lib/utils";
 
-const inter = Inter({ subsets: ["latin"] });
+const sans = Inter({
+	subsets: ["latin"],
+	variable: "--font-inter",
+});
+
+const mono = Cascadia_Code({
+	subsets: ["latin"],
+	variable: "--font-cascadia-code",
+});
 
 export const metadata: Metadata = {
 	description: "Create and post to social media by chatting with AI.",
@@ -23,7 +31,8 @@ export const metadata: Metadata = {
 		"social media",
 		"post scheduler",
 	],
-	title: appName,
+	metadataBase: new URL("https://www.try-crosspost.com"),
+	title: { default: appName, template: `%s | ${appName}` },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -31,8 +40,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
 		<html className="h-full" lang="en" suppressHydrationWarning>
 			<body
 				className={cn(
-					"h-full bg-background text-foreground antialiased",
-					inter.className,
+					"h-full bg-background font-sans text-foreground antialiased",
+					mono.variable,
+					sans.variable,
 				)}
 			>
 				<ThemeProvider>

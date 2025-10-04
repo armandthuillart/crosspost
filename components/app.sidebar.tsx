@@ -178,7 +178,7 @@ function SibebarHistorySearch({
 
 			{hasThreadIds && (
 				<Button
-					className="shrink-0 text-muted-foreground"
+					className="shrink-0 text-muted-foreground hover:bg-destructive hover:text-destructive-foreground"
 					onClick={handleDelete}
 					size="icon"
 					variant="ghost"

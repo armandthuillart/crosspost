@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
 	images: {
 		remotePatterns: [
 			{ hostname: "cdn.bsky.app" },
+			{ hostname: "static.licdn.com" },
 			{ hostname: "*.cdninstagram.com" },
 		],
 	},

@@ -188,6 +188,7 @@
 	--foreground: oklch(18.8% 0.0128 249);
 	--border: oklch(96.1% 0.00448 214);
 	--selection-foreground: oklch(66.7% 0.161 246);
+	--muted: oklch(98.8% 0.000000000000000663 0);
 	--muted-foreground: oklch(49.4% 0.0294 241);
 	--text-base: 0.9375rem;
 	--text-sm: 0.8125rem;
@@ -198,9 +199,36 @@
 	--foreground: oklch(93.3% 0.00255 229);
 	--border: oklch(31.8% 0.00772 240);
 	--selection-foreground: oklch(66.7% 0.161 246);
+	--muted: oklch(13.4% 0.0000000000000000703 0);
 	--muted-foreground: oklch(56.3% 0.00981 248);
 	--text-base: 0.9375rem;
 	--text-sm: 0.8125rem
+}
+
+.linkedin {
+	--background: oklch(96.2% 0.00574 84.6);
+	--foreground: oklch(21.3% 0 0);
+	--muted-foreground: oklch(51% 0 0);
+	--border: oklch(90% 0.00551 95.1);
+	--input: oklch(93.1% 0.000000000000000765 0);
+	--card: oklch(100% 0 0);
+	--card-foreground: oklch(21.3% 0 0);
+	--accent: oklch(96.4% 0.000000000000000446 0);
+	--accent-foreground: oklch(0% 0 0 / 75%);
+	--text-base: 0.875rem;
+}
+
+.dark .linkedin {
+	--background: oklch(0% 0 0);
+	--foreground: oklch(93.4% 0.00134 286);
+	--muted-foreground: oklch(72.3% 0 220);
+	--border: oklch(25.6% 0.000000000000000175 0);
+	--input: oklch(34.7% 0.00664 248);
+	--card: oklch(23.7% 0.00973 248);
+	--card-foreground: oklch(93.4% 0.00134 286);
+	--accent: oklch(29.6% 0.00841 256);
+	--accent-foreground: oklch(100% 0 0 / 75%);
+	--text-base: 0.875rem;
 }
 
 @layer base {

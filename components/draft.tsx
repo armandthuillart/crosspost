@@ -10,6 +10,7 @@ import {
 import { DraftEditor } from "~/components/draft.editor";
 import { DraftHeader } from "~/components/draft.header";
 import { Bluesky } from "~/components/draft.layout.bluesky";
+import { LinkedIn } from "~/components/draft.layout.linkedin";
 import { Threads } from "~/components/draft.layout.threads";
 import { X } from "~/components/draft.layout.x";
 import { DraftVersions } from "~/components/draft.versions";
@@ -46,10 +47,10 @@ const PLATFORM_CONFIG: Record<Platform, Options> = {
 	},
 	linkedin: {
 		components: {
-			layout: Bluesky,
-			post: { component: Bluesky.Tweet, props: {} },
+			layout: LinkedIn,
+			post: { component: LinkedIn.Post, props: {} },
 		},
-		maxLength: 300,
+		maxLength: 3000,
 	},
 	threads: {
 		components: {

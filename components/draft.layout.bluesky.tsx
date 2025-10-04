@@ -143,15 +143,15 @@ interface TweetProps {
 function Tweet({
 	image,
 	avatar,
-	handle,
+	handle = "@you",
 	content,
 	isThread,
 	children,
-	createdAt,
+	createdAt = "now",
 	className,
 	likesCount,
 	isVerified,
-	displayName,
+	displayName = "You",
 	repliesCount,
 	commentsCount,
 	isEndOfThread = false,
@@ -205,7 +205,7 @@ function Tweet({
 	return (
 		<motion.div
 			className={cn(
-				"mx-auto flex w-full max-w-150 border not-last:border-t-0 p-2.5 pr-3.75 pb-2 last:border-b-0 hover:bg-muted/45 data-[thread-end=true]:border-t-0 data-[thread-start=true]:border-b-0 data-[thread-end=true]:pt-0",
+				"mx-auto flex w-full max-w-150 border not-last:border-t-0 p-2.5 pr-3.75 pb-2 last:border-t-0 last:border-b-0 hover:bg-muted/45 data-[thread-end=true]:border-t-0 data-[thread-start=true]:border-b-0 data-[thread-end=true]:pt-0",
 				className,
 			)}
 			data-thread-end={isEndOfThread}
@@ -225,14 +225,10 @@ function Tweet({
 
 			<div className="flex w-full flex-col">
 				<div className="flex items-center pb-1">
-					<span className="font-semibold leading-4.25">
-						{displayName ?? "You"}
-					</span>
+					<span className="font-semibold leading-4.25">{displayName}</span>
 					{isVerified && <Badge />}
 					&nbsp;
-					<span className="text-muted-foreground leading-4.25">
-						{handle ?? "you"}
-					</span>
+					<span className="text-muted-foreground leading-4.25">{handle}</span>
 					<span className="pl-1 text-muted-foreground leading-4.25">
 						· {createdAt}
 					</span>

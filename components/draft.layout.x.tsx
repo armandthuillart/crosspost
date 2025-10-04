@@ -184,7 +184,10 @@ function Post({
 
 	return (
 		<motion.div
-			className={cn("flex gap-x-2 border-b px-4 pt-3", className)}
+			className={cn(
+				"flex gap-x-2 border-b px-4 pt-3 transition-colors ease-snappy hover:bg-muted",
+				className,
+			)}
 			ref={postRef}
 		>
 			<Avatar className={cn("size-10", hasSquareAvatar && "rounded")}>

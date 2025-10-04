@@ -51,15 +51,34 @@ function PopulateEditorPlugin({ content }: { content: string }) {
 	return null;
 }
 
-function renderProgress(maxLength: number) {
-	return ({ remainingCharacters }: { remainingCharacters: number }) => {
+export function DraftEditor({ content, maxLength }: DraftEditorProps) {
+	const initialConfig: InitialConfigType = {
+		namespace: "MyEditor",
+		nodes: [LinkNode, OverflowNode],
+		onError: (e: unknown) => {
+			console.error(e);
+			throw e;
+		},
+		theme: {
+			link: "inline cursor-pointer align-baseline text-primary underline decoration-2 decoration-muted-foreground decoration-dotted underline-offset-2",
+			paragraph: "text-base",
+		},
+	};
+
+	function handleChange(editorState: EditorState) {
+		console.log(editorState);
+	}
+
+	function renderProgress({
+		remainingCharacters,
+	}: {
+		remainingCharacters: number;
+	}) {
 		const usedLength = maxLength - remainingCharacters;
 		const progress = Math.min(usedLength / maxLength, 1);
 
 		const circumference = 2 * Math.PI * 10; // radius = 10
 		const strokeDashoffset = circumference - progress * circumference;
-
-		const parent = document.querySelector('[data-slot="card"]');
 
 		const element = (
 			<HoverCard>
@@ -120,27 +139,18 @@ function renderProgress(maxLength: number) {
 			</HoverCard>
 		);
 
-		return createPortal(element, parent as Element);
-	};
-}
+		if (typeof window === "undefined") {
+			return <div />;
+		}
 
-export function DraftEditor({ content, maxLength }: DraftEditorProps) {
-	const initialConfig: InitialConfigType = {
-		namespace: "MyEditor",
-		nodes: [LinkNode, OverflowNode],
-		onError: (e: unknown) => {
-			console.error(e);
-			throw e;
-		},
-		theme: {
-			link: "inline cursor-pointer align-baseline text-primary underline decoration-2 decoration-muted-foreground decoration-dotted underline-offset-2",
-			paragraph: "text-base",
-		},
-	};
+		const parent = document.querySelector('[data-slot="card"]');
 
-	const handleChange = (editorState: EditorState) => {
-		console.log(editorState);
-	};
+		if (!parent) {
+			return <div />;
+		}
+
+		return createPortal(element, parent);
+	}
 
 	return (
 		<LexicalComposer initialConfig={initialConfig}>
@@ -157,7 +167,7 @@ export function DraftEditor({ content, maxLength }: DraftEditorProps) {
 			<CharacterLimitPlugin
 				charset="UTF-8"
 				maxLength={maxLength}
-				renderer={renderProgress(maxLength)}
+				renderer={renderProgress}
 			/>
 		</LexicalComposer>
 	);
@@ -165,8 +175,10 @@ export function DraftEditor({ content, maxLength }: DraftEditorProps) {
 
 function Placeholder() {
 	return (
-		<span className="pointer-events-none absolute top-7 left-8 mt-px size-full text-muted-foreground">
-			Write something...
-		</span>
+		<div className="relative">
+			<span className="-top-6 pointer-events-none absolute left-0 mt-0.5 size-full text-muted-foreground">
+				Write something...
+			</span>
+		</div>
 	);
 }

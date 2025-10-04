@@ -44,15 +44,25 @@ interface ChatInputProps {
 	order: number;
 	isChat: boolean;
 	chatId: string | null;
-	countryCode?: string;
 	isStreaming: boolean;
+	countryCode?: string;
 	hasSubmitted: boolean;
 	userLocation: { city?: string; country?: string; region?: string };
+	onStartNewChat?: () => void;
 }
 
 export const ChatInput = forwardRef<InputRef, ChatInputProps>(
 	(
-		{ user, order, chatId, isChat, isStreaming, userLocation, hasSubmitted },
+		{
+			user,
+			order,
+			chatId,
+			isChat,
+			isStreaming,
+			userLocation,
+			hasSubmitted,
+			onStartNewChat,
+		},
 		ref,
 	) => {
 		const { replace } = useRouter();
@@ -99,6 +109,7 @@ export const ChatInput = forwardRef<InputRef, ChatInputProps>(
 				let threadId = chatId;
 
 				if (!chatId) {
+					onStartNewChat?.();
 					threadId = await createChat();
 					replace(`/c/${threadId}`);
 					setThreadId(threadId);
@@ -134,6 +145,7 @@ export const ChatInput = forwardRef<InputRef, ChatInputProps>(
 				sendMessage,
 				resetHeight,
 				userLocation,
+				onStartNewChat,
 			],
 		);
 
@@ -269,9 +281,10 @@ export const ChatInput = forwardRef<InputRef, ChatInputProps>(
 					ref={inputRef}
 					value={prompt}
 				/>
-				{isStreaming ? (
+
+				{threadId && isStreaming ? (
 					<PromptInputStop
-						onClick={() => threadId && abortStreamByOrder({ order, threadId })}
+						onClick={() => abortStreamByOrder({ order, threadId })}
 					/>
 				) : (
 					<PromptInputSubmit disabled={!isDirty || hasSubmitted} />

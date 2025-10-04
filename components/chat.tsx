@@ -17,9 +17,9 @@ import type { MyMessage } from "~/lib/types";
 import { attr } from "~/lib/utils";
 
 interface ChatProps {
-	userLocation: { city?: string; country?: string; region?: string };
-	preloadedUser: Preloaded<typeof api.auth.getUser>;
 	initialMessages: UIMessage[];
+	preloadedUser: Preloaded<typeof api.auth.getUser>;
+	userLocation: { city?: string; country?: string; region?: string };
 }
 
 export function Chat({
@@ -27,10 +27,19 @@ export function Chat({
 	preloadedUser,
 	userLocation,
 }: ChatProps) {
-	const user = usePreloadedQuery(preloadedUser);
-
 	const { chatId } = useParams<ParamsOf<"/c/[chatId]">>();
-	const isChat = Boolean(chatId);
+
+	const [isPending, setIsPending] = useState(false);
+
+	useEffect(() => {
+		if (chatId) {
+			setIsPending(false);
+		}
+	}, [chatId]);
+
+	const isChat = !!chatId || isPending;
+
+	const user = usePreloadedQuery(preloadedUser);
 
 	const { status, results, loadMore } = useUIMessages(
 		api.chat.loadChat,
@@ -108,6 +117,7 @@ export function Chat({
 									hasSubmitted={hasSubmitted}
 									isChat={isChat}
 									isStreaming={isStreaming}
+									onStartNewChat={() => setIsPending(true)}
 									order={order}
 									ref={inputRef}
 									user={user}

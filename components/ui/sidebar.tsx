@@ -1,7 +1,6 @@
 "use client";
 
 import { cva, type VariantProps } from "class-variance-authority";
-import { type HTMLMotionProps, motion } from "motion/react";
 import { Slot as SlotPrimitive } from "radix-ui";
 import {
 	type ComponentProps,
@@ -290,9 +289,9 @@ function SidebarGroupContent({ className, ...props }: ComponentProps<"div">) {
 	);
 }
 
-function SidebarMenu({ className, ...props }: HTMLMotionProps<"ul">) {
+function SidebarMenu({ className, ...props }: ComponentProps<"ul">) {
 	return (
-		<motion.ul
+		<ul
 			className={cn("flex w-full min-w-0 flex-col gap-1", className)}
 			data-sidebar="menu"
 			data-slot="sidebar-menu"
@@ -301,9 +300,9 @@ function SidebarMenu({ className, ...props }: HTMLMotionProps<"ul">) {
 	);
 }
 
-function SidebarMenuItem({ className, ...props }: HTMLMotionProps<"li">) {
+function SidebarMenuItem({ className, ...props }: ComponentProps<"li">) {
 	return (
-		<motion.li
+		<li
 			className={cn("group/menu-item relative", className)}
 			data-sidebar="menu-item"
 			data-slot="sidebar-menu-item"

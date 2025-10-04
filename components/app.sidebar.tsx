@@ -3,13 +3,6 @@
 import type { ThreadDoc } from "@convex-dev/agent/validators";
 import { type Preloaded, useMutation, usePreloadedQuery } from "convex/react";
 import type { PaginationResult } from "convex/server";
-import {
-	AnimatePresence,
-	type AnimationOptions,
-	stagger,
-	type Target,
-	useAnimate,
-} from "motion/react";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { type MouseEvent, useState } from "react";
 import type { ParamsOf } from "~/.next/types/routes";
@@ -39,11 +32,10 @@ export function AppSidebar({
 	preloadedChats: Preloaded<typeof api.chat.listChats>;
 	preloadedUser: Preloaded<typeof api.auth.getUser>;
 }) {
+	const pathname = usePathname();
+	const router = useRouter();
 	const chats = usePreloadedQuery(preloadedChats);
 	const user = usePreloadedQuery(preloadedUser);
-
-	const { push } = useRouter();
-	const pathname = usePathname();
 
 	const [threadIds, setThreadIds] = useState<string[] | null>(null);
 	const hasThreadIds = !!threadIds;
@@ -65,7 +57,7 @@ export function AppSidebar({
 							<SidebarMenuItem>
 								<SidebarMenuButton
 									isActive={pathname === "/"}
-									onClick={() => push("/")}
+									onClick={() => router.push("/")}
 								>
 									<AppIcon className="size-5 text-primary" />
 									{appName}
@@ -98,6 +90,7 @@ export function AppSidebar({
 							</Button>
 						)}
 					</SidebarGroupLabel>
+
 					<SidebarGroupContent>
 						<SidebarMenu>
 							<SibebarHistory
@@ -200,11 +193,7 @@ function SibebarHistory({
 	setThreadIds: (threadIds: string[] | null) => void;
 }) {
 	const { chatId: paramsChatId } = useParams<ParamsOf<"/c/[chatId]">>();
-	const [ref, animate] = useAnimate();
 	const { push } = useRouter();
-
-	const activeChats =
-		chats?.page.filter(({ status }) => status === "active") || [];
 
 	function handleSelect(e: MouseEvent<HTMLButtonElement>, chatId: string) {
 		e.stopPropagation();
@@ -216,88 +205,23 @@ function SibebarHistory({
 			: [...currentIds, chatId];
 
 		setThreadIds(newIds.length > 0 ? newIds : null);
-
-		const hasMultipleCheckboxes = activeChats.length > 1;
-		const allSelected = newIds.length === activeChats.length;
-
-		if (hasMultipleCheckboxes && allSelected) {
-			const lastCompletedIndex = activeChats.findIndex(
-				({ _id: chatId }) => !currentIds.includes(chatId),
-			);
-
-			const { floor, random } = Math;
-
-			const animations: Array<{
-				options: AnimationOptions;
-				keyframes: Target;
-			}> = [
-				// Scale animation
-				{
-					keyframes: { scale: [1, 1.25, 1] },
-					options: {
-						delay: stagger(0.075, { from: lastCompletedIndex }),
-						duration: 0.35,
-					},
-				},
-				// Shimmy animation
-				{
-					keyframes: { x: [0, 2, -2, 0] },
-					options: {
-						delay: stagger(0.1, { from: lastCompletedIndex }),
-						duration: 0.4,
-					},
-				},
-				// Shake animation
-				{
-					keyframes: { rotate: [0, 10, -10, 0] },
-					options: {
-						delay: stagger(0.1, { from: lastCompletedIndex }),
-						duration: 0.5,
-					},
-				},
-			];
-
-			const selected = animations[floor(random() * animations.length)];
-
-			animate('[data-slot="checkbox"]', selected.keyframes, {
-				...selected.options,
-				ease: [0.32, 0.72, 0, 1],
-			});
-		}
 	}
 
-	return (
-		<div ref={ref}>
-			<AnimatePresence initial={false} mode="popLayout">
-				{activeChats.map(({ _id: chatId, title }) => (
-					<SidebarMenuItem
-						animate={{ height: "auto" }}
-						exit={{ height: 0 }}
-						initial={{ height: 0 }}
-						key={chatId}
-						layout="position"
-						transition={{
-							duration: 0.5,
-							ease: [0.32, 0.72, 0, 1],
-							layout: { duration: 0.5, ease: [0.32, 0.72, 0, 1] },
-						}}
-					>
-						<SidebarMenuButton
-							className="justify-between group-hover/menu-item:bg-sidebar-accent/70 group-has-data-[state=checked]/menu-item:bg-sidebar-accent/70"
-							isActive={chatId === paramsChatId}
-							onClick={() => push(`/c/${chatId}`)}
-						>
-							<span className="truncate">{title}</span>
-						</SidebarMenuButton>
+	return chats.page.map(({ _id: chatId, title }) => (
+		<SidebarMenuItem key={chatId}>
+			<SidebarMenuButton
+				className="justify-between group-hover/menu-item:bg-sidebar-accent/70 group-has-data-[state=checked]/menu-item:bg-sidebar-accent/70"
+				isActive={chatId === paramsChatId}
+				onClick={() => push(`/c/${chatId}`)}
+			>
+				<span className="truncate">{title}</span>
+			</SidebarMenuButton>
 
-						<Checkbox
-							checked={threadIds?.includes(chatId) || false}
-							className="absolute top-2.5 right-3 bg-background not-data-[state=checked]:opacity-0 group-hover/menu-item:opacity-100"
-							onClick={(e) => handleSelect(e, chatId)}
-						/>
-					</SidebarMenuItem>
-				))}
-			</AnimatePresence>
-		</div>
-	);
+			<Checkbox
+				checked={threadIds?.includes(chatId) || false}
+				className="absolute top-2.5 right-3 bg-background not-data-[state=checked]:opacity-0 group-hover/menu-item:opacity-100"
+				onClick={(e) => handleSelect(e, chatId)}
+			/>
+		</SidebarMenuItem>
+	));
 }

@@ -1,6 +1,5 @@
 "use client";
 
-import { type HTMLMotionProps, motion } from "motion/react";
 import { type ComponentProps, memo } from "react";
 import { Button, type ButtonProps } from "~/components/ui/button";
 import { SendIcon, StopIcon } from "~/components/ui/icons";
@@ -16,115 +15,80 @@ function PromptInput({
 	className,
 	children,
 	...props
-}: HTMLMotionProps<"form">) {
+}: ComponentProps<"form">) {
 	return (
-		<motion.form
-			className="group/prompt-input bg-muted"
-			layoutId="prompt-input-outer"
-			style={{ borderRadius: 28 }}
-			transition={{ layout: { duration: 0.5, ease: [0.32, 0.72, 0, 1] } }}
+		<form
+			className={cn(
+				"group/prompt-input grid grid-cols-[auto_1fr_auto] rounded-4xl bg-muted p-2.5 [grid-template-areas:'left_center_right'] data-expanded:[grid-template-areas:'center_center_center''left_void_right']",
+				className,
+			)}
 			{...props}
 		>
-			<motion.div
-				className="grid grid-cols-[auto_1fr_auto] p-2.5 [grid-template-areas:'left_center_right'] group-data-expanded/prompt-input:[grid-template-areas:'center_center_center''left_void_right']"
-				layoutId="prompt-input-inner"
-				transition={{ layout: { duration: 0.5, ease: [0.32, 0.72, 0, 1] } }}
-			>
-				{children}
-			</motion.div>
-		</motion.form>
+			{children}
+		</form>
 	);
 }
 
 function PromptInputTextarea({
 	className,
 	...props
-}: HTMLMotionProps<"textarea">) {
+}: ComponentProps<"textarea">) {
 	return (
-		<motion.div
+		<div
 			className={cn(
 				"-my-2.5 flex min-h-14 w-full px-2.5 [grid-area:center] group-data-expanded/prompt-input:mb-0",
 				className,
 			)}
-			layout="position"
-			layoutId="prompt-input-textarea-container"
-			transition={{ layout: { duration: 0.5, ease: [0.32, 0.72, 0, 1] } }}
 		>
-			<motion.textarea
+			<textarea
 				className={cn(
 					"my-4 max-h-52 w-full resize-none antialiased outline-none ring-0 placeholder:text-muted-foreground focus-visible:ring-0",
 					className,
 				)}
-				layout="position"
-				layoutId="prompt-input-textarea-content"
 				name="prompt"
 				rows={1}
-				transition={{ layout: { duration: 0.5, ease: [0.32, 0.72, 0, 1] } }}
 				{...props}
 			/>
-		</motion.div>
+		</div>
 	);
 }
 
-function PurePromptInputSubmit({
-	className,
-	...props
-}: ComponentProps<"button">) {
-	return (
-		<motion.div
-			className="h-9 [grid-area:right]"
-			layout="position"
-			layoutId="prompt-input-submit"
-			transition={{ layout: { duration: 0.5, ease: [0.32, 0.72, 0, 1] } }}
-		>
-			<Button className="rounded-full" size="icon" type="submit" {...props}>
-				<SendIcon className="size-5" />
-			</Button>
-		</motion.div>
-	);
-}
+const PromptInputSubmit = memo(({ className, ...props }: ButtonProps) => (
+	<Button
+		className="rounded-full [grid-area:right]"
+		size="icon"
+		type="submit"
+		{...props}
+	>
+		<SendIcon className="size-5" />
+	</Button>
+));
 
-const PromptInputSubmit = memo(PurePromptInputSubmit);
+const PromptInputStop = memo(({ className, ...props }: ButtonProps) => (
+	<Button
+		className="rounded-full bg-background [grid-area:right] hover:bg-background"
+		size="icon"
+		type="button"
+		variant="secondary"
+		{...props}
+	>
+		<StopIcon className="size-5" />
+	</Button>
+));
 
-function PromptInputStop({ className, ...props }: ComponentProps<"button">) {
-	return (
-		<motion.div
-			className="h-9 [grid-area:right]"
-			layout="position"
-			layoutId="prompt-input-stop"
-			transition={{ layout: { duration: 0.5, ease: [0.32, 0.72, 0, 1] } }}
-		>
-			<Button
-				className="rounded-full bg-background hover:bg-background"
-				size="icon"
-				type="button"
-				variant="secondary"
-				{...props}
-			>
-				<StopIcon className="size-5" />
-			</Button>
-		</motion.div>
-	);
-}
-
-function PromptInputButton({
-	className,
-	children,
-	tooltip,
-	kbd,
-	...props
-}: ButtonProps & { kbd: string; tooltip: string }) {
-	return (
+const PromptInputButton = memo(
+	({
+		className,
+		children,
+		tooltip,
+		kbd,
+		...props
+	}: ButtonProps & { kbd: string; tooltip: string }) => (
 		<TooltipProvider>
 			<Tooltip>
-				<motion.div
-					className="h-9 [grid-area:left]"
-					layout="position"
-					layoutId="prompt-input-button"
-					transition={{ layout: { duration: 0.5, ease: [0.32, 0.72, 0, 1] } }}
-				>
-					<TooltipTrigger {...props}>{children}</TooltipTrigger>
-				</motion.div>
+				<TooltipTrigger className="h-9 [grid-area:left]" {...props}>
+					{children}
+				</TooltipTrigger>
 				<TooltipContent className="flex gap-1.5" side="bottom">
 					{tooltip}{" "}
 					<kbd className="-mr-1 flex size-4 items-center justify-center rounded bg-white/20 text-muted-foreground">
@@ -133,8 +97,8 @@ function PromptInputButton({
 				</TooltipContent>
 			</Tooltip>
 		</TooltipProvider>
-	);
-}
+	),
+);
 
 export {
 	PromptInput,

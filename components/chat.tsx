@@ -27,7 +27,7 @@ export function Chat({
 	preloadedUser,
 	userLocation,
 }: ChatProps) {
-	const { chatId } = useParams<ParamsOf<"/c/[chatId]">>();
+	const { chatId } = useParams<ParamsOf<"/chat/[chatId]">>();
 
 	const [isPending, setIsPending] = useState(false);
 

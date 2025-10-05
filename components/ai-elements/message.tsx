@@ -19,7 +19,6 @@ const variants: Variants = {
 const transition: Transition = {
 	duration: 0.5,
 	ease: [0.32, 0.72, 0, 1],
-	layout: { bounce: 0.4, duration: 1, type: "spring" },
 };
 
 interface MessageProps extends HTMLMotionProps<"div"> {
@@ -74,7 +73,7 @@ function MessageBubble({ className, ...props }: MessageBubbleProps) {
 		<div className="flex flex-col group-data-user/message:items-end">
 			<div
 				className={cn(
-					"max-w-7/10 rounded-xl bg-muted px-4 py-1.5 data-multiline:py-3",
+					"w-fit max-w-7/10 rounded-xl bg-muted px-4 py-1.5 data-multiline:py-3",
 					className,
 				)}
 				{...props}
@@ -83,4 +82,31 @@ function MessageBubble({ className, ...props }: MessageBubbleProps) {
 	);
 }
 
-export { Message, MessageBubble, MessageContent };
+function MessageThinking({
+	className,
+	...props
+}: HTMLAttributes<HTMLDivElement>) {
+	return (
+		<div
+			className={cn("w-fit rounded-xl bg-muted px-4 py-3", className)}
+			{...props}
+		>
+			<div className="flex gap-1.5 text-muted-foreground">
+				{[1, 2, 3].map((dot) => (
+					<motion.div
+						animate={{ opacity: [0.3, 1, 0.3] }}
+						className="size-2 shrink-0 rounded-full bg-current"
+						key={dot}
+						transition={{
+							delay: (dot - 1) * 0.3,
+							duration: 2,
+							repeat: Infinity,
+						}}
+					/>
+				))}
+			</div>
+		</div>
+	);
+}
+
+export { Message, MessageBubble, MessageContent, MessageThinking };

@@ -119,7 +119,7 @@ function SibebarHistorySearch({
 	setThreadIds: (threadIds: string[] | null) => void;
 	hasThreadIds: boolean;
 }) {
-	const { chatId } = useParams<ParamsOf<"/c/[chatId]">>();
+	const { chatId } = useParams<ParamsOf<"/chat/[chatId]">>();
 	const { push } = useRouter();
 
 	const deleteChats = useMutation(api.chat.deleteChats).withOptimisticUpdate(
@@ -192,7 +192,7 @@ function SibebarHistory({
 	threadIds: string[] | null;
 	setThreadIds: (threadIds: string[] | null) => void;
 }) {
-	const { chatId: paramsChatId } = useParams<ParamsOf<"/c/[chatId]">>();
+	const { chatId: paramsChatId } = useParams<ParamsOf<"/chat/[chatId]">>();
 	const { push } = useRouter();
 
 	function handleSelect(e: MouseEvent<HTMLButtonElement>, chatId: string) {
@@ -212,7 +212,7 @@ function SibebarHistory({
 			<SidebarMenuButton
 				className="justify-between group-hover/menu-item:bg-sidebar-accent/70 group-has-data-[state=checked]/menu-item:bg-sidebar-accent/70"
 				isActive={chatId === paramsChatId}
-				onClick={() => push(`/c/${chatId}`)}
+				onClick={() => push(`/chat/${chatId}`)}
 			>
 				<span className="truncate">{title}</span>
 			</SidebarMenuButton>

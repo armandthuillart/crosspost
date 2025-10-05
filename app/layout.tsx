@@ -38,6 +38,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
 	return (
 		<html className="h-full" lang="en" suppressHydrationWarning>
+			<head>
+				<script src="https://unpkg.com/react-scan/dist/auto.global.js" />
+			</head>
 			<body
 				className={cn(
 					"h-full bg-background font-sans text-foreground antialiased",

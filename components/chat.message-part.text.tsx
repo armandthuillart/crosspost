@@ -12,9 +12,9 @@ interface TextProps {
 	isStreaming: boolean;
 }
 
-export function Text({ part, role, isStreaming }: TextProps) {
+export function Text({ part, role }: TextProps) {
 	const [visibleText] = useSmoothText(part.text, {
-		startStreaming: isStreaming,
+		startStreaming: part.state === "streaming",
 	});
 
 	if (role === "user") {

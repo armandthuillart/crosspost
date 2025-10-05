@@ -16,7 +16,7 @@ function Actions({ children, className, ...props }: ActionsProps) {
 	return (
 		<div
 			className={cn(
-				"group-not-data-user/message:-ml-1 group-data-user/message:-mr-1 flex p-1 transition-opacity duration-500 ease-snappy group-data-user/message:justify-end group-data-user/message:has-focus-visible:opacity-100 group-data-user/message:md:opacity-0 group-data-user/message:md:hover:opacity-100",
+				"group-not-data-user/message:-ml-1 group-data-user/message:-mr-1 flex p-1 group-data-user/message:justify-end group-data-user/message:has-focus-visible:opacity-100 group-data-user/message:md:opacity-0 group-data-user/message:md:hover:opacity-100",
 				className,
 			)}
 			{...props}

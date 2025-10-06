@@ -5,6 +5,14 @@ import {
 	type ThemeProviderProps,
 } from "next-themes";
 
+export const themeColors = [
+	"default",
+	"orange",
+	"green",
+	"blue",
+	"pink",
+] as const;
+
 export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
 	return (
 		<NextThemesProvider

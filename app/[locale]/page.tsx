@@ -4,7 +4,7 @@ import { Chat } from "~/components/chat";
 import { api } from "~/convex/generated/api";
 import { getToken } from "~/lib/auth-server";
 
-export default async function Page() {
+export default async function HomePage() {
 	const [{ city, region, country }, token] = await Promise.all([
 		getLocation(),
 		getToken(),

@@ -35,6 +35,8 @@
 	--color-popover-foreground: var(--popover-foreground);
 	--color-card: var(--card);
 	--color-card-foreground: var(--card-foreground);
+	--color-message: var(--message);
+	--color-message-foreground: var(--message-foreground);
 	--color-accent: var(--accent);
 	--color-accent-foreground: var(--accent-foreground);
 	--color-border: var(--border);
@@ -47,6 +49,8 @@
 	--color-selection-foreground: var(--selection-foreground);
 	--color-avatar: var(--avatar);
 	--color-avatar-foreground: var(--avatar-foreground);
+	--color-interactive: var(--interactive);
+	--color-interactive-foreground: var(--interactive-foreground);
 }
 
 :root {
@@ -65,6 +69,8 @@
 	--border: oklch(92.2% 0 0);
 	--card: oklch(100% 0 0);
 	--card-foreground: oklch(26.9% 0 0);
+	--message: oklch(96% 0 0);
+	--message-foreground: oklch(26.9% 0 0);
 	--popover: oklch(100% 0 0);
 	--popover-foreground: oklch(26.9% 0 0);
 	--sidebar: oklch(100% 0 0);
@@ -99,6 +105,8 @@
 	--border: oklch(37% 0 0);
 	--card: oklch(27% 0 0);
 	--card-foreground: oklch(92.2% 0 0);
+	--message: oklch(27% 0 0);
+	--message-foreground: oklch(100% 0 0);
 	--popover: oklch(27% 0 0);
 	--popover-foreground: oklch(97% 0 0);
 	--sidebar: oklch(20.5% 0 0);
@@ -115,6 +123,62 @@
   --selection-foreground: oklch(53% 0.190 280);
 	--avatar: oklch(67% 0.175 275);
 	--avatar-foreground: oklch(92.2% 0 0);
+}
+
+[data-theme="pink"] {
+	--primary: oklch(72.2% 0.198 354);
+	--primary-foreground: oklch(100% 0 0);
+	--message: oklch(95.3% 0.0288 347);
+	--message-foreground: oklch(31.4% 0.0745 354);
+}
+
+.dark[data-theme="pink"] {
+	--primary: oklch(64% 0.194 356);
+	--primary-foreground: oklch(100% 0 0);
+	--message: oklch(49% 0.129 353);
+	--message-foreground: oklch(97.7% 0.0134 348);
+}
+
+[data-theme="blue"] {
+	--primary: oklch(68.2% 0.173 251);
+	--primary-foreground: oklch(100% 0 0);
+	--message: oklch(95.7% 0.022 244);
+	--message-foreground: oklch(27.4% 0.0804 251);
+}
+
+.dark[data-theme="blue"] {
+	--primary: oklch(52.8% 0.172 255);
+	--primary-foreground: oklch(100% 0 0);
+	--message: oklch(36.9% 0.115 253);
+	--message-foreground: oklch(98.3% 0.00854 248);
+}
+
+[data-theme="orange"] {
+	--primary: oklch(69.6% 0.193 42.6);
+	--primary-foreground: oklch(100% 0 0);
+	--message: oklch(94.4% 0.0324 52.3);
+	--message-foreground: oklch(30.3% 0.0717 51);
+}
+
+.dark[data-theme="orange"] {
+	--primary: oklch(63% 0.189 41.5);
+	--primary-foreground: oklch(100% 0 0);
+	--message: oklch(46.6% 0.129 43.1);
+	--message-foreground: oklch(98.3% 0.00854 248);
+}
+
+[data-theme="green"] {
+	--primary: oklch(62.1% 0.18 148);
+	--primary-foreground: oklch(100% 0 0);
+	--message: oklch(94.3% 0.0354 160);
+	--message-foreground: oklch(29.5% 0.0794 151);
+}
+
+.dark[data-theme="green"] {
+	--primary: oklch(62.1% 0.179 148);
+	--primary-foreground: oklch(100% 0 0);
+	--message: oklch(45.5% 0.129 149);
+	--message-foreground: oklch(97.3% 0.0173 159);
 }
 
 .bluesky {

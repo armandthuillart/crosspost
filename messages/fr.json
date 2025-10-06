@@ -1,0 +1,54 @@
+{
+	"AppSettings": {
+		"app": "Application",
+		"appearance": "Apparence",
+		"appLanguage": "Langue de l'application",
+		"blue": "Bleu",
+		"dark": "Sombre",
+		"default": "Par défaut",
+		"green": "Vert",
+		"light": "Clair",
+		"orange": "Orange",
+		"pink": "Rose",
+		"system": "Système",
+		"themeColor": "Couleur d'accentuation",
+		"title": "Paramètres"
+	},
+	"AppSidebar": {
+		"all": "Tout",
+		"chats": "Conversations",
+		"clear": "Annuler"
+	},
+	"ChatMessages": {
+		"copy": "Copier"
+	},
+	"ChatSuggestions": {
+		"help": {
+			"description": "à propos de mon nouveau poste",
+			"prompt": "Aide-moi à écrire un post LinkedIn sur mon nouveau job. Commence par me poser des questions sur mon nouveau poste et mon entreprise.",
+			"title": "Aide-moi à poster"
+		},
+		"switch": {
+			"description": "de naturel à formel",
+			"prompt": "Aide-moi à changer le ton de mon contenu du casual au formel. Commence par demander de partager le post et la plateforme, puis réécris-le avec le ton demandé.",
+			"title": "Change le ton"
+		},
+		"teach": {
+			"description": "faire grandir mon compte",
+			"prompt": "Dis-moi comment développer ma présence sur les réseaux sociaux. Commence par demander quelle plateforme m'intéresse, mes intérêts et mon objectif.",
+			"title": "Dis-moi comment"
+		},
+		"write": {
+			"description": "plus décontracté",
+			"prompt": "Aide-moi à rendre mon contenu plus décontracté et naturel. Commence par demander de partager le tweet avec toi.",
+			"title": "Rends plus casual"
+		}
+	},
+	"LocaleLayout": {
+		"description": "Publiez sur les réseaux sociaux en parlant avec l'IA.",
+		"keywords": "ia, ia chat, crosspost, marketing, broadcast, crosspost, réseaux sociaux, planificateur de publication"
+	},
+	"Manifest": {
+		"description": "Publiez sur les réseaux sociaux en parlant avec l'IA."
+	}
+}

@@ -1,0 +1,54 @@
+{
+	"AppSettings": {
+		"app": "App",
+		"appearance": "Appearance",
+		"appLanguage": "App language",
+		"blue": "Blue",
+		"dark": "Dark",
+		"default": "Default",
+		"green": "Green",
+		"light": "Light",
+		"orange": "Orange",
+		"pink": "Pink",
+		"system": "System",
+		"themeColor": "Accent color",
+		"title": "Settings"
+	},
+	"AppSidebar": {
+		"all": "All",
+		"chats": "Chats",
+		"clear": "Clear"
+	},
+	"ChatMessages": {
+		"copy": "Copy"
+	},
+	"ChatSuggestions": {
+		"help": {
+			"description": "about my new role",
+			"prompt": "I want you to help me write a LinkedIn post about my new job. Start by asking me about my new role and company.",
+			"title": "Help me post"
+		},
+		"switch": {
+			"description": "from casual to formal",
+			"prompt": "I want you to help me convert my content from casual to formal tone. Start by asking me to share my post with you and the platform it's for, then rewrite it appropriately.",
+			"title": "Switch the tone"
+		},
+		"teach": {
+			"description": "to grow my account",
+			"prompt": "I want you to teach me how to grow my social media presence. Start by asking me what platform I want to grow and what my account is for.",
+			"title": "Teach me how"
+		},
+		"write": {
+			"description": "sound more casual",
+			"prompt": "I want you to help me make my content sound more casual and conversational. Start by asking me to share my tweet with you.",
+			"title": "Make my tweet"
+		}
+	},
+	"LocaleLayout": {
+		"description": "Create and post to social media by chatting with AI.",
+		"keywords": "ai, ai chat, crosspost, marketing, broadcast, crosspost, social media, post scheduler"
+	},
+	"Manifest": {
+		"description": "Create and post to social media by chatting with AI."
+	}
+}

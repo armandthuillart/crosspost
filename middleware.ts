@@ -1,21 +1,22 @@
 import { geolocation } from "@vercel/functions";
-import { type NextRequest, NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import createMiddleware from "next-intl/middleware";
+import { routing } from "~/i18n/routing";
 
-export function middleware(request: NextRequest) {
+const i18nMiddleware = createMiddleware(routing);
+
+export async function middleware(request: NextRequest) {
 	const { city, region, country } = geolocation(request);
-	const { next } = NextResponse;
-
-	const headers = new Headers(request.headers);
 
 	if (city && region && country) {
-		headers.set("x-user-city", encodeURIComponent(city));
-		headers.set("x-user-region", encodeURIComponent(region));
-		headers.set("x-user-country", encodeURIComponent(country));
+		request.headers.set("x-user-city", encodeURIComponent(city));
+		request.headers.set("x-user-region", encodeURIComponent(region));
+		request.headers.set("x-user-country", encodeURIComponent(country));
 	}
 
-	return next({ request: { headers } });
+	return i18nMiddleware(request);
 }
 
 export const config = {
-	matcher: ["/", "/chat/:path"],
+	matcher: ["/", "/(en|fr)/:path*"],
 };

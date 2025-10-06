@@ -73,7 +73,7 @@ function MessageBubble({ className, ...props }: MessageBubbleProps) {
 		<div className="flex flex-col group-data-user/message:items-end">
 			<div
 				className={cn(
-					"w-fit max-w-7/10 rounded-xl bg-muted px-4 py-1.5 data-multiline:py-3",
+					"w-fit max-w-7/10 rounded-xl bg-message px-4 py-1.5 text-message-foreground data-multiline:py-3",
 					className,
 				)}
 				{...props}

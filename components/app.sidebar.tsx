@@ -3,7 +3,8 @@
 import type { ThreadDoc } from "@convex-dev/agent/validators";
 import { type Preloaded, useMutation, usePreloadedQuery } from "convex/react";
 import type { PaginationResult } from "convex/server";
-import { useParams, usePathname, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { type MouseEvent, useState } from "react";
 import type { ParamsOf } from "~/.next/types/routes";
 import { AppMenu } from "~/components/app.menu";
@@ -23,6 +24,7 @@ import {
 	SidebarMenuItem,
 } from "~/components/ui/sidebar";
 import { api } from "~/convex/generated/api";
+import { usePathname, useRouter } from "~/i18n/navigation";
 import { appName } from "~/lib/constants";
 
 export function AppSidebar({
@@ -36,6 +38,7 @@ export function AppSidebar({
 	const router = useRouter();
 	const chats = usePreloadedQuery(preloadedChats);
 	const user = usePreloadedQuery(preloadedUser);
+	const t = useTranslations("AppSidebar");
 
 	const [threadIds, setThreadIds] = useState<string[] | null>(null);
 	const hasThreadIds = !!threadIds;
@@ -69,7 +72,7 @@ export function AppSidebar({
 
 				<SidebarGroup>
 					<SidebarGroupLabel className="justify-between">
-						Chats
+						{t("chats")}
 						{hasThreadIds && (
 							<Button
 								className="not-hover:text-muted-foreground"
@@ -85,8 +88,8 @@ export function AppSidebar({
 								variant="link"
 							>
 								{threadIds && threadIds.length === chats?.page.length
-									? "Clear"
-									: "All"}
+									? t("clear")
+									: t("all")}
 							</Button>
 						)}
 					</SidebarGroupLabel>

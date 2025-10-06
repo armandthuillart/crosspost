@@ -1,6 +1,7 @@
 "use client";
 
 import { AnimatePresence } from "motion/react";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { Action, Actions } from "~/components/ai-elements/actions";
 import {
@@ -16,16 +17,8 @@ import {
 } from "~/components/ai-elements/message";
 import { MessagePart } from "~/components/chat.message-part";
 import { CopyIcon, TickIcon } from "~/components/ui/icons";
-
 import type { MyMessage } from "~/lib/types";
 import { attr } from "~/lib/utils";
-
-type ReasoningPart = Extract<MyMessage["parts"][number], { type: "reasoning" }>;
-
-const isReasoningPart = (
-	part: MyMessage["parts"][number],
-): part is ReasoningPart =>
-	part.type === "reasoning" && Boolean(part.text?.trim().length);
 
 interface ChatMessagesProps {
 	messages: Array<MyMessage>;
@@ -42,9 +35,10 @@ export function ChatMessages({
 	isLoadingMore,
 	hasSentMessage,
 }: ChatMessagesProps) {
+	const t = useTranslations("ChatMessages");
+
 	const [isCopied, setIsCopied] = useState<string | null>(null);
 	const [isThinking, setIsThinking] = useState(false);
-
 	const hasActiveAssistantMessage = messages.some(
 		({ role, status }) => role === "assistant" && status !== "pending",
 	);
@@ -85,8 +79,6 @@ export function ChatMessages({
 						const hasCopied = isCopied === message.id;
 						const isPending = message.status === "pending";
 						const isStreaming = message.status === "streaming";
-						const reasoningParts = message.parts.filter(isReasoningPart);
-						let hasRenderedReasoning = false;
 
 						return (
 							<Message
@@ -103,22 +95,6 @@ export function ChatMessages({
 							>
 								<MessageContent>
 									{message.parts.map((part, partIndex) => {
-										if (part.type === "reasoning") {
-											if (!reasoningParts.length || hasRenderedReasoning) {
-												return null;
-											}
-											hasRenderedReasoning = true;
-
-											return (
-												<MessagePart
-													isStreaming={isStreaming}
-													key={`${message.key}-reasoning`}
-													part={part}
-													role={message.role}
-												/>
-											);
-										}
-
 										return (
 											<MessagePart
 												isStreaming={isStreaming}
@@ -129,7 +105,10 @@ export function ChatMessages({
 										);
 									})}
 									<Actions>
-										<Action onClick={() => handleCopy(message)} tooltip="Copy">
+										<Action
+											onClick={() => handleCopy(message)}
+											tooltip={t("copy")}
+										>
 											{hasCopied ? <TickIcon /> : <CopyIcon />}
 										</Action>
 									</Actions>

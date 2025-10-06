@@ -4,7 +4,6 @@ import { optimisticallySendMessage } from "@convex-dev/agent/react";
 import { isRateLimitError } from "@convex-dev/rate-limiter";
 import { useMutation } from "convex/react";
 import { useAtom } from "jotai";
-import { useRouter } from "next/navigation";
 import {
 	type FormEvent,
 	forwardRef,
@@ -27,6 +26,7 @@ import { PlusIcon } from "~/components/ui/icons";
 import { api } from "~/convex/generated/api";
 import { useAutoFocus } from "~/hooks/use-auto-focus";
 import { useTypewriter } from "~/hooks/use-typewriter";
+import { useRouter } from "~/i18n/navigation";
 import { showBannerAtom } from "~/lib/atoms";
 import { authClient } from "~/lib/auth-client";
 import type { User } from "~/lib/types";
@@ -65,7 +65,7 @@ export const ChatInput = forwardRef<InputRef, ChatInputProps>(
 		},
 		ref,
 	) => {
-		const { replace } = useRouter();
+		const router = useRouter();
 		const [threadId, setThreadId] = useState(chatId);
 
 		const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -111,7 +111,7 @@ export const ChatInput = forwardRef<InputRef, ChatInputProps>(
 				if (!chatId) {
 					onStartNewChat?.();
 					threadId = await createChat();
-					replace(`/chat/${threadId}`);
+					router.replace(`/chat/${threadId}`);
 					setThreadId(threadId);
 				}
 
@@ -139,12 +139,12 @@ export const ChatInput = forwardRef<InputRef, ChatInputProps>(
 				chatId,
 				prompt,
 				isDirty,
-				replace,
 				showBanner,
 				createChat,
 				sendMessage,
 				resetHeight,
 				userLocation,
+				router.replace,
 				onStartNewChat,
 			],
 		);

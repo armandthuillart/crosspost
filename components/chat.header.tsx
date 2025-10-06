@@ -1,10 +1,10 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { CTA } from "~/components/chat.header.upgrade";
 import { Button } from "~/components/ui/button";
 import { AppIcon } from "~/components/ui/icons";
 import { SidebarTrigger } from "~/components/ui/sidebar";
+import { useRouter } from "~/i18n/navigation";
 import { authClient } from "~/lib/auth-client";
 
 interface ChatHeaderProps {
@@ -13,7 +13,7 @@ interface ChatHeaderProps {
 }
 
 export function ChatHeader({ isFree, isAnonymous }: ChatHeaderProps) {
-	const { push } = useRouter();
+	const router = useRouter();
 
 	async function handleSignInWithGoogle() {
 		await authClient.signIn.social({ provider: "google" });
@@ -24,7 +24,7 @@ export function ChatHeader({ isFree, isAnonymous }: ChatHeaderProps) {
 			<header className="absolute @max-8xl/chat:sticky inset-0 bottom-auto z-50 flex w-full items-center justify-between p-2 group-not-data-chat/chat:justify-end @max-8xl/chat:group-data-chat/chat:bg-background">
 				<Button
 					className="group/trigger group-not-data-chat/chat:hidden"
-					onClick={() => push("/")}
+					onClick={() => router.push("/")}
 					size="icon"
 					variant="ghost"
 				>

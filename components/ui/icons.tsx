@@ -654,3 +654,88 @@ export const UndoIcon = (props: SVGProps<SVGSVGElement>) => {
 		</svg>
 	);
 };
+
+export const LanguageIcon = (props: SVGProps<SVGSVGElement>) => {
+	return (
+		<svg
+			aria-hidden="true"
+			fill="none"
+			stroke="currentColor"
+			viewBox="0 0 24 24"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" />
+			<path
+				d="M8 12C8 18 12 22 12 22C12 22 16 18 16 12C16 6 12 2 12 2C12 2 8 6 8 12Z"
+				stroke="currentColor"
+				strokeLinejoin="round"
+				strokeWidth="2"
+			/>
+			<path
+				d="M21 15H3"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="2"
+			/>
+			<path
+				d="M21 9H3"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="2"
+			/>
+		</svg>
+	);
+};
+
+export const AppearanceIcon = (props: SVGProps<SVGSVGElement>) => {
+	return (
+		<svg
+			aria-hidden="true"
+			fill="none"
+			stroke="currentColor"
+			viewBox="0 0 24 24"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<path
+				d="M17 12C17 14.7614 14.7614 17 12 17C9.23858 17 7 14.7614 7 12C7 9.23858 9.23858 7 12 7C14.7614 7 17 9.23858 17 12Z"
+				stroke="currentColor"
+				strokeLinejoin="round"
+				strokeWidth="2"
+			/>
+			<path
+				d="M11.9982 2V4M11.9982 20V22M18.9981 5.00098L17.499 6.5M6.5 17.5L5 19M22 12H20M4 12H2M19 19.001L17.5 17.501M6.49902 6.5L5 5.00098"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="2"
+			/>
+		</svg>
+	);
+};
+
+export const PaintBrushIcon = (props: SVGProps<SVGSVGElement>) => {
+	return (
+		<svg
+			aria-hidden="true"
+			fill="none"
+			stroke="currentColor"
+			viewBox="0 0 24 24"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<path
+				d="M5 14V12.7296C5 11.9754 5.42422 11.2854 6.09717 10.945L8.84085 9.55694C9.5139 9.21645 9.93814 8.52627 9.93802 7.772L9.93726 3.00016C9.93717 2.44781 10.3849 2 10.9373 2H13.9455C14.4978 2 14.9456 2.44781 14.9455 3.00016L14.9447 7.75902C14.9446 8.52006 15.3764 9.21521 16.0587 9.55236L18.886 10.9495C19.5682 11.2866 20 11.9816 20 12.7425L20 14C20 14.5523 19.5523 15 19 15H6C5.44772 15 5 14.5523 5 14Z"
+				stroke="currentColor"
+				strokeLinejoin="round"
+				strokeWidth="2"
+			/>
+			<path
+				d="M6 15C6 16 6 18.8 4 22C9 22 13 22 15.5 18V21C15.5 21.5523 15.9477 22 16.5 22H19C19.5523 22 20.002 21.5518 19.9972 20.9995C19.9803 19.0494 19.8596 17.5789 19 15"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="2"
+			/>
+		</svg>
+	);
+};

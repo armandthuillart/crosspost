@@ -26,3 +26,5 @@ type MyUITools = {
 };
 
 export type MyMessage = UIMessage<unknown, UIDataTypes, MyUITools>;
+
+export type ThemeColor = "default" | "green" | "blue" | "pink" | "orange";

@@ -30,8 +30,8 @@ export function AppShortcuts() {
 			open={isOpen}
 		>
 			<DrawerContent
-				className="data-[vaul-drawer-direction=left]:after:!bg-transparent gap-0 rounded-2xl before:bg-transparent data-[vaul-drawer-direction=left]:top-2 data-[vaul-drawer-direction=left]:bottom-2 data-[vaul-drawer-direction=left]:left-2 sm:max-w-xs"
-				style={{ "--initial-transform": "calc(100% + 8px)" } as CSSProperties}
+				className="data-[vaul-drawer-direction=left]:after:!bg-transparent gap-0 rounded-2xl before:bg-transparent data-[vaul-drawer-direction=left]:top-3 data-[vaul-drawer-direction=left]:bottom-3 data-[vaul-drawer-direction=left]:left-3 data-[vaul-drawer-direction=left]:sm:max-w-xs"
+				style={{ "--initial-transform": "calc(100% + 12px)" } as CSSProperties}
 			>
 				<DrawerHeader className="p-6 pb-4">
 					<DrawerTitle>{t("title")}</DrawerTitle>

@@ -317,7 +317,7 @@ function SidebarMenuItem({ className, ...props }: ComponentProps<"li">) {
 }
 
 const sidebarMenuButtonVariants = cva(
-	"peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 px-2.5 text-left text-sm outline-hidden ring-sidebar-ring/50 transition-[color,box-shadow,background-color] ease-snappy hover:bg-sidebar-accent/70 hover:text-sidebar-accent-foreground focus-visible:ring-3 active:bg-sidebar-accent/70 active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-data-[sidebar=menu-action]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent/70 data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-2! [&>span:last-child]:truncate [&>svg]:shrink-0",
+	"peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 px-2.5 text-left text-sm outline-hidden ring-sidebar-ring/50 hover:bg-sidebar-accent/70 hover:text-sidebar-accent-foreground focus-visible:ring-3 active:bg-sidebar-accent/70 active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-data-[sidebar=menu-action]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent/70 data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-2! [&>span:last-child]:truncate [&>svg]:shrink-0",
 	{
 		defaultVariants: {
 			size: "default",
@@ -373,7 +373,7 @@ function SidebarGroupLabel({
 	return (
 		<Comp
 			className={cn(
-				"flex shrink-0 items-center rounded-md px-2.5 py-2 text-muted-foreground text-sm outline-hidden ring-sidebar-ring transition-[margin,opacity] duration-200 ease-linear focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0",
+				"flex shrink-0 items-center rounded-md px-2.5 py-2 text-muted-foreground text-sm outline-hidden ring-sidebar-ring focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0",
 				"group-data-[collapsible=icon]:-mt-8 group-data-[collapsible=icon]:opacity-0",
 				className,
 			)}

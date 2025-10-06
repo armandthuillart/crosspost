@@ -1,5 +1,6 @@
 "use client";
 
+import { useSetAtom } from "jotai";
 import { Settings2Icon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { AppSettings } from "~/components/app.settings";
@@ -23,6 +24,7 @@ import {
 } from "~/components/ui/icons";
 import { SidebarMenuButton } from "~/components/ui/sidebar";
 import { usePathname, useRouter } from "~/i18n/navigation";
+import { showShortcutsAtom } from "~/lib/atoms";
 import { signOut } from "~/lib/auth-client";
 import type { User } from "~/lib/types";
 
@@ -34,6 +36,7 @@ export function AppMenu({ user }: AppMenuProps) {
 	const t = useTranslations("AppMenu");
 	const router = useRouter();
 	const pathname = usePathname();
+	const setShowShortcuts = useSetAtom(showShortcutsAtom);
 
 	async function handleSignOut() {
 		await signOut();
@@ -85,7 +88,10 @@ export function AppMenu({ user }: AppMenuProps) {
 								{t("termsAndPolicies")}
 							</DropdownMenuItem>
 
-							<DropdownMenuItem className="w-full">
+							<DropdownMenuItem
+								className="w-full"
+								onClick={() => setShowShortcuts(true)}
+							>
 								<KeyboardKeyIcon className="size-4" />
 								{t("keyboardShortcuts")}
 							</DropdownMenuItem>

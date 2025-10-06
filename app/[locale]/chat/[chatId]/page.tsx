@@ -4,7 +4,9 @@ import { Chat } from "~/components/chat";
 import { api } from "~/convex/generated/api";
 import { getToken } from "~/lib/auth-server";
 
-export default async function Page({ params }: PageProps<"/chat/[chatId]">) {
+export default async function Page({
+	params,
+}: PageProps<"/[locale]/chat/[chatId]">) {
 	const [userLocation, token, { chatId: threadId }] = await Promise.all([
 		getLocation(),
 		getToken(),

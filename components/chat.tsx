@@ -125,7 +125,7 @@ export function Chat({
 						</div>
 					</div>
 				</div>
-				<PostGallery />
+				{/* <PostGallery /> */}
 			</div>
 		</main>
 	);

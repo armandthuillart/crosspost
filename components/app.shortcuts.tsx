@@ -1,7 +1,6 @@
 "use client";
 
 import { useAtom } from "jotai";
-import { PrinterIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { CSSProperties } from "react";
 import { Button } from "~/components/ui/button";
@@ -13,6 +12,7 @@ import {
 	DrawerHeader,
 	DrawerTitle,
 } from "~/components/ui/drawer";
+import { PrintIcon } from "~/components/ui/icons";
 import { Kbd } from "~/components/ui/kbd";
 import { SHORTCUTS, useShortcut } from "~/hooks/use-shortcuts";
 import { showShortcutsAtom } from "~/lib/atoms";
@@ -72,7 +72,7 @@ export function AppShortcuts() {
 						onClick={() => window.print()}
 						variant="outline"
 					>
-						<PrinterIcon className="-ms-1 size-4 opacity-60" />
+						<PrintIcon className="-ms-1 size-4 opacity-60" />
 						Print
 						<Kbd>⌘P</Kbd>
 					</Button>

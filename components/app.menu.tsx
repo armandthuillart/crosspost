@@ -1,7 +1,6 @@
 "use client";
 
 import { useSetAtom } from "jotai";
-import { Settings2Icon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { AppSettings } from "~/components/app.settings";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
@@ -16,10 +15,11 @@ import {
 	DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import {
+	HelpIcon,
 	KeyboardKeyIcon,
-	LifeBuoyIcon,
 	LogOutIcon,
 	MoreIcon,
+	SettingsIcon,
 	SignatureIcon,
 } from "~/components/ui/icons";
 import { SidebarMenuButton } from "~/components/ui/sidebar";
@@ -71,14 +71,14 @@ export function AppMenu({ user }: AppMenuProps) {
 				<DropdownMenuContent align="start" className="w-64" side="top">
 					<DrawerTrigger asChild>
 						<DropdownMenuItem>
-							<Settings2Icon className="size-4" />
+							<SettingsIcon className="size-4" />
 							{t("settings")}
 						</DropdownMenuItem>
 					</DrawerTrigger>
 
 					<DropdownMenuSub>
 						<DropdownMenuSubTrigger>
-							<LifeBuoyIcon className="size-4" />
+							<HelpIcon className="size-4" />
 							{t("help")}
 						</DropdownMenuSubTrigger>
 

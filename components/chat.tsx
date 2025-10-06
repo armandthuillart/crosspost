@@ -2,7 +2,6 @@
 
 import { type UIMessage, useUIMessages } from "@convex-dev/agent/react";
 import { type Preloaded, usePreloadedQuery } from "convex/react";
-import { LayoutGroup } from "motion/react";
 import { useParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { ParamsOf } from "~/.next/types/routes";
@@ -15,6 +14,7 @@ import { ChatSuggestions } from "~/components/chat.suggestions";
 import { api } from "~/convex/generated/api";
 import type { MyMessage } from "~/lib/types";
 import { attr } from "~/lib/utils";
+import { PostGallery } from "./post-gallery";
 
 interface ChatProps {
 	initialMessages: UIMessage[];
@@ -27,7 +27,7 @@ export function Chat({
 	preloadedUser,
 	userLocation,
 }: ChatProps) {
-	const { chatId } = useParams<ParamsOf<"/chat/[chatId]">>();
+	const { chatId } = useParams<ParamsOf<"/[locale]/chat/[chatId]">>();
 
 	const [isPending, setIsPending] = useState(false);
 
@@ -100,33 +100,32 @@ export function Chat({
 					)}
 
 					<div className="px-2">
-						<LayoutGroup>
-							<div className="relative mx-auto flex w-full max-w-(--chat-content-max-width) flex-col gap-4 pb-2 @[34rem]:[--chat-content-max-width:40rem] @[64rem]:[--chat-content-max-width:48rem] [--chat-content-max-width:32rem] md:flex-col-reverse md:pb-4 md:group-not-data-chat/chat:pb-0">
-								{isChat && (
-									<ChatBanner
-										isAnonymous={isAnonymous}
-										isFree={isFree}
-										isPro={isPro}
-									/>
-								)}
-
-								{!isChat && <ChatSuggestions onSubmit={handleSubmit} />}
-
-								<ChatInput
-									chatId={chatId}
-									hasSubmitted={hasSubmitted}
-									isChat={isChat}
-									isStreaming={isStreaming}
-									onStartNewChat={() => setIsPending(true)}
-									order={order}
-									ref={inputRef}
-									user={user}
-									userLocation={userLocation}
+						<div className="relative mx-auto flex w-full max-w-(--chat-content-max-width) flex-col gap-4 pb-2 @[34rem]:[--chat-content-max-width:40rem] @[64rem]:[--chat-content-max-width:48rem] [--chat-content-max-width:32rem] md:flex-col-reverse md:pb-4 md:group-not-data-chat/chat:pb-0">
+							{isChat && (
+								<ChatBanner
+									isAnonymous={isAnonymous}
+									isFree={isFree}
+									isPro={isPro}
 								/>
-							</div>
-						</LayoutGroup>
+							)}
+
+							{!isChat && <ChatSuggestions onSubmit={handleSubmit} />}
+
+							<ChatInput
+								chatId={chatId}
+								hasSubmitted={hasSubmitted}
+								isChat={isChat}
+								isStreaming={isStreaming}
+								onStartNewChat={() => setIsPending(true)}
+								order={order}
+								ref={inputRef}
+								user={user}
+								userLocation={userLocation}
+							/>
+						</div>
 					</div>
 				</div>
+				<PostGallery />
 			</div>
 		</main>
 	);

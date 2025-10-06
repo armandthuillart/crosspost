@@ -21,6 +21,10 @@
 		"themeColor": "Couleur d'accentuation",
 		"title": "Paramètres"
 	},
+	"AppShortcuts": {
+		"description": "Pour nos amateurs de clavier.",
+		"title": "Raccourcis clavier"
+	},
 	"AppSidebar": {
 		"all": "Tout",
 		"chats": "Conversations",

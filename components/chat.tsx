@@ -14,7 +14,6 @@ import { ChatSuggestions } from "~/components/chat.suggestions";
 import { api } from "~/convex/generated/api";
 import type { MyMessage } from "~/lib/types";
 import { attr } from "~/lib/utils";
-import { PostGallery } from "./post-gallery";
 
 interface ChatProps {
 	initialMessages: UIMessage[];

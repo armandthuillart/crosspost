@@ -22,6 +22,7 @@ import {
 } from "~/components/ui/drawer";
 import { MenuIcon } from "~/components/ui/icons";
 import { useIsMobile } from "~/hooks/use-mobile";
+import { SHORTCUTS, useShortcut } from "~/hooks/use-shortcuts";
 import { cn } from "~/lib/utils";
 
 const SIDEBAR_COOKIE_NAME = "sidebar";
@@ -91,6 +92,10 @@ function SidebarProvider({
 	const toggleSidebar = useCallback(() => {
 		return isMobile ? setOpenMobile((open) => !open) : setOpen((open) => !open);
 	}, [isMobile, setOpen]);
+
+	useShortcut(SHORTCUTS.TOGGLE_SIDEBAR, () => {
+		toggleSidebar();
+	});
 
 	const state = open ? "expanded" : "collapsed";
 

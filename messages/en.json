@@ -6,6 +6,10 @@
 		"settings": "Settings",
 		"termsAndPolicies": "Terms & policies"
 	},
+	"AppShortcuts": {
+		"title": "Keyboard shortcuts",
+		"description": "For our keyboard enthusiasts."
+	},
 	"AppSettings": {
 		"app": "App",
 		"appearance": "Appearance",

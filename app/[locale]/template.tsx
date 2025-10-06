@@ -1,6 +1,7 @@
 import { preloadedQueryResult, preloadQuery } from "convex/nextjs";
 import { cookies } from "next/headers";
 import type { ReactNode } from "react";
+import { AppShortcuts } from "~/components/app.shortcuts";
 import { AppSidebar } from "~/components/app.sidebar";
 import { SidebarProvider } from "~/components/ui/sidebar";
 import { WelcomeBack } from "~/components/welcome-back";
@@ -34,12 +35,13 @@ export default async function Template({ children }: { children: ReactNode }) {
 
 	return (
 		<SidebarProvider defaultOpen={isOpen === "true"}>
+			{isBack && <WelcomeBack />}
+			<AppShortcuts />
 			<AppSidebar
 				preloadedChats={preloadedChats}
 				preloadedUser={preloadedUser}
 			/>
 			{children}
-			{isBack && <WelcomeBack />}
 		</SidebarProvider>
 	);
 }

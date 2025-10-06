@@ -3,7 +3,7 @@
 import { atom, useAtom } from "jotai";
 import { type Locale, useLocale, useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
-import { type ReactNode, useEffect, useTransition } from "react";
+import { type ReactNode, useEffect, useState, useTransition } from "react";
 import { themeColors } from "~/app/theme-provider";
 import {
 	Drawer,
@@ -24,6 +24,7 @@ import {
 	SelectValue,
 } from "~/components/ui/select";
 import { Separator } from "~/components/ui/separator";
+import { SHORTCUTS, useShortcut } from "~/hooks/use-shortcuts";
 import { usePathname, useRouter } from "~/i18n/navigation";
 import { routing } from "~/i18n/routing";
 import { themeColorAtom } from "~/lib/atoms";
@@ -35,6 +36,7 @@ export const snapPointsAtom = atom<number | string | null>(snapPoints[0]);
 
 export function AppSettings({ children }: { children: ReactNode }) {
 	const [snap, setSnap] = useAtom(snapPointsAtom);
+	const [isOpen, setIsOpen] = useState(false);
 	const [themeColor, setThemeColor] = useAtom(themeColorAtom);
 	const [isPending, startTransition] = useTransition();
 
@@ -55,10 +57,23 @@ export function AppSettings({ children }: { children: ReactNode }) {
 		document.documentElement.setAttribute("data-theme", themeColor);
 	}, [themeColor]);
 
+	useShortcut(SHORTCUTS.OPEN_SETTINGS, () => {
+		if (!isOpen) {
+			setIsOpen(true);
+			setSnap(snapPoints[0]);
+		} else if (snap === snapPoints[0]) {
+			setSnap(snapPoints[1]);
+		} else {
+			setIsOpen(false);
+		}
+	});
+
 	return (
 		<Drawer
 			activeSnapPoint={snap}
 			fadeFromIndex={0}
+			onOpenChange={setIsOpen}
+			open={isOpen}
 			setActiveSnapPoint={setSnap}
 			snapPoints={snapPoints}
 			snapToSequentialPoint

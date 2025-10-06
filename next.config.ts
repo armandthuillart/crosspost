@@ -4,9 +4,6 @@ const nextConfig: NextConfig = {
 	devIndicators: {
 		position: "bottom-right",
 	},
-	experimental: {
-		reactCompiler: true,
-	},
 	images: {
 		remotePatterns: [
 			{ hostname: "cdn.bsky.app" },

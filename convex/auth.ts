@@ -16,21 +16,17 @@ import type { Tier, User } from "~/lib/types";
 
 const siteUrl = process.env.SITE_URL;
 
-export const {
-	adapter,
-	getHeaders,
-	triggersApi,
-	registerRoutes,
-	getAnyUserById,
-	safeGetAuthUser,
-} = createClient<DataModel, typeof authSchema>(components.betterAuth, {
-	local: {
-		schema: authSchema,
+export const authComponent = createClient<DataModel, typeof authSchema>(
+	components.betterAuth,
+	{
+		local: {
+			schema: authSchema,
+		},
+		verbose: false,
 	},
-	verbose: false,
-});
+);
 
-export const { onCreate, onUpdate, onDelete } = triggersApi();
+export const { onCreate, onUpdate, onDelete } = authComponent.triggersApi();
 
 export const createAuth = (
 	ctx: GenericCtx<DataModel>,
@@ -38,7 +34,7 @@ export const createAuth = (
 ) => {
 	return betterAuth({
 		baseURL: siteUrl,
-		database: adapter(ctx),
+		database: authComponent.adapter(ctx),
 		databaseHooks: {
 			user: {
 				create: {
@@ -155,7 +151,7 @@ export const createAuth = (
 export const getUser = query({
 	args: {},
 	handler: async (ctx): Promise<User | null> => {
-		const user = await safeGetAuthUser(ctx);
+		const user = await authComponent.safeGetAuthUser(ctx);
 
 		const tainted: User | null = user
 			? {

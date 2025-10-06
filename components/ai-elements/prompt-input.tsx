@@ -3,6 +3,7 @@
 import { type ComponentProps, memo } from "react";
 import { Button, type ButtonProps } from "~/components/ui/button";
 import { SendIcon, StopIcon } from "~/components/ui/icons";
+import { Kbd } from "~/components/ui/kbd";
 import {
 	Tooltip,
 	TooltipContent,
@@ -85,15 +86,15 @@ const PromptInputButton = memo(
 		...props
 	}: ButtonProps & { kbd: string; tooltip: string }) => (
 		<TooltipProvider>
-			<Tooltip>
+			<Tooltip >
 				<TooltipTrigger className="h-9 [grid-area:left]" {...props}>
 					{children}
 				</TooltipTrigger>
 				<TooltipContent className="flex gap-1.5" side="bottom">
 					{tooltip}{" "}
-					<kbd className="-mr-1 flex size-4 items-center justify-center rounded bg-white/20 text-muted-foreground">
+					<Kbd className="-mr-1 !text-primary-foreground !bg-primary-foreground/20 !size-4 flex min-w-auto items-center justify-center rounded">
 						{kbd}
-					</kbd>
+					</Kbd>
 				</TooltipContent>
 			</Tooltip>
 		</TooltipProvider>

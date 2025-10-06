@@ -1,6 +1,7 @@
 "use client";
 
-import { CTA } from "~/components/chat.header.upgrade";
+import { useTranslations } from "next-intl";
+import { ChatHeaderUpgradeButton } from "~/components/chat.header.upgrade";
 import { Button } from "~/components/ui/button";
 import { AppIcon } from "~/components/ui/icons";
 import { SidebarTrigger } from "~/components/ui/sidebar";
@@ -14,6 +15,7 @@ interface ChatHeaderProps {
 
 export function ChatHeader({ isFree, isAnonymous }: ChatHeaderProps) {
 	const router = useRouter();
+	const t = useTranslations("ChatHeader");
 
 	async function handleSignInWithGoogle() {
 		await authClient.signIn.social({ provider: "google" });
@@ -37,11 +39,11 @@ export function ChatHeader({ isFree, isAnonymous }: ChatHeaderProps) {
 						onClick={handleSignInWithGoogle}
 						variant="secondary"
 					>
-						Sign in
+						{t("signIn")}
 					</Button>
 
 					<Button className="rounded-full" onClick={handleSignInWithGoogle}>
-						Sign up for free
+						{t("signUp")}
 					</Button>
 				</div>
 			</header>
@@ -51,8 +53,7 @@ export function ChatHeader({ isFree, isAnonymous }: ChatHeaderProps) {
 	return (
 		<header className="inset-0 bottom-auto z-50 flex items-center justify-between p-2 group-not-data-chat/chat:absolute group-data-chat/chat:sticky @max-8xl/chat:group-data-chat/chat:bg-background">
 			<SidebarTrigger />
-
-			{isFree && <CTA />}
+			{isFree && <ChatHeaderUpgradeButton />}
 		</header>
 	);
 }

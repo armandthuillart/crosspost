@@ -1,4 +1,11 @@
 {
+	"AppMenu": {
+		"help": "Help",
+		"keyboardShortcuts": "Keyboard shortcuts",
+		"logOut": "Log out",
+		"settings": "Settings",
+		"termsAndPolicies": "Terms & policies"
+	},
 	"AppSettings": {
 		"app": "App",
 		"appearance": "Appearance",
@@ -18,6 +25,13 @@
 		"all": "All",
 		"chats": "Chats",
 		"clear": "Clear"
+	},
+	"ChatHeader": {
+		"signIn": "Sign in",
+		"signUp": "Sign up for free"
+	},
+	"ChatHeaderUpgradeButton": {
+		"upgrade": "Upgrade"
 	},
 	"ChatMessages": {
 		"copy": "Copy"
@@ -50,5 +64,8 @@
 	},
 	"Manifest": {
 		"description": "Create and post to social media by chatting with AI."
+	},
+	"SidebarHistorySearch": {
+		"search": "Search"
 	}
 }

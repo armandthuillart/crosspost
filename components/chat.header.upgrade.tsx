@@ -1,10 +1,13 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Button } from "~/components/ui/button";
 import { StarIcon } from "~/components/ui/icons";
 import { checkout } from "~/lib/auth-client";
 
-export function CTA() {
+export function ChatHeaderUpgradeButton() {
+	const t = useTranslations("ChatHeaderUpgradeButton");
+
 	async function handleCheckout() {
 		await checkout({ slug: "pro" });
 	}
@@ -17,7 +20,7 @@ export function CTA() {
 				variant="selection"
 			>
 				<StarIcon className="size-3.5" />
-				Upgrade
+				{t("upgrade")}
 			</Button>
 		</div>
 	);

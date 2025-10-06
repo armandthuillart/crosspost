@@ -30,7 +30,7 @@ import { themeColorAtom } from "~/lib/atoms";
 import type { ThemeColor } from "~/lib/types";
 import { cn } from "~/lib/utils";
 
-export const snapPoints = ["448px", 0.8];
+export const snapPoints = ["500px", 0.8];
 export const snapPointsAtom = atom<number | string | null>(snapPoints[0]);
 
 export function AppSettings({ children }: { children: ReactNode }) {
@@ -142,16 +142,18 @@ export function AppSettings({ children }: { children: ReactNode }) {
 									<SelectContent>
 										{themeColors.map((themeColor) => (
 											<SelectItem key={themeColor} value={themeColor}>
-												<span
-													className={cn(
-														"size-3 rounded-full",
-														themeColor === "default"
-															? "bg-muted"
-															: "bg-primary",
-													)}
-													data-theme={themeColor}
-												/>
-												{t(themeColor)}
+												<span className="flex items-center gap-2">
+													<span
+														className={cn(
+															"size-2.5 rounded-full",
+															themeColor === "default"
+																? "bg-muted"
+																: "bg-primary",
+														)}
+														data-theme={themeColor}
+													/>
+													{t(themeColor)}
+												</span>
 											</SelectItem>
 										))}
 									</SelectContent>

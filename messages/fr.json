@@ -1,4 +1,11 @@
 {
+	"AppMenu": {
+		"help": "Centre d'aide",
+		"keyboardShortcuts": "Raccourcis clavier",
+		"logOut": "Se déconnecter",
+		"settings": "Paramètres",
+		"termsAndPolicies": "Conditions"
+	},
 	"AppSettings": {
 		"app": "Application",
 		"appearance": "Apparence",
@@ -18,6 +25,13 @@
 		"all": "Tout",
 		"chats": "Conversations",
 		"clear": "Annuler"
+	},
+	"ChatHeader": {
+		"signIn": "Se connecter",
+		"signUp": "Créer un compte"
+	},
+	"ChatHeaderUpgradeButton": {
+		"upgrade": "Mettre à niveau"
 	},
 	"ChatMessages": {
 		"copy": "Copier"
@@ -50,5 +64,8 @@
 	},
 	"Manifest": {
 		"description": "Publiez sur les réseaux sociaux en parlant avec l'IA."
+	},
+	"SidebarHistorySearch": {
+		"search": "Rechercher"
 	}
 }

@@ -1,9 +1,9 @@
 "use client";
 
 import { Settings2Icon } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { AppSettings } from "~/components/app.settings";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
-import { Badge } from "~/components/ui/badge";
 import { DrawerTrigger } from "~/components/ui/drawer";
 import {
 	DropdownMenu,
@@ -15,7 +15,6 @@ import {
 	DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import {
-	AssistantsIcon,
 	KeyboardKeyIcon,
 	LifeBuoyIcon,
 	LogOutIcon,
@@ -32,6 +31,7 @@ interface AppMenuProps {
 }
 
 export function AppMenu({ user }: AppMenuProps) {
+	const t = useTranslations("AppMenu");
 	const router = useRouter();
 	const pathname = usePathname();
 
@@ -66,43 +66,35 @@ export function AppMenu({ user }: AppMenuProps) {
 					</SidebarMenuButton>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent align="start" className="w-64" side="top">
-					<DropdownMenuItem disabled>
-						<AssistantsIcon className="size-4" />
-						Customize
-						<Badge className="ml-auto rounded-full" variant="selection">
-							Soon
-						</Badge>
-					</DropdownMenuItem>
-
 					<DrawerTrigger asChild>
 						<DropdownMenuItem>
 							<Settings2Icon className="size-4" />
-							Settings
+							{t("settings")}
 						</DropdownMenuItem>
 					</DrawerTrigger>
 
 					<DropdownMenuSub>
 						<DropdownMenuSubTrigger>
 							<LifeBuoyIcon className="size-4" />
-							Help
+							{t("help")}
 						</DropdownMenuSubTrigger>
 
 						<DropdownMenuSubContent>
 							<DropdownMenuItem>
 								<SignatureIcon className="size-4" />
-								Terms & policies
+								{t("termsAndPolicies")}
 							</DropdownMenuItem>
 
 							<DropdownMenuItem className="w-full">
 								<KeyboardKeyIcon className="size-4" />
-								Keyboard shortcuts
+								{t("keyboardShortcuts")}
 							</DropdownMenuItem>
 						</DropdownMenuSubContent>
 					</DropdownMenuSub>
 
 					<DropdownMenuItem onClick={handleSignOut}>
 						<LogOutIcon className="size-4" />
-						Log out
+						{t("logOut")}
 					</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenu>

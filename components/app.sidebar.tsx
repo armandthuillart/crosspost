@@ -1,16 +1,13 @@
 "use client";
 
-import type { ThreadDoc } from "@convex-dev/agent/validators";
-import { type Preloaded, useMutation, usePreloadedQuery } from "convex/react";
-import type { PaginationResult } from "convex/server";
-import { useParams } from "next/navigation";
+import { type Preloaded, usePreloadedQuery } from "convex/react";
 import { useTranslations } from "next-intl";
-import { type MouseEvent, useState } from "react";
-import type { ParamsOf } from "~/.next/types/routes";
+import { useState } from "react";
 import { AppMenu } from "~/components/app.menu";
+import { SibebarHistory } from "~/components/app.sidebar.history";
+import { SibebarHistorySearch } from "~/components/app.sidebar.history.search";
 import { Button } from "~/components/ui/button";
-import { Checkbox } from "~/components/ui/checkbox";
-import { AppIcon, SearchIcon, TrashIcon } from "~/components/ui/icons";
+import { AppIcon } from "~/components/ui/icons";
 import {
 	Sidebar,
 	SidebarContent,
@@ -23,7 +20,7 @@ import {
 	SidebarMenuButton,
 	SidebarMenuItem,
 } from "~/components/ui/sidebar";
-import { api } from "~/convex/generated/api";
+import type { api } from "~/convex/generated/api";
 import { usePathname, useRouter } from "~/i18n/navigation";
 import { appName } from "~/lib/constants";
 
@@ -111,120 +108,4 @@ export function AppSidebar({
 			</SidebarFooter>
 		</Sidebar>
 	);
-}
-
-function SibebarHistorySearch({
-	threadIds,
-	setThreadIds,
-	hasThreadIds,
-}: {
-	threadIds: string[] | null;
-	setThreadIds: (threadIds: string[] | null) => void;
-	hasThreadIds: boolean;
-}) {
-	const { chatId } = useParams<ParamsOf<"/chat/[chatId]">>();
-	const { push } = useRouter();
-
-	const deleteChats = useMutation(api.chat.deleteChats).withOptimisticUpdate(
-		(localStore, { threadIds }) => {
-			const currentChats = localStore.getQuery(api.chat.listChats, {
-				paginationOpts: { cursor: null, numItems: 10 },
-			});
-
-			if (currentChats !== undefined) {
-				const updatedResults = {
-					...currentChats,
-					page: currentChats.page.filter(
-						({ _id: chatId }) => !threadIds.includes(chatId),
-					),
-				};
-
-				localStore.setQuery(
-					api.chat.listChats,
-					{ paginationOpts: { cursor: null, numItems: 10 } },
-					updatedResults,
-				);
-			}
-		},
-	);
-
-	async function handleDelete() {
-		if (!threadIds) return;
-
-		if (chatId && threadIds.includes(chatId as string)) {
-			push("/");
-		}
-
-		void deleteChats({ threadIds });
-		setThreadIds(null);
-	}
-
-	return (
-		<div className="relative flex w-full items-center gap-3">
-			<div className="flex w-full items-center gap-2 pl-2.5 text-muted-foreground">
-				<div className="my-2 flex size-5 shrink-0 items-center justify-center">
-					<SearchIcon className="size-4 shrink-0" />
-				</div>
-
-				<input
-					className="w-full text-foreground text-sm outline-none placeholder:text-muted-foreground"
-					placeholder="Search"
-				/>
-			</div>
-
-			{hasThreadIds && (
-				<Button
-					className="shrink-0 text-muted-foreground hover:bg-destructive hover:text-destructive-foreground"
-					onClick={handleDelete}
-					size="icon"
-					variant="ghost"
-				>
-					<TrashIcon className="size-5" />
-				</Button>
-			)}
-		</div>
-	);
-}
-
-function SibebarHistory({
-	chats,
-	threadIds,
-	setThreadIds,
-}: {
-	chats: PaginationResult<ThreadDoc>;
-	threadIds: string[] | null;
-	setThreadIds: (threadIds: string[] | null) => void;
-}) {
-	const { chatId: paramsChatId } = useParams<ParamsOf<"/chat/[chatId]">>();
-	const { push } = useRouter();
-
-	function handleSelect(e: MouseEvent<HTMLButtonElement>, chatId: string) {
-		e.stopPropagation();
-
-		const currentIds = threadIds || [];
-
-		const newIds = currentIds.includes(chatId)
-			? currentIds.filter((id) => id !== chatId)
-			: [...currentIds, chatId];
-
-		setThreadIds(newIds.length > 0 ? newIds : null);
-	}
-
-	return chats.page.map(({ _id: chatId, title }) => (
-		<SidebarMenuItem key={chatId}>
-			<SidebarMenuButton
-				className="justify-between group-hover/menu-item:bg-sidebar-accent/70 group-has-data-[state=checked]/menu-item:bg-sidebar-accent/70"
-				isActive={chatId === paramsChatId}
-				onClick={() => push(`/chat/${chatId}`)}
-			>
-				<span className="truncate">{title}</span>
-			</SidebarMenuButton>
-
-			<Checkbox
-				checked={threadIds?.includes(chatId) || false}
-				className="absolute top-2.5 right-3 bg-background not-data-[state=checked]:opacity-0 group-hover/menu-item:opacity-100"
-				onClick={(e) => handleSelect(e, chatId)}
-			/>
-		</SidebarMenuItem>
-	));
 }

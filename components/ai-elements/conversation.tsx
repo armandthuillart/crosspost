@@ -60,7 +60,7 @@ function PureConversationScrollButton({ className, ...props }: ButtonProps) {
 		!isAtBottom && (
 			<Button
 				className={cn(
-					"-translate-x-1/2 absolute bottom-12 left-1/2 z-50 rounded-full hover:bg-muted",
+					"-translate-x-1/2 absolute bottom-12 left-1/2 z-50 rounded-full bg-muted hover:bg-secondary",
 					isVisible && "bottom-32",
 					className,
 				)}

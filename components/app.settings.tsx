@@ -117,7 +117,9 @@ export function AppSettings({ children }: { children: ReactNode }) {
 									</SelectContent>
 								</Select>
 							</SettingsGroupItem>
+
 							<Separator />
+
 							<SettingsGroupItem
 								icon={<AppearanceIcon className="size-5" />}
 								title={t("appearance")}
@@ -141,7 +143,9 @@ export function AppSettings({ children }: { children: ReactNode }) {
 									</SelectContent>
 								</Select>
 							</SettingsGroupItem>
+
 							<Separator />
+
 							<SettingsGroupItem
 								icon={<PaintBrushIcon className="size-5" />}
 								title={t("themeColor")}
@@ -154,7 +158,8 @@ export function AppSettings({ children }: { children: ReactNode }) {
 									<SelectTrigger className="w-fit bg-background">
 										<SelectValue />
 									</SelectTrigger>
-									<SelectContent>
+
+									<SelectContent alignOffset={-5}>
 										{themeColors.map((themeColor) => (
 											<SelectItem key={themeColor} value={themeColor}>
 												<span className="flex items-center gap-2">
@@ -162,7 +167,7 @@ export function AppSettings({ children }: { children: ReactNode }) {
 														className={cn(
 															"size-2.5 rounded-full",
 															themeColor === "default"
-																? "bg-muted"
+																? "bg-muted dark:bg-accent"
 																: "bg-primary",
 														)}
 														data-theme={themeColor}

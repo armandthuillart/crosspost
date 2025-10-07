@@ -18,7 +18,9 @@ export function ChatHeader({ isFree, isAnonymous }: ChatHeaderProps) {
 	const t = useTranslations("ChatHeader");
 
 	async function handleSignInWithGoogle() {
-		await authClient.signIn.social({ provider: "google" });
+		await authClient.signIn.social({
+			provider: "google",
+		});
 	}
 
 	if (isAnonymous) {

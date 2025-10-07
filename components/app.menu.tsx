@@ -52,7 +52,7 @@ export function AppMenu({ user }: AppMenuProps) {
 		<AppSettings>
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
-					<SidebarMenuButton className="h-auto justify-between rounded-full pr-4">
+					<SidebarMenuButton className="h-auto justify-between rounded-full pr-4 pl-2">
 						<div className="flex items-center gap-2.5 overflow-hidden">
 							<Avatar>
 								<AvatarFallback>
@@ -68,7 +68,8 @@ export function AppMenu({ user }: AppMenuProps) {
 						<MoreIcon className="size-6" />
 					</SidebarMenuButton>
 				</DropdownMenuTrigger>
-				<DropdownMenuContent align="start" className="w-64" side="top">
+
+				<DropdownMenuContent align="start" className="w-58" side="top">
 					<DrawerTrigger asChild>
 						<DropdownMenuItem>
 							<SettingsIcon className="size-4" />

@@ -2,6 +2,7 @@ import { fetchQuery, preloadQuery } from "convex/nextjs";
 import { getLocation } from "~/app/actions";
 import { Chat } from "~/components/chat";
 import { getToken } from "~/lib/auth-server";
+import type { MyMessage } from "~/lib/types";
 import { api } from "../../../../convex/_generated/api";
 
 export default async function Page({
@@ -24,7 +25,7 @@ export default async function Page({
 
 	return (
 		<Chat
-			initialMessages={initialMessages}
+			initialMessages={initialMessages as Array<MyMessage>}
 			preloadedUser={preloadedUser}
 			userLocation={userLocation}
 		/>

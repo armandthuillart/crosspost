@@ -1,51 +1,21 @@
 "use client";
 
 import type { UIMessage } from "@convex-dev/agent/react";
-import {
-	type HTMLMotionProps,
-	motion,
-	type Transition,
-	type Variants,
-} from "motion/react";
-import type { HTMLAttributes } from "react";
+import { motion } from "motion/react";
+import type { ComponentProps, HTMLAttributes } from "react";
 import { cn } from "~/lib/utils";
 
-const variants: Variants = {
-	animate: { filter: "blur(0px)", opacity: 1, scale: 1, y: 0 },
-	exit: { filter: "blur(12px)", opacity: 0, scale: 0.9, y: "80dvh" },
-	initial: { filter: "blur(12px)", opacity: 0, scale: 0.9, y: "80dvh" },
-};
-
-const transition: Transition = {
-	duration: 0.5,
-	ease: [0.32, 0.72, 0, 1],
-};
-
-interface MessageProps extends HTMLMotionProps<"div"> {
+interface MessageProps extends ComponentProps<"div"> {
 	from: UIMessage["role"];
-	animate?: boolean;
-	onAnimationComplete?: () => void;
 }
 
-function Message({
-	from,
-	animate = false,
-	className,
-	onAnimationComplete,
-	...props
-}: MessageProps) {
+function Message({ from, className, ...props }: MessageProps) {
 	return (
-		<motion.div
-			animate={animate ? "animate" : undefined}
+		<div
 			className={cn(
 				"group/message px-4 data-user:pt-3 not-first:data-user:pt-12",
 				className,
 			)}
-			exit={animate ? "exit" : undefined}
-			initial={animate ? "initial" : undefined}
-			onAnimationComplete={onAnimationComplete}
-			transition={transition}
-			variants={variants}
 			{...props}
 		/>
 	);

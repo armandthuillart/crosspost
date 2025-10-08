@@ -1,6 +1,6 @@
 "use client";
 
-import { type UIMessage, useUIMessages } from "@convex-dev/agent/react";
+import { useUIMessages } from "@convex-dev/agent/react";
 import { type Preloaded, usePreloadedQuery } from "convex/react";
 import { useParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -10,14 +10,14 @@ import { ChatGreetings } from "~/components/chat.greetings";
 import { ChatHeader } from "~/components/chat.header";
 import { ChatInput, type InputRef } from "~/components/chat.input";
 import { ChatMessages } from "~/components/chat.messages";
+import { ChatPostsGallery } from "~/components/chat.posts-gallery";
 import { ChatSuggestions } from "~/components/chat.suggestions";
-import { PostGallery } from "~/components/post-gallery";
 import type { MyMessage } from "~/lib/types";
 import { attr } from "~/lib/utils";
 import { api } from "../convex/_generated/api";
 
 interface ChatProps {
-	initialMessages: UIMessage[];
+	initialMessages: Array<MyMessage>;
 	preloadedUser: Preloaded<typeof api.auth.getUser>;
 	userLocation: { city?: string; country?: string; region?: string };
 }
@@ -40,23 +40,24 @@ export function Chat({
 	const isChat = !!chatId || isPending;
 
 	const user = usePreloadedQuery(preloadedUser);
-
-	const { status, results, loadMore } = useUIMessages(
-		api.chat.loadChat,
-		chatId ? { threadId: chatId } : "skip",
-		{ initialNumItems: 10, stream: true },
-	);
-
-	const messages = status === "LoadingFirstPage" ? initialMessages : results;
-
 	const isPro = user?.tier === "pro";
-	const order = messages.find((m) => m.status === "streaming")?.order ?? 0;
 	const isFree = user?.tier === "free";
-	const canLoadMore = status === "CanLoadMore";
+	const isAnonymous = !user || user?.tier === "anonymous";
+
+	const {
+		status,
+		results: uiMessages,
+		loadMore,
+	} = useUIMessages(api.chat.loadChat, chatId ? { threadId: chatId } : "skip", {
+		initialNumItems: 10,
+		stream: true,
+	});
+
+	const messages = status === "LoadingFirstPage" ? initialMessages : uiMessages;
+
+	const order = messages.find((m) => m.status === "streaming")?.order ?? 0;
 	const isStreaming = messages.some((m) => m.status === "streaming");
-	const isAnonymous = user?.tier === "anonymous" || !user;
 	const hasSubmitted = messages.some((m) => m.status === "pending");
-	const isLoadingMore = status === "LoadingMore";
 
 	const [hasSentMessage, setHasSentMessage] = useState(false);
 
@@ -91,9 +92,10 @@ export function Chat({
 						<ChatGreetings />
 					) : (
 						<ChatMessages
-							canLoadMore={canLoadMore}
+							canLoadMore={status === "CanLoadMore"}
 							hasSentMessage={hasSentMessage}
-							isLoadingMore={isLoadingMore}
+							isLoadingMore={status === "LoadingMore"}
+							isStreaming={isStreaming}
 							loadMore={loadMore}
 							messages={messages as Array<MyMessage>}
 						/>
@@ -125,7 +127,7 @@ export function Chat({
 						</div>
 					</div>
 				</div>
-				{!isChat && <PostGallery />}
+				{!isChat && <ChatPostsGallery />}
 			</div>
 		</main>
 	);

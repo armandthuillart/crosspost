@@ -1,8 +1,7 @@
 "use client";
 
-import { AnimatePresence } from "motion/react";
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Action, Actions } from "~/components/ai-elements/actions";
 import {
 	Conversation,
@@ -23,6 +22,7 @@ import { attr } from "~/lib/utils";
 interface ChatMessagesProps {
 	messages: Array<MyMessage>;
 	loadMore: (numItems: number) => void;
+	isStreaming: boolean;
 	canLoadMore: boolean;
 	isLoadingMore: boolean;
 	hasSentMessage: boolean;
@@ -32,99 +32,77 @@ export function ChatMessages({
 	loadMore,
 	messages,
 	canLoadMore,
+	isStreaming,
 	isLoadingMore,
 	hasSentMessage,
 }: ChatMessagesProps) {
 	const t = useTranslations("ChatMessages");
 
-	const [isCopied, setIsCopied] = useState<string | null>(null);
-	const [isThinking, setIsThinking] = useState(false);
-	const hasActiveAssistantMessage = messages.some(
-		({ role, status }) => role === "assistant" && status !== "pending",
-	);
+	const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
 
 	async function handleCopy(message: MyMessage) {
 		await navigator.clipboard.writeText(message.text);
-		setIsCopied(message.id);
+		setCopiedMessageId(message.id);
 
 		setTimeout(() => {
-			setIsCopied(null);
+			setCopiedMessageId(null);
 		}, 2000);
 	}
 
-	function handleUserMessageAnimationComplete(isLastMessage: boolean) {
-		if (isLastMessage && hasSentMessage) {
-			setIsThinking(true);
-		}
-	}
-
-	useEffect(() => {
-		if (hasActiveAssistantMessage || messages.length === 0) {
-			setIsThinking(false);
-		}
-	}, [hasActiveAssistantMessage, messages.length]);
+	const isThinking =
+		messages.at(-1)?.role === "user" &&
+		messages.some((m) => m.status === "pending");
 
 	return (
 		<Conversation>
+			{/* Should be studied if that works or not */}
 			<ConversationAutoLoadOnTop
 				canLoadMore={canLoadMore}
 				isLoadingMore={isLoadingMore}
 				loadMore={loadMore}
 			/>
+
 			<ConversationContent>
-				<AnimatePresence initial={false} mode="popLayout">
-					{messages.map((message, i) => {
-						const isLast = i === messages.length - 1;
-						const fromUser = message.role === "user";
-						const hasCopied = isCopied === message.id;
-						const isPending = message.status === "pending";
-						const isStreaming = message.status === "streaming";
+				{messages.map((m, i) => {
+					const isLast = i === messages.length - 1;
+					const hasCopied = copiedMessageId === m.id;
+					const hasScrollPadding = isLast && hasSentMessage;
 
-						return (
-							<Message
-								{...attr("scroll-padding", isLast && hasSentMessage)}
-								{...attr("user", message.role === "user")}
-								animate={isLast && fromUser}
-								from={message.role}
-								key={message.key}
-								onAnimationComplete={
-									fromUser && isPending
-										? () => handleUserMessageAnimationComplete(isLast)
-										: undefined
-								}
-							>
-								<MessageContent>
-									{message.parts.map((part, partIndex) => {
-										return (
-											<MessagePart
-												isStreaming={isStreaming}
-												key={`${message.key}-${partIndex}`}
-												part={part}
-												role={message.role}
-											/>
-										);
-									})}
-									<Actions>
-										<Action
-											onClick={() => handleCopy(message)}
-											tooltip={t("copy")}
-										>
-											{hasCopied ? <TickIcon /> : <CopyIcon />}
-										</Action>
-									</Actions>
-								</MessageContent>
-							</Message>
-						);
-					})}
-
-					{isThinking && (
-						<Message from="assistant">
+					return (
+						<Message
+							{...attr("scroll-padding", hasScrollPadding)}
+							{...attr("user", m.role === "user")}
+							from={m.role}
+							key={m.key}
+						>
 							<MessageContent>
-								<MessageThinking />
+								{m.parts.map((p, i) => (
+									<MessagePart
+										isStreaming={isStreaming}
+										// biome-ignore lint/suspicious/noArrayIndexKey: it's alright
+										key={i}
+										part={p}
+										role={m.role}
+									/>
+								))}
+
+								<Actions>
+									<Action onClick={() => handleCopy(m)} tooltip={t("copy")}>
+										{hasCopied ? <TickIcon /> : <CopyIcon />}
+									</Action>
+								</Actions>
 							</MessageContent>
 						</Message>
-					)}
-				</AnimatePresence>
+					);
+				})}
+
+				{isThinking && (
+					<Message from="assistant">
+						<MessageContent>
+							<MessageThinking />
+						</MessageContent>
+					</Message>
+				)}
 			</ConversationContent>
 			<ConversationScrollButton />
 		</Conversation>

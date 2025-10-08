@@ -21,7 +21,7 @@ const createColumn = (columnIndex: number) => (
 	</div>
 );
 
-export function PostGallery() {
+export function ChatPostsGallery() {
 	const t = useTranslations("PostGallery");
 
 	return (

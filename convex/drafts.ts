@@ -1,9 +1,9 @@
 import { v } from "convex/values";
 import { zodToConvex } from "convex-helpers/server/zod";
-import type { Id } from "~/convex/generated/dataModel";
-import { mutation } from "~/convex/generated/server";
-import { draftSchema } from "~/lib/schema";
-import type { Platform } from "~/lib/types";
+import { draftSchema } from "../lib/schema";
+import type { Platform } from "../lib/types";
+import type { Id } from "./_generated/dataModel";
+import { mutation } from "./_generated/server";
 
 export const createDraft = mutation({
 	args: v.object({

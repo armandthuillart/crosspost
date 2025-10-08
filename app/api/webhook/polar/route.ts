@@ -1,6 +1,6 @@
 import { Webhooks } from "@polar-sh/nextjs";
-import { fetchMutation } from "convex/nextjs";
-import { api } from "~/convex/generated/api";
+import { fetchAction } from "convex/nextjs";
+import { api } from "../../../../convex/_generated/api";
 
 export const POST = Webhooks({
 	onCustomerStateChanged: async ({
@@ -10,12 +10,12 @@ export const POST = Webhooks({
 
 		if (externalId) {
 			if (isPro) {
-				await fetchMutation(api.betterAuth.auth.updateUserTier, {
+				await fetchAction(api.betterAuth.auth.updateUserTierAction, {
 					tier: "pro",
 					userId: externalId,
 				});
 			} else {
-				await fetchMutation(api.betterAuth.auth.updateUserTier, {
+				await fetchAction(api.betterAuth.auth.updateUserTierAction, {
 					tier: "free",
 					userId: externalId,
 				});

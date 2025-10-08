@@ -1,7 +1,7 @@
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 import { zodToConvex } from "convex-helpers/server/zod";
-import { platformSchema } from "~/lib/schema";
+import { platformSchema } from "../lib/schema";
 
 export default defineSchema({
 	drafts: defineTable({

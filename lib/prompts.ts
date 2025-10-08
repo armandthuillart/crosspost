@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 import { getName } from "i18n-iso-countries";
-import { appName } from "~/lib/constants";
+import { appName } from "../lib/constants";
 
 export const CHAT_PROMPT = ({
 	city,

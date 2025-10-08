@@ -1,11 +1,7 @@
 import { getThreadMetadata } from "@convex-dev/agent";
-import { api, components } from "~/convex/generated/api";
-import type {
-	ActionCtx,
-	MutationCtx,
-	QueryCtx,
-} from "~/convex/generated/server";
-import { ChatSDKError } from "~/lib/errors";
+import { ChatSDKError } from "../lib/errors";
+import { api, components } from "./_generated/api";
+import type { ActionCtx, MutationCtx, QueryCtx } from "./_generated/server";
 
 export async function verifyOwnership(
 	ctx: QueryCtx | MutationCtx | ActionCtx,

@@ -6,67 +6,67 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 export const tables = {
-  user: defineTable({
-    name: v.string(),
-    email: v.string(),
-    emailVerified: v.boolean(),
-    image: v.optional(v.union(v.null(), v.string())),
-    createdAt: v.number(),
-    updatedAt: v.number(),
-    isAnonymous: v.optional(v.union(v.null(), v.boolean())),
-    userId: v.optional(v.union(v.null(), v.string())),
-    firstName: v.optional(v.union(v.null(), v.string())),
-    lastName: v.optional(v.union(v.null(), v.string())),
-    tier: v.optional(v.union(v.null(), v.string())),
-  })
-    .index("email_name", ["email","name"])
-    .index("name", ["name"])
-    .index("userId", ["userId"]),
-  session: defineTable({
-    expiresAt: v.number(),
-    token: v.string(),
-    createdAt: v.number(),
-    updatedAt: v.number(),
-    ipAddress: v.optional(v.union(v.null(), v.string())),
-    userAgent: v.optional(v.union(v.null(), v.string())),
-    userId: v.string(),
-  })
-    .index("expiresAt", ["expiresAt"])
-    .index("expiresAt_userId", ["expiresAt","userId"])
-    .index("token", ["token"])
-    .index("userId", ["userId"]),
-  account: defineTable({
-    accountId: v.string(),
-    providerId: v.string(),
-    userId: v.string(),
-    accessToken: v.optional(v.union(v.null(), v.string())),
-    refreshToken: v.optional(v.union(v.null(), v.string())),
-    idToken: v.optional(v.union(v.null(), v.string())),
-    accessTokenExpiresAt: v.optional(v.union(v.null(), v.number())),
-    refreshTokenExpiresAt: v.optional(v.union(v.null(), v.number())),
-    scope: v.optional(v.union(v.null(), v.string())),
-    password: v.optional(v.union(v.null(), v.string())),
-    createdAt: v.number(),
-    updatedAt: v.number(),
-  })
-    .index("accountId", ["accountId"])
-    .index("accountId_providerId", ["accountId","providerId"])
-    .index("providerId_userId", ["providerId","userId"])
-    .index("userId", ["userId"]),
-  verification: defineTable({
-    identifier: v.string(),
-    value: v.string(),
-    expiresAt: v.number(),
-    createdAt: v.number(),
-    updatedAt: v.number(),
-  })
-    .index("expiresAt", ["expiresAt"])
-    .index("identifier", ["identifier"]),
-  jwks: defineTable({
-    publicKey: v.string(),
-    privateKey: v.string(),
-    createdAt: v.number(),
-  }),
+	account: defineTable({
+		accessToken: v.optional(v.union(v.null(), v.string())),
+		accessTokenExpiresAt: v.optional(v.union(v.null(), v.number())),
+		accountId: v.string(),
+		createdAt: v.number(),
+		idToken: v.optional(v.union(v.null(), v.string())),
+		password: v.optional(v.union(v.null(), v.string())),
+		providerId: v.string(),
+		refreshToken: v.optional(v.union(v.null(), v.string())),
+		refreshTokenExpiresAt: v.optional(v.union(v.null(), v.number())),
+		scope: v.optional(v.union(v.null(), v.string())),
+		updatedAt: v.number(),
+		userId: v.string(),
+	})
+		.index("accountId", ["accountId"])
+		.index("accountId_providerId", ["accountId", "providerId"])
+		.index("providerId_userId", ["providerId", "userId"])
+		.index("userId", ["userId"]),
+	jwks: defineTable({
+		createdAt: v.number(),
+		privateKey: v.string(),
+		publicKey: v.string(),
+	}),
+	session: defineTable({
+		createdAt: v.number(),
+		expiresAt: v.number(),
+		ipAddress: v.optional(v.union(v.null(), v.string())),
+		token: v.string(),
+		updatedAt: v.number(),
+		userAgent: v.optional(v.union(v.null(), v.string())),
+		userId: v.string(),
+	})
+		.index("expiresAt", ["expiresAt"])
+		.index("expiresAt_userId", ["expiresAt", "userId"])
+		.index("token", ["token"])
+		.index("userId", ["userId"]),
+	user: defineTable({
+		createdAt: v.number(),
+		email: v.string(),
+		emailVerified: v.boolean(),
+		firstName: v.optional(v.union(v.null(), v.string())),
+		image: v.optional(v.union(v.null(), v.string())),
+		isAnonymous: v.optional(v.union(v.null(), v.boolean())),
+		lastName: v.optional(v.union(v.null(), v.string())),
+		name: v.string(),
+		tier: v.optional(v.union(v.null(), v.string())),
+		updatedAt: v.number(),
+		userId: v.optional(v.union(v.null(), v.string())),
+	})
+		.index("email_name", ["email", "name"])
+		.index("name", ["name"])
+		.index("userId", ["userId"]),
+	verification: defineTable({
+		createdAt: v.number(),
+		expiresAt: v.number(),
+		identifier: v.string(),
+		updatedAt: v.number(),
+		value: v.string(),
+	})
+		.index("expiresAt", ["expiresAt"])
+		.index("identifier", ["identifier"]),
 };
 
 const schema = defineSchema(tables);

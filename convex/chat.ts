@@ -14,14 +14,14 @@ import {
 import { MINUTE } from "@convex-dev/rate-limiter";
 import { type PaginationResult, paginationOptsValidator } from "convex/server";
 import { v } from "convex/values";
-import { chatAgent } from "~/convex/agents";
-import { api, components, internal } from "~/convex/generated/api";
-import { internalAction, mutation, query } from "~/convex/generated/server";
-import { rateLimiter } from "~/convex/rateLimiting";
-import { getDraft, renameChat } from "~/convex/tools";
-import { verifyOwnership } from "~/convex/utils";
-import { ChatSDKError } from "~/lib/errors";
-import { CHAT_PROMPT } from "~/lib/prompts";
+import { ChatSDKError } from "../lib/errors";
+import { CHAT_PROMPT } from "../lib/prompts";
+import { api, components, internal } from "./_generated/api";
+import { internalAction, mutation, query } from "./_generated/server";
+import { chatAgent } from "./agents";
+import { rateLimiter } from "./rateLimiting";
+import { getDraft, renameChat } from "./tools";
+import { verifyOwnership } from "./utils";
 
 export const createChat = mutation({
 	args: {},

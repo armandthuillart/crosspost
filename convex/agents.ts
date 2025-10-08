@@ -1,6 +1,6 @@
 import type { GatewayModelId } from "@ai-sdk/gateway";
 import { Agent, stepCountIs } from "@convex-dev/agent";
-import { components } from "~/convex/generated/api";
+import { components } from "./_generated/api";
 
 export const chatAgent = new Agent(components.agent, {
 	contextOptions: {

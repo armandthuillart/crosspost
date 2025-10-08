@@ -1,5 +1,5 @@
 import { defineSchema } from "convex/server";
-import { tables } from "~/convex/betterAuth/generatedSchema";
+import { tables } from "./generatedSchema";
 
 const schema = defineSchema({
 	...tables,

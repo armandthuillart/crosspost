@@ -1,10 +1,10 @@
 import { createTool } from "@convex-dev/agent";
 import { z } from "zod/v3";
-import { chatAgent } from "~/convex/agents";
-import { api } from "~/convex/generated/api";
-import type { Id } from "~/convex/generated/dataModel";
-import { ChatSDKError } from "~/lib/errors";
-import { draftSchema } from "~/lib/schema";
+import { ChatSDKError } from "../lib/errors";
+import { draftSchema } from "../lib/schema";
+import { api } from "./_generated/api";
+import type { Id } from "./_generated/dataModel";
+import { chatAgent } from "./agents";
 
 export const getDraft = createTool({
 	args: draftSchema,

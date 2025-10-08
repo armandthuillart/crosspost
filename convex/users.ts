@@ -1,6 +1,6 @@
 import { v } from "convex/values";
-import { components } from "~/convex/generated/api";
-import { internalMutation } from "~/convex/generated/server";
+import { components } from "./_generated/api";
+import { internalMutation } from "./_generated/server";
 
 export const deleteAllForUserId = internalMutation({
 	args: { userId: v.string() },

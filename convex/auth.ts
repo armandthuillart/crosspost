@@ -6,27 +6,23 @@ import { type BetterAuthOptions, betterAuth } from "better-auth";
 import { anonymous } from "better-auth/plugins";
 import { v } from "convex/values";
 import { zodToConvex } from "convex-helpers/server/zod";
-import authSchema from "~/convex/betterAuth/schema";
-import { api, components } from "~/convex/generated/api";
-import type { DataModel } from "~/convex/generated/dataModel";
-import { query } from "~/convex/generated/server";
-import { polarClient } from "~/lib/polar";
-import { tierSchema } from "~/lib/schema";
-import type { Tier, User } from "~/lib/types";
+import { polarClient } from "../lib/polar";
+import { tierSchema } from "../lib/schema";
+import type { Tier, User } from "../lib/types";
+import { api, components } from "./_generated/api";
+import type { DataModel } from "./_generated/dataModel";
+import { query } from "./_generated/server";
+import authSchema from "./betterAuth/schema";
 
 const siteUrl = process.env.SITE_URL;
 
-export const authComponent = createClient<DataModel, typeof authSchema>(
-	components.betterAuth,
-	{
+export const { adapter, getAuth, registerRoutes, safeGetAuthUser } =
+	createClient<DataModel, typeof authSchema>(components.betterAuth, {
 		local: {
 			schema: authSchema,
 		},
 		verbose: false,
-	},
-);
-
-export const { onCreate, onUpdate, onDelete } = authComponent.triggersApi();
+	});
 
 export const createAuth = (
 	ctx: GenericCtx<DataModel>,
@@ -34,7 +30,7 @@ export const createAuth = (
 ) => {
 	return betterAuth({
 		baseURL: siteUrl,
-		database: authComponent.adapter(ctx),
+		database: adapter(ctx),
 		databaseHooks: {
 			user: {
 				create: {
@@ -73,6 +69,7 @@ export const createAuth = (
 		},
 		logger: {
 			disabled: optionsOnly,
+			level: "debug",
 		},
 		plugins: [
 			anonymous({
@@ -151,7 +148,7 @@ export const createAuth = (
 export const getUser = query({
 	args: {},
 	handler: async (ctx): Promise<User | null> => {
-		const user = await authComponent.safeGetAuthUser(ctx);
+		const user = await safeGetAuthUser(ctx);
 
 		const tainted: User | null = user
 			? {

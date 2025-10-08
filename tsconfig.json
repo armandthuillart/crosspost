@@ -9,11 +9,7 @@
 		"module": "esnext",
 		"moduleResolution": "bundler",
 		"noEmit": true,
-		"paths": {
-			"~/*": ["./*"],
-			"~/convex/betterAuth/generated/*": ["./convex/betterAuth/_generated/*"],
-			"~/convex/generated/*": ["./convex/_generated/*"]
-		},
+		"paths": { "~/*": ["./*"] },
 		"plugins": [{ "name": "next" }],
 		"resolveJsonModule": true,
 		"skipLibCheck": true,

@@ -6,8 +6,8 @@ import { useTranslations } from "next-intl";
 import type { ParamsOf } from "~/.next/types/routes";
 import { Button } from "~/components/ui/button";
 import { SearchIcon, TrashIcon } from "~/components/ui/icons";
-import { api } from "../convex/_generated/api";
 import { useRouter } from "~/i18n/navigation";
+import { api } from "../convex/_generated/api";
 
 export function SibebarHistorySearch({
 	threadIds,

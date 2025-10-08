@@ -20,9 +20,9 @@ import {
 	SidebarMenuButton,
 	SidebarMenuItem,
 } from "~/components/ui/sidebar";
-import type { api } from "~/convex/generated/api";
 import { usePathname, useRouter } from "~/i18n/navigation";
 import { appName } from "~/lib/constants";
+import type { api } from "../convex/_generated/api";
 
 export function AppSidebar({
 	preloadedChats,

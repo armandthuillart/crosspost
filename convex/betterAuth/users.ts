@@ -1,6 +1,6 @@
 import { v } from "convex/values";
-import { ChatSDKError } from "../../lib/errors";
 import { tier } from "../schema";
+import type { Id } from "./_generated/dataModel";
 import { mutation } from "./_generated/server";
 
 export const syncTier = mutation({
@@ -9,13 +9,7 @@ export const syncTier = mutation({
 		tier,
 	},
 	handler: async (ctx, { tier, externalId }) => {
-		const userId = ctx.db.normalizeId("user", externalId);
-
-		if (!userId) {
-			throw new ChatSDKError("not_found:auth");
-		}
-
-		await ctx.db.patch(userId, {
+		await ctx.db.patch(externalId as Id<"user">, {
 			tier,
 		});
 	},

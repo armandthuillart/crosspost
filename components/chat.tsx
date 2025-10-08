@@ -10,7 +10,7 @@ import { ChatGreetings } from "~/components/chat.greetings";
 import { ChatHeader } from "~/components/chat.header";
 import { ChatInput, type InputRef } from "~/components/chat.input";
 import { ChatMessages } from "~/components/chat.messages";
-import { ChatPostsGallery } from "~/components/chat.posts-gallery";
+// import { ChatPostsGallery } from "~/components/chat.posts-gallery";
 import { ChatSuggestions } from "~/components/chat.suggestions";
 import type { MyMessage } from "~/lib/types";
 import { attr } from "~/lib/utils";
@@ -87,7 +87,7 @@ export function Chat({
 			<ChatHeader isAnonymous={isAnonymous} isFree={isFree} />
 
 			<div className="flex h-full flex-col overflow-y-scroll group-data-chat/chat:gap-32">
-				<div className="flex h-full flex-col group-data-chat/chat:h-full group-data-chat/chat:justify-center group-data-chat/chat:overflow-hidden max-md:shrink-0 group-not-data-chat/chat:md:gap-6 group-not-data-chat/chat:md:pt-44 group-not-data-chat/chat:lg:pt-[23svh]">
+				<div className="flex h-full flex-col group-data-chat/chat:h-full group-data-chat/chat:justify-center group-data-chat/chat:overflow-hidden max-md:shrink-0 group-not-data-chat/chat:md:gap-6 group-not-data-chat/chat:md:pt-44 group-not-data-chat/chat:lg:pt-78">
 					{!isChat ? (
 						<ChatGreetings />
 					) : (
@@ -127,7 +127,8 @@ export function Chat({
 						</div>
 					</div>
 				</div>
-				{!isChat && <ChatPostsGallery />}
+
+				{/* {!isChat && <ChatPostsGallery />} */}
 			</div>
 		</main>
 	);

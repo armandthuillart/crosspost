@@ -1,13 +1,12 @@
 import { v } from "convex/values";
-import { zodToConvex } from "convex-helpers/server/zod";
 import { ChatSDKError } from "../../lib/errors";
-import { tierSchema } from "../../lib/schema";
+import { tier } from "../schema";
 import { mutation } from "./_generated/server";
 
 export const syncTier = mutation({
 	args: {
 		externalId: v.string(),
-		tier: zodToConvex(tierSchema),
+		tier,
 	},
 	handler: async (ctx, { tier, externalId }) => {
 		const userId = ctx.db.normalizeId("user", externalId);

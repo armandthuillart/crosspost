@@ -1,12 +1,11 @@
 import { v } from "convex/values";
-import { zodToConvex } from "convex-helpers/server/zod";
-import { platformSchema } from "../lib/schema";
 import { internalMutation } from "./_generated/server";
+import { platform } from "./schema";
 
 export const createPost = internalMutation({
 	args: v.object({
 		content: v.string(),
-		platform: zodToConvex(platformSchema),
+		platform,
 		title: v.string(),
 	}),
 	handler: async (ctx, { title, content, platform }) => {

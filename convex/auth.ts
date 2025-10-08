@@ -5,14 +5,13 @@ import { checkout, polar, portal } from "@polar-sh/better-auth";
 import { type BetterAuthOptions, betterAuth } from "better-auth";
 import { anonymous } from "better-auth/plugins";
 import { v } from "convex/values";
-import { zodToConvex } from "convex-helpers/server/zod";
 import { polarClient } from "../lib/polar";
-import { tierSchema } from "../lib/schema";
 import type { Tier, User } from "../lib/types";
 import { api, components } from "./_generated/api";
 import type { DataModel } from "./_generated/dataModel";
 import { query } from "./_generated/server";
 import authSchema from "./betterAuth/schema";
+import { tier } from "./schema";
 
 const siteUrl = process.env.SITE_URL;
 
@@ -169,7 +168,7 @@ export const getUser = query({
 			firstName: v.string(),
 			id: v.string(),
 			lastName: v.optional(v.string()),
-			tier: zodToConvex(tierSchema),
+			tier,
 		}),
 	),
 });

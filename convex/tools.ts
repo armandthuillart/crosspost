@@ -1,5 +1,5 @@
 import { createTool } from "@convex-dev/agent";
-import { z } from "zod/v3";
+import { z } from "zod";
 import { ChatSDKError } from "../lib/errors";
 import { draftSchema } from "../lib/schema";
 import { api } from "./_generated/api";

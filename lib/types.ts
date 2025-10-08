@@ -1,6 +1,6 @@
 import type { UIMessage } from "@convex-dev/agent/react";
 import type { InferUITool, UIDataTypes } from "ai";
-import type { z } from "zod/v3";
+import type { z } from "zod";
 import type { getDraft, renameChat } from "../convex/tools";
 import type { draftSchema, platformSchema, tierSchema } from "../lib/schema";
 

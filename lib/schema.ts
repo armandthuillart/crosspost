@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { Platform } from "~/lib/types";
+import type { Platform } from "../lib/types";
 
 export const tierSchema = z.enum(["anonymous", "free", "pro"]);
 

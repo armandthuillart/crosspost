@@ -1,4 +1,5 @@
 import { z } from "zod";
+import type { Platform } from "~/lib/types";
 
 export const tierSchema = z.enum(["anonymous", "free", "pro"]);
 
@@ -39,29 +40,18 @@ export const postSchema = z
 		platform: platformSchema.describe("Platform to publish the post to"),
 		title: z.string().describe("The title of the post"),
 	})
-	.refine(
-		({ content, platform }) => {
-			switch (platform) {
-				case "threads":
-					return content.length <= 10000;
-				case "linkedin":
-					return content.length <= 3000;
-				case "bluesky":
-					return content.length <= 300;
-				case "x":
-					return content.length <= 280;
-			}
-		},
-		({ platform }) => {
-			switch (platform) {
-				case "threads":
-					return { message: "Must be under 10000 characters" };
-				case "linkedin":
-					return { message: "Must be under 3000 characters" };
-				case "bluesky":
-					return { message: "Must be under 300 characters" };
-				case "x":
-					return { message: "Must be under 280 characters" };
-			}
-		},
-	);
+	.superRefine(({ content, platform }, ctx) => {
+		const limits: Record<Platform, number> = {
+			bluesky: 300,
+			linkedin: 3000,
+			threads: 10000,
+			x: 280,
+		};
+
+		if (content.length > limits[platform]) {
+			ctx.addIssue({
+				code: "custom",
+				message: `Must be under ${limits[platform]} characters`,
+			});
+		}
+	});

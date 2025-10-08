@@ -52,16 +52,25 @@ interface PostCardProps {
 	platform: Platform;
 	isPremium: boolean;
 	displayName: string;
+	likesCount: number;
+	replyCount: number;
+	repostCount: number;
+	viewsCount: number;
 	column: number;
 	order: number;
 }
 
 function PostCard({
 	handle,
+
 	content,
 	platform,
 	postedAt,
 	isPremium,
+	likesCount,
+	replyCount,
+	viewsCount,
+	repostCount,
 	displayName,
 }: PostCardProps) {
 	return (
@@ -83,10 +92,10 @@ function PostCard({
 						displayName={displayName}
 						handle={handle}
 						isPremium={isPremium}
-						likeCount={100}
-						replyCount={10}
-						repostCount={10}
-						viewsCount={1000}
+						likeCount={likesCount}
+						replyCount={replyCount}
+						repostCount={repostCount}
+						viewsCount={viewsCount}
 					>
 						{content}
 					</X.Post>
@@ -96,7 +105,9 @@ function PostCard({
 						className="rounded-md border bg-card"
 						handle={handle}
 						isVerified
-						likesCount={100}
+						likesCount={likesCount}
+						repliesCount={replyCount}
+						repostsCount={repostCount}
 					>
 						{content}
 					</Threads.Post>
@@ -106,9 +117,9 @@ function PostCard({
 						className="size-full overflow-hidden rounded-md"
 						createdAt={formatDistanceToNow(postedAt)}
 						displayName={displayName}
-						likeCount={100}
-						replyCount={10}
-						repostCount={10}
+						likeCount={likesCount}
+						replyCount={replyCount}
+						repostCount={repostCount}
 					>
 						{content}
 					</LinkedIn.Post>
@@ -116,10 +127,12 @@ function PostCard({
 				{platform === "bluesky" && (
 					<Bluesky.Tweet
 						className="!border size-full overflow-hidden rounded-md"
+						commentsCount={repostCount}
 						createdAt={formatDistanceToNow(postedAt)}
 						displayName={displayName}
-						likesCount={100}
-						repliesCount={10}
+						handle={handle}
+						likesCount={likesCount}
+						repliesCount={replyCount}
 					>
 						{content}
 					</Bluesky.Tweet>
@@ -132,130 +145,176 @@ function PostCard({
 const seeds: PostCardProps[] = [
 	{
 		column: 1,
-		content: `wait it's "jif" not "gif"??? my whole life is a lie`,
-		displayName: "Armand",
-		handle: "@armand",
+		content:
+			"been debugging the same issue for 3 hours and it was a typo in the variable name why am i like this",
+		displayName: "jen",
+		handle: "@jenbuilds",
 		id: "1",
 		isPremium: false,
+		likesCount: 100,
 		order: 1,
 		platform: "x",
-		postedAt: new Date(Date.now() - 2 * 60 * 1000),
+		postedAt: new Date(Date.now() - 4 * 60 * 1000),
+		replyCount: 10,
+		repostCount: 10,
+		viewsCount: 1000,
 	},
 	{
 		column: 2,
-		content: `anyone tried the new agent kit yet? is it actually good or just more hype`,
-		displayName: "Emma",
-		handle: "emma",
+		content:
+			"why does every tutorial assume i already know what im trying to learn",
+		displayName: "cal",
+		handle: "cal",
 		id: "8",
 		isPremium: false,
+		likesCount: 100,
 		order: 2,
 		platform: "threads",
-		postedAt: new Date(Date.now() - 5 * 60 * 1000),
+		postedAt: new Date(Date.now() - 8 * 60 * 1000),
+		replyCount: 10,
+		repostCount: 10,
+		viewsCount: 1000,
 	},
 	{
 		column: 3,
-		content:
-			"spent 20 min looking for my keys. they were literally in my pocket the whole time",
-		displayName: "sarahcodes",
-		handle: "@sarahcodes",
+		content: "my code works but i have no idea why shipping it anyway",
+		displayName: "Marcus Chen",
+		handle: "@mchen",
 		id: "2",
 		isPremium: true,
+		likesCount: 100,
 		order: 2,
 		platform: "x",
-		postedAt: new Date(Date.now() - 8 * 60 * 1000),
+		postedAt: new Date(Date.now() - 12 * 60 * 1000),
+		replyCount: 10,
+		repostCount: 10,
+		viewsCount: 1000,
 	},
 	{
 		column: 1,
 		content:
-			"my coffee shop has been secretly adding cinnamon to my usual order for months. i never asked for it but now i'm addicted. they know me better than i know myself",
-		displayName: "River",
+			"local bakery started recognizing me and now they just hand me my usual without asking not sure if this is peak adulthood or just sad",
+		displayName: "River Song",
 		handle: "river.bsky.social",
 		id: "10",
 		isPremium: false,
+		likesCount: 100,
 		order: 2,
 		platform: "bluesky",
-		postedAt: new Date(Date.now() - 3 * 60 * 1000),
+		postedAt: new Date(Date.now() - 6 * 60 * 1000),
+		replyCount: 10,
+		repostCount: 10,
+		viewsCount: 1000,
 	},
 	{
 		column: 2,
 		content:
-			"ok this new AI thing is actually wild. just watched it build a whole react app in like 30 seconds. we're all gonna be unemployed",
-		displayName: "Alex",
-		handle: "@alexdev",
+			"wrote some code that actually worked on the first try and now im suspicious what did i miss",
+		displayName: "Taylor Kim",
+		handle: "@taylorcodes",
 		id: "3",
 		isPremium: true,
+		likesCount: 100,
 		order: 2,
 		platform: "x",
-		postedAt: new Date(Date.now() - 15 * 60 * 1000),
+		postedAt: new Date(Date.now() - 18 * 60 * 1000),
+		replyCount: 10,
+		repostCount: 10,
+		viewsCount: 1000,
 	},
 	{
 		column: 3,
 		content:
-			"It only has to make sense to you. Remember that.",
-		displayName: "Marcus",
-		handle: "marcus",
+			"anyone elses imposter syndrome just background noise at this point",
+		displayName: "dev_irl",
+		handle: "dev_irl",
 		id: "9",
 		isPremium: false,
+		likesCount: 100,
 		order: 1,
 		platform: "threads",
-		postedAt: new Date(Date.now() - 18 * 60 * 1000),
+		postedAt: new Date(Date.now() - 22 * 60 * 1000),
+		replyCount: 10,
+		repostCount: 10,
+		viewsCount: 1000,
 	},
 	{
 		column: 1,
-		content: "my timeline is absolutely unhinged today what is happening",
-		displayName: "Maya",
-		handle: "@mayathoughts",
+		content:
+			"explaining what i do for work to my parents will never not be awkward",
+		displayName: "sam",
+		handle: "@samwrites",
 		id: "4",
 		isPremium: false,
+		likesCount: 100,
 		order: 3,
 		platform: "x",
-		postedAt: new Date(Date.now() - 25 * 60 * 1000),
+		postedAt: new Date(Date.now() - 28 * 60 * 1000),
+		replyCount: 10,
+		repostCount: 10,
+		viewsCount: 1000,
 	},
 	{
 		column: 2,
 		content:
-			"debugging at 2am taught me:\n\n• check logs first (saves you from looking like an idiot)\n• it's never as complicated as you think\n• coffee hits different when you're not having a breakdown\n\nwhat's your worst debugging nightmare?",
-		displayName: "David Thompson",
-		handle: "David Thompson",
+			"After 3 years building our design system from scratch, we're open sourcing it next week.\n\nWhat started as a side project to solve our own problems turned into something we think can help other teams ship faster. Still can't believe we're here.\n\nMore details coming soon. Would love to hear what challenges you're facing with design systems.",
+		displayName: "Priya Sharma",
+		handle: "Priya Sharma",
 		id: "6",
 		isPremium: false,
+		likesCount: 100,
 		order: 1,
 		platform: "linkedin",
-		postedAt: new Date(Date.now() - 24 * 60 * 1000),
+		postedAt: new Date(Date.now() - 45 * 60 * 1000),
+		replyCount: 10,
+		repostCount: 10,
+		viewsCount: 1000,
 	},
 	{
 		column: 3,
-		content: "coffee shop wifi died and i'm literally shaking",
-		displayName: "jordanwrites",
-		handle: "@jordanwrites",
+		content: "reminder that taking a break is productive actually",
+		displayName: "alex",
+		handle: "@alexthinks",
 		id: "5",
 		isPremium: false,
+		likesCount: 100,
 		order: 3,
 		platform: "x",
-		postedAt: new Date(Date.now() - 35 * 60 * 1000),
+		postedAt: new Date(Date.now() - 38 * 60 * 1000),
+		replyCount: 10,
+		repostCount: 10,
+		viewsCount: 1000,
 	},
 	{
 		column: 1,
 		content:
-			"sunset from my balcony was unreal tonight. sometimes you just gotta stop and appreciate the little things before they're gone",
-		displayName: "Phoenix",
-		handle: "phoenix.bsky.social",
+			"watching the clouds move while my code compiles sometimes the in between moments are the best ones",
+		displayName: "morgan",
+		handle: "morgan.bsky.social",
 		id: "11",
 		isPremium: false,
+		likesCount: 100,
 		order: 4,
 		platform: "bluesky",
-		postedAt: new Date(Date.now() - 12 * 60 * 1000),
+		postedAt: new Date(Date.now() - 16 * 60 * 1000),
+		replyCount: 10,
+		repostCount: 10,
+		viewsCount: 1000,
 	},
 	{
 		column: 3,
 		content:
-			"reading about decentralized social networks and honestly the future is wild. we're either gonna solve everything or break everything, no in between",
-		displayName: "Sage",
-		handle: "sage.bsky.social",
+			"decentralization either saves us or fragments us into a million pieces probably both",
+		displayName: "kai",
+		handle: "kai.bsky.social",
 		id: "12",
 		isPremium: false,
+		likesCount: 100,
 		order: 4,
 		platform: "bluesky",
-		postedAt: new Date(Date.now() - 30 * 60 * 1000),
+		postedAt: new Date(Date.now() - 34 * 60 * 1000),
+		replyCount: 10,
+		repostCount: 10,
+		viewsCount: 1000,
 	},
 ];

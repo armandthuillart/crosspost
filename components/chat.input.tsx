@@ -23,7 +23,6 @@ import {
 } from "~/components/ai-elements/prompt-input";
 import { Button } from "~/components/ui/button";
 import { PlusIcon } from "~/components/ui/icons";
-import { api } from "~/convex/generated/api";
 import { useAutoFocus } from "~/hooks/use-auto-focus";
 import { useTypewriter } from "~/hooks/use-typewriter";
 import { useRouter } from "~/i18n/navigation";
@@ -31,6 +30,7 @@ import { showBannerAtom } from "~/lib/atoms";
 import { authClient } from "~/lib/auth-client";
 import type { User } from "~/lib/types";
 import { attr } from "~/lib/utils";
+import { api } from "../convex/_generated/api";
 
 const TEXTAREA_MIN_HEIGHT = 24;
 const TEXTAREA_EXPANDED_MIN_HEIGHT = 48;

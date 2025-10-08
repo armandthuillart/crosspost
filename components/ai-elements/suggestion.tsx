@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "motion/react";
 import type { ComponentProps } from "react";
 import { Button } from "~/components/ui/button";
 import { ScrollArea, ScrollBar } from "~/components/ui/scroll-area";
@@ -10,11 +9,7 @@ type SuggestionsProps = ComponentProps<typeof ScrollArea>;
 
 function Suggestions({ className, children, ...props }: SuggestionsProps) {
 	return (
-		<motion.div
-			className="mx-auto max-w-full"
-			layout="position"
-			transition={{ layout: { duration: 0.5, ease: [0.32, 0.72, 0, 1] } }}
-		>
+		<div className="mx-auto max-w-full">
 			<ScrollArea
 				className="w-full overflow-x-auto whitespace-nowrap"
 				{...props}
@@ -26,7 +21,7 @@ function Suggestions({ className, children, ...props }: SuggestionsProps) {
 				</div>
 				<ScrollBar className="hidden" orientation="horizontal" />
 			</ScrollArea>
-		</motion.div>
+		</div>
 	);
 }
 
@@ -55,7 +50,7 @@ function Suggestion({
 	return (
 		<Button
 			className={cn(
-				"h-auto cursor-pointer flex-col items-start gap-0 rounded-lg bg-accent px-4 py-3",
+				"h-auto cursor-pointer flex-col items-start gap-0 rounded-lg bg-accent px-4 py-3 hover:bg-accent/80",
 				className,
 			)}
 			onClick={handleClick}

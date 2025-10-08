@@ -11,7 +11,7 @@ import {
 	Repeat2Icon,
 	SendIcon,
 } from "lucide-react";
-import { type MotionProps, motion } from "motion/react";
+import { type HTMLMotionProps, type MotionProps, motion } from "motion/react";
 import Image from "next/image";
 import {
 	type ComponentProps,
@@ -46,7 +46,7 @@ function Page({ children, className, avatar, ...props }: PageProps) {
 			className={cn("flex flex-1 items-center justify-center px-5", className)}
 			{...props}
 		>
-			<div className="flex max-w-160 flex-col">
+			<div className="flex w-full max-w-160 flex-col">
 				<Header />
 				<div
 					className="h-full overflow-hidden rounded-t-3xl border border-b-0 bg-card shadow-lg"
@@ -131,7 +131,7 @@ function Header() {
 	);
 }
 
-interface PostProps {
+interface PostProps extends HTMLMotionProps<"div"> {
 	image?: string;
 	handle?: string;
 	avatar?: string;
@@ -153,12 +153,14 @@ function Post({
 	content,
 	children,
 	postedAt,
+	className,
 	likesCount,
 	isVerified,
 	repostsCount,
 	repliesCount,
 	isEndOfThread = false,
 	isStartOfThread = false,
+	...props
 }: PostProps) {
 	const postRef = useRef<HTMLDivElement>(null);
 	const [, setPostMarginTop] = useAtom(postMarginTopAtom);
@@ -203,7 +205,7 @@ function Post({
 		};
 	}, [centerPost]);
 
-	const props = children
+	const motionProps = children
 		? ({
 				layout: "preserve-aspect",
 				onLayoutMeasure: centerPost,
@@ -213,12 +215,13 @@ function Post({
 
 	return (
 		<motion.div
-			className="flex gap-3 border-b px-6 pt-3 pb-2"
+			className={cn("flex gap-3 border-b px-6 pt-3 pb-2", className)}
 			data-post
 			data-thread-end={isEndOfThread}
 			data-thread-start={isStartOfThread}
 			ref={postRef}
 			{...props}
+			{...motionProps}
 		>
 			<Avatar className="relative mt-1 size-9 shrink-0 overflow-visible">
 				<Image
@@ -346,6 +349,7 @@ const Icon = forwardRef<SVGSVGElement, LucideProps>(function Icon(
 
 export const Threads = Object.assign(Page, {
 	Badge,
+	Header,
 	Icon,
 	Post,
 });

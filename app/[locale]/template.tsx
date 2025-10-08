@@ -5,8 +5,8 @@ import { AppShortcuts } from "~/components/app.shortcuts";
 import { AppSidebar } from "~/components/app.sidebar";
 import { SidebarProvider } from "~/components/ui/sidebar";
 import { WelcomeBack } from "~/components/welcome-back";
-import { api } from "~/convex/generated/api";
 import { getToken } from "~/lib/auth-server";
+import { api } from "../../convex/_generated/api";
 
 export default async function Template({ children }: { children: ReactNode }) {
 	const [cookieStore, token] = await Promise.all([cookies(), getToken()]);

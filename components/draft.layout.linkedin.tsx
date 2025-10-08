@@ -143,7 +143,10 @@ function Post({
 
 	return (
 		<motion.div
-			className={cn("relative rounded-lg border bg-card", className)}
+			className={cn(
+				"@container/post relative rounded-lg border bg-card",
+				className,
+			)}
 			ref={postRef}
 		>
 			<div className="flex items-center gap-2 pt-3 pr-18 pb-2 pl-4">
@@ -216,7 +219,7 @@ function Post({
 							strokeWidth="2"
 						/>
 					</svg>
-					Like
+					<span className="@max-md/post:hidden">Like</span>
 				</Button>
 
 				<Button
@@ -246,7 +249,7 @@ function Post({
 							strokeWidth="2"
 						/>
 					</svg>
-					Comment
+					<span className="@max-md/post:hidden">Comment</span>
 				</Button>
 
 				<Button
@@ -275,7 +278,7 @@ function Post({
 							strokeWidth="2"
 						/>
 					</svg>
-					Repost
+					<span className="@max-md/post:hidden">Repost</span>
 				</Button>
 
 				<Button
@@ -304,7 +307,7 @@ function Post({
 							strokeWidth="2"
 						/>
 					</svg>
-					Send
+					<span className="@max-md/post:hidden">Send</span>
 				</Button>
 			</div>
 		</motion.div>

@@ -17,7 +17,12 @@ import { cn, formatNumberToK } from "~/lib/utils";
 
 const postMarginTopAtom = atom<number>(0);
 
-function Page({ children, className, ...props }: ComponentProps<"div">) {
+function Page({
+	children,
+	hasHeader = true,
+	className,
+	...props
+}: ComponentProps<"div"> & { hasHeader?: boolean }) {
 	const [postMarginTop] = useAtom(postMarginTopAtom);
 
 	return (
@@ -30,7 +35,7 @@ function Page({ children, className, ...props }: ComponentProps<"div">) {
 			style={{ marginTop: postMarginTop }}
 			{...props}
 		>
-			<Header />
+			{hasHeader && <Header />}
 			<Post
 				avatar="https://pbs.twimg.com/profile_images/1955359038532653056/OSHY3ewP_400x400.jpg"
 				content="bangers are in the eye of the beholder"
@@ -112,6 +117,7 @@ interface PostProps {
 	className?: string;
 	likeCount?: number;
 	createdAt?: string;
+	isPremium?: boolean;
 	replyCount?: number;
 	viewsCount?: number;
 	repostCount?: number;
@@ -128,6 +134,7 @@ function Post({
 	className,
 	likeCount,
 	createdAt = "now",
+	isPremium = true,
 	replyCount,
 	viewsCount,
 	displayName = "You",
@@ -195,15 +202,19 @@ function Post({
 			<div className="flex w-full flex-col gap-y-3 pb-3">
 				<div className="flex w-full flex-col">
 					<div className="flex h-5 w-full items-center justify-between">
-						<div className="flex h-full items-center gap-1">
+						<div className="flex h-full items-center gap-1 overflow-hidden">
 							<div className="flex h-full items-center gap-0.5">
-								<span className="font-bold text-base">{displayName}</span>
-								<Badge variant={handle === "@X" ? "golden" : "default"} />
+								<span className="truncate font-bold text-base">
+									{displayName}
+								</span>
+								{isPremium && (
+									<Badge variant={handle === "@X" ? "golden" : "default"} />
+								)}
 							</div>
 							<div className="flex gap-1 text-base text-muted-foreground">
-								<span>{handle}</span>
+								<span className="truncate">{handle}</span>
 								<span>•</span>
-								<span>{createdAt}</span>
+								<span className="truncate">{createdAt}</span>
 							</div>
 						</div>
 						<div className="flex gap-1 text-muted-foreground">

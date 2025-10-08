@@ -12,6 +12,7 @@ import type * as adapter from "../adapter.js";
 import type * as auth from "../auth.js";
 import type * as crons from "../crons.js";
 import type * as generatedSchema from "../generatedSchema.js";
+import type * as users from "../users.js";
 
 import type {
   ApiFromModules,
@@ -32,6 +33,7 @@ declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   crons: typeof crons;
   generatedSchema: typeof generatedSchema;
+  users: typeof users;
 }>;
 export type Mounts = {
   adapter: {
@@ -1005,6 +1007,14 @@ export type Mounts = {
         onUpdateHandle?: string;
       },
       any
+    >;
+  };
+  users: {
+    syncTier: FunctionReference<
+      "mutation",
+      "public",
+      { externalId: string; tier: "anonymous" | "free" | "pro" },
+      null
     >;
   };
 };

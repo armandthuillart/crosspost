@@ -69,6 +69,10 @@
 	"Manifest": {
 		"description": "Publiez sur les réseaux sociaux en parlant avec l'IA."
 	},
+	"PostGallery": {
+		"description": "Ce qui a été publié récemment avec {appName}.",
+		"title": "Mur des publications"
+	},
 	"SidebarHistorySearch": {
 		"search": "Rechercher"
 	}

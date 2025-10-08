@@ -6,10 +6,6 @@
 		"settings": "Settings",
 		"termsAndPolicies": "Terms & policies"
 	},
-	"AppShortcuts": {
-		"title": "Keyboard shortcuts",
-		"description": "For our keyboard enthusiasts."
-	},
 	"AppSettings": {
 		"app": "App",
 		"appearance": "Appearance",
@@ -24,6 +20,10 @@
 		"system": "System",
 		"themeColor": "Accent color",
 		"title": "Settings"
+	},
+	"AppShortcuts": {
+		"description": "For our keyboard enthusiasts.",
+		"title": "Keyboard shortcuts"
 	},
 	"AppSidebar": {
 		"all": "All",
@@ -68,6 +68,10 @@
 	},
 	"Manifest": {
 		"description": "Create and post to social media by chatting with AI."
+	},
+	"PostGallery": {
+		"description": "What has been posted recently with {appName}.",
+		"title": "Wall of posts"
 	},
 	"SidebarHistorySearch": {
 		"search": "Search"

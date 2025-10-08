@@ -9,9 +9,9 @@ import { useAtom } from "jotai";
 import { AnimatePresence, motion } from "motion/react";
 import { Button } from "~/components/ui/button";
 import { CloseIcon } from "~/components/ui/icons";
-import { api } from "~/convex/generated/api";
 import { showBannerAtom } from "~/lib/atoms";
 import { authClient } from "~/lib/auth-client";
+import { api } from "../convex/_generated/api";
 
 async function handleSignInWithGoogle() {
 	await authClient.signIn.social({

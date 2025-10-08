@@ -1,8 +1,8 @@
 import { fetchQuery, preloadQuery } from "convex/nextjs";
 import { getLocation } from "~/app/actions";
 import { Chat } from "~/components/chat";
-import { api } from "~/convex/generated/api";
 import { getToken } from "~/lib/auth-server";
+import { api } from "../../../../convex/_generated/api";
 
 export default async function Page({
 	params,

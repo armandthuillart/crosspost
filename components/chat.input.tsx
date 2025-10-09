@@ -4,6 +4,7 @@ import { optimisticallySendMessage } from "@convex-dev/agent/react";
 import { isRateLimitError } from "@convex-dev/rate-limiter";
 import { useMutation } from "convex/react";
 import { useAtom } from "jotai";
+import { useTranslations } from "next-intl";
 import {
 	type FormEvent,
 	forwardRef,
@@ -64,6 +65,7 @@ export const ChatInput = forwardRef<InputRef, ChatInputProps>(
 		},
 		ref,
 	) => {
+		const t = useTranslations("ChatInput");
 		const router = useRouter();
 		const [threadId, setThreadId] = useState(chatId);
 
@@ -209,23 +211,23 @@ export const ChatInput = forwardRef<InputRef, ChatInputProps>(
 			loop: true,
 			pauseDuration: 2000,
 			texts: [
-				"yourself...",
-				"your app...",
-				"anything...",
-				"your day...",
-				"your life...",
-				"your week...",
-				"your work...",
-				"your goals...",
-				"your business...",
-				"your thoughts...",
+				t("you"),
+				t("yourApp"),
+				t("anything"),
+				t("yourDay"),
+				t("yourLife"),
+				t("yourWeek"),
+				t("yourWork"),
+				t("yourGoals"),
+				t("yourBusiness"),
+				t("yourThoughts"),
 			],
 			typingSpeed: 100,
 		});
 
 		const placeholder = isChat
-			? "Ask to post about anything..."
-			: `Ask to post about ${typewriter}`;
+			? t("placeholder", { action: t("anything") })
+			: t("placeholder", { action: typewriter });
 
 		// TODO: Imperative code using refs should be avoided in most cases.
 		// Should be replaced by some architectural changes (via props or state).

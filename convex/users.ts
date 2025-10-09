@@ -1,6 +1,7 @@
 import { v } from "convex/values";
+import { polarClient } from "../lib/polar";
 import { components } from "./_generated/api";
-import { internalMutation, mutation } from "./_generated/server";
+import { action, internalMutation, mutation } from "./_generated/server";
 import { createAuth, getAuth } from "./auth";
 import { tier } from "./schema";
 
@@ -38,6 +39,31 @@ export const syncTier = mutation({
 		internalAdapter.updateUser(externalId, {
 			tier,
 		});
+	},
+	returns: v.null(),
+});
+
+export const createCustomer = action({
+	args: {
+		email: v.string(),
+		name: v.string(),
+		userId: v.string(),
+	},
+	handler: async (_, { email, name, userId }) => {
+		const paginated = await polarClient.customers.list({
+			email,
+			limit: 1,
+		});
+
+		const customer = paginated.result.items[0];
+
+		if (!customer) {
+			await polarClient.customers.create({
+				email,
+				externalId: userId,
+				name,
+			});
+		}
 	},
 	returns: v.null(),
 });

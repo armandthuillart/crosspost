@@ -78,7 +78,7 @@ export function AppShortcuts() {
 						variant="outline"
 					>
 						<PrintIcon className="-ms-1 size-4 opacity-60" />
-						Print
+						{t("print")}
 						<Kbd>⌘P</Kbd>
 					</Button>
 				</DrawerFooter>

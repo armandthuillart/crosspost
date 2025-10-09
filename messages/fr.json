@@ -4,7 +4,7 @@
 		"keyboardShortcuts": "Raccourcis clavier",
 		"logOut": "Se déconnecter",
 		"settings": "Paramètres",
-		"termsAndPolicies": "Conditions"
+		"termsAndPolicies": "Conditions légales"
 	},
 	"AppSettings": {
 		"account": "Compte",
@@ -27,7 +27,8 @@
 		"upgrade": "Mettre à niveau"
 	},
 	"AppShortcuts": {
-		"description": "Pour nos amateurs de clavier.",
+		"description": "Pour aller encore plus vite.",
+		"print": "Imprimer",
 		"shortcuts": "Voir les raccourcis",
 		"sidebar": "Basculer la barre latérale",
 		"title": "Raccourcis clavier"
@@ -44,29 +45,43 @@
 	"ChatHeaderUpgradeButton": {
 		"upgrade": "Mettre à niveau"
 	},
+	"ChatInput": {
+		"anything": "n'importe quoi",
+		"placeholder": "Demande de poster à propos de {action}...",
+		"you": "toi",
+		"yourApp": "ton appli",
+		"yourBusiness": "ton business",
+		"yourDay": "ta journée",
+		"yourGoals": "tes objectifs",
+		"yourLife": "ta vie",
+		"yourself": "toi",
+		"yourThoughts": "tes pensées",
+		"yourWeek": "ta semaine",
+		"yourWork": "ton travail"
+	},
 	"ChatMessages": {
 		"copy": "Copier"
 	},
 	"ChatSuggestions": {
 		"help": {
-			"description": "à propos de mon nouveau poste",
+			"description": "mon nouveau travail",
 			"prompt": "Aide-moi à écrire un post LinkedIn sur mon nouveau job. Commence par me poser des questions sur mon nouveau poste et mon entreprise.",
-			"title": "Aide-moi à poster"
+			"title": "Aide-moi à annoncer"
 		},
 		"switch": {
 			"description": "de naturel à formel",
 			"prompt": "Aide-moi à changer le ton de mon contenu du casual au formel. Commence par demander de partager le post et la plateforme, puis réécris-le avec le ton demandé.",
-			"title": "Change le ton"
+			"title": "Change le style"
 		},
 		"teach": {
-			"description": "faire grandir mon compte",
+			"description": "me faire connaître",
 			"prompt": "Dis-moi comment développer ma présence sur les réseaux sociaux. Commence par demander quelle plateforme m'intéresse, mes intérêts et mon objectif.",
 			"title": "Dis-moi comment"
 		},
 		"write": {
-			"description": "plus décontracté",
+			"description": "ce soit plus naturel",
 			"prompt": "Aide-moi à rendre mon contenu plus décontracté et naturel. Commence par demander de partager le tweet avec toi.",
-			"title": "Rends plus casual"
+			"title": "Réécris à ce que"
 		}
 	},
 	"LocaleLayout": {

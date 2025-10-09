@@ -27,7 +27,8 @@
 		"upgrade": "Upgrade"
 	},
 	"AppShortcuts": {
-		"description": "For our keyboard enthusiasts.",
+		"description": "For even faster navigation.",
+		"print": "Print",
 		"shortcuts": "See shortcuts",
 		"sidebar": "Toggle sidebar",
 		"title": "Keyboard shortcuts"
@@ -43,6 +44,20 @@
 	},
 	"ChatHeaderUpgradeButton": {
 		"upgrade": "Upgrade"
+	},
+	"ChatInput": {
+		"anything": "anything",
+		"placeholder": "Ask to post about {action}...",
+		"you": "you",
+		"yourApp": "your app",
+		"yourBusiness": "your business",
+		"yourDay": "your day",
+		"yourGoals": "your goals",
+		"yourLife": "your life",
+		"yourself": "yourself",
+		"yourThoughts": "your thoughts",
+		"yourWeek": "your week",
+		"yourWork": "your work"
 	},
 	"ChatMessages": {
 		"copy": "Copy"

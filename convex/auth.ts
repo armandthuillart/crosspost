@@ -34,20 +34,11 @@ export const createAuth = (
 			user: {
 				create: {
 					after: async ({ id: userId, name, email }) => {
-						const paginated = await polarClient.customers.list({
-							email,
-							limit: 1,
-						});
-
-						const customer = paginated.result.items[0];
-
-						if (!customer) {
-							await polarClient.customers.create({
-								email,
-								externalId: userId,
-								name,
-							});
-						}
+						requireActionCtx(ctx).scheduler.runAfter(
+							0,
+							api.users.createCustomer,
+							{ email, name, userId },
+						);
 					},
 					before: async ({ name, isAnonymous, ...rest }) => {
 						const tier: Tier = isAnonymous ? "anonymous" : "free";
@@ -76,20 +67,15 @@ export const createAuth = (
 					newUser: { user: newUser },
 					anonymousUser: { user: anonymousUser },
 				}) => {
-					const paginated = await polarClient.customers.list({
-						email: newUser.email,
-						limit: 1,
-					});
-
-					const customer = paginated.result.items[0];
-
-					if (!customer) {
-						await polarClient.customers.create({
+					requireActionCtx(ctx).scheduler.runAfter(
+						0,
+						api.users.createCustomer,
+						{
 							email: newUser.email,
-							externalId: newUser.id,
 							name: newUser.name,
-						});
-					}
+							userId: newUser.id,
+						},
+					);
 
 					await requireActionCtx(ctx).runMutation(api.chat.migrateChats, {
 						anonymousUserId: anonymousUser.id,

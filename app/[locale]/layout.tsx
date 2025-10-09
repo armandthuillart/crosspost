@@ -4,6 +4,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Provider as JotaiProvider } from "jotai";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { hasLocale, type Locale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
@@ -11,6 +12,7 @@ import { ConvexClientProvider } from "~/app/convex-client-provider";
 import { ThemeProvider } from "~/app/theme-provider";
 import { routing } from "~/i18n/routing";
 import { appName } from "~/lib/constants";
+import type { ThemeColor } from "~/lib/types";
 import { cn } from "~/lib/utils";
 
 const sans = Geist({
@@ -48,7 +50,7 @@ export default async function LocaleLayout({
 	params,
 	children,
 }: LayoutProps<"/[locale]">) {
-	const { locale } = await params;
+	const [{ locale }, cookieStore] = await Promise.all([params, cookies()]);
 
 	if (!hasLocale(routing.locales, locale)) {
 		notFound();
@@ -56,8 +58,15 @@ export default async function LocaleLayout({
 
 	setRequestLocale(locale);
 
+	const themeColor = cookieStore.get("theme-color")?.value as ThemeColor;
+
 	return (
-		<html className="relative h-full" lang={locale} suppressHydrationWarning>
+		<html
+			className="relative h-full"
+			data-theme={themeColor}
+			lang={locale}
+			suppressHydrationWarning
+		>
 			<body
 				className={cn(
 					"relative h-full bg-background font-sans text-foreground antialiased",

@@ -14,7 +14,10 @@ import {
 import {
 	AppearanceIcon,
 	LanguageIcon,
+	MailIcon,
 	PaintBrushIcon,
+	SquareLinkIcon,
+	StarIcon,
 } from "~/components/ui/icons";
 import {
 	Select,
@@ -28,13 +31,20 @@ import { SHORTCUTS, useShortcut } from "~/hooks/use-shortcuts";
 import { usePathname, useRouter } from "~/i18n/navigation";
 import { routing } from "~/i18n/routing";
 import { themeColorAtom } from "~/lib/atoms";
-import type { ThemeColor } from "~/lib/types";
+import { authClient, checkout, customer } from "~/lib/auth-client";
+import type { ThemeColor, User } from "~/lib/types";
 import { cn } from "~/lib/utils";
+import { Button } from "./ui/button";
 
 export const snapPoints = ["500px", 0.8];
 export const snapPointsAtom = atom<number | string | null>(snapPoints[0]);
 
-export function AppSettings({ children }: { children: ReactNode }) {
+interface AppSettingsProps {
+	user: User | null;
+	children: ReactNode;
+}
+
+export function AppSettings({ user, children }: AppSettingsProps) {
 	const [snap, setSnap] = useAtom(snapPointsAtom);
 	const [isOpen, setIsOpen] = useState(false);
 	const [themeColor, setThemeColor] = useAtom(themeColorAtom);
@@ -68,6 +78,14 @@ export function AppSettings({ children }: { children: ReactNode }) {
 		}
 	});
 
+	async function handleSubscription() {
+		if (user?.tier === "free") {
+			await checkout({ slug: "pro" });
+		} else {
+			await customer.portal();
+		}
+	}
+
 	return (
 		<Drawer
 			activeSnapPoint={snap}
@@ -90,97 +108,127 @@ export function AppSettings({ children }: { children: ReactNode }) {
 						<DrawerTitle className="text-xl">{t("title")}</DrawerTitle>
 					</DrawerHeader>
 
-					<SettingsCategory title={t("app")}>
-						<SettingsGroup>
-							<SettingsGroupItem
-								icon={<LanguageIcon className="size-5" />}
-								title={t("appLanguage")}
-							>
-								<Select
-									defaultValue={locale}
-									onValueChange={handleLocaleChange}
-									value={locale}
+					<div className="flex flex-col gap-8">
+						<SettingsCategory title={t("account")}>
+							<SettingsGroup>
+								<SettingsGroupItem
+									icon={<MailIcon className="size-5" />}
+									title={t("email")}
 								>
-									<SelectTrigger
-										className="w-fit bg-background"
-										disabled={isPending}
+									<span className="text-muted-foreground">{user?.email}</span>
+								</SettingsGroupItem>
+
+								<Separator />
+
+								<SettingsGroupItem
+									icon={<StarIcon className="size-5" />}
+									title={t("subscription")}
+								>
+									<Button
+										className="min-w-28 justify-between bg-background px-3 font-normal text-foreground hover:bg-background"
+										onClick={handleSubscription}
 									>
-										<SelectValue />
-									</SelectTrigger>
-									<SelectContent>
-										{routing.locales.map((locale) => (
-											<SelectItem key={locale} value={locale}>
-												{locale === "en" && "English"}
-												{locale === "fr" && "Français"}
-											</SelectItem>
-										))}
-									</SelectContent>
-								</Select>
-							</SettingsGroupItem>
+										{user?.tier === "pro" ? t("manage") : t("upgrade")}
+										<SquareLinkIcon className="size-4 text-muted-foreground" />
+									</Button>
+								</SettingsGroupItem>
+							</SettingsGroup>
+						</SettingsCategory>
 
-							<Separator />
-
-							<SettingsGroupItem
-								icon={<AppearanceIcon className="size-5" />}
-								title={t("appearance")}
-							>
-								<Select
-									defaultValue={theme}
-									onValueChange={setTheme}
-									value={theme}
+						<SettingsCategory title={t("app")}>
+							<SettingsGroup>
+								<SettingsGroupItem
+									icon={<LanguageIcon className="size-5" />}
+									title={t("appLanguage")}
 								>
-									<SelectTrigger className="w-fit bg-background">
-										<SelectValue />
-									</SelectTrigger>
-									<SelectContent>
-										{themes.map((theme) => (
-											<SelectItem key={theme} value={theme}>
-												{theme === "system" && t("system")}
-												{theme === "light" && t("light")}
-												{theme === "dark" && t("dark")}
-											</SelectItem>
-										))}
-									</SelectContent>
-								</Select>
-							</SettingsGroupItem>
+									<Select
+										defaultValue={locale}
+										onValueChange={handleLocaleChange}
+										value={locale}
+									>
+										<SelectTrigger
+											className="w-fit bg-background"
+											disabled={isPending}
+										>
+											<SelectValue />
+										</SelectTrigger>
+										<SelectContent>
+											{routing.locales.map((locale) => (
+												<SelectItem key={locale} value={locale}>
+													{locale === "en" && "English"}
+													{locale === "fr" && "Français"}
+												</SelectItem>
+											))}
+										</SelectContent>
+									</Select>
+								</SettingsGroupItem>
 
-							<Separator />
+								<Separator />
 
-							<SettingsGroupItem
-								icon={<PaintBrushIcon className="size-5" />}
-								title={t("themeColor")}
-							>
-								<Select
-									defaultValue={themeColor}
-									onValueChange={(value) => setThemeColor(value as ThemeColor)}
-									value={themeColor}
+								<SettingsGroupItem
+									icon={<AppearanceIcon className="size-5" />}
+									title={t("appearance")}
 								>
-									<SelectTrigger className="w-fit bg-background">
-										<SelectValue />
-									</SelectTrigger>
+									<Select
+										defaultValue={theme}
+										onValueChange={setTheme}
+										value={theme}
+									>
+										<SelectTrigger className="w-fit bg-background">
+											<SelectValue />
+										</SelectTrigger>
+										<SelectContent>
+											{themes.map((theme) => (
+												<SelectItem key={theme} value={theme}>
+													{theme === "system" && t("system")}
+													{theme === "light" && t("light")}
+													{theme === "dark" && t("dark")}
+												</SelectItem>
+											))}
+										</SelectContent>
+									</Select>
+								</SettingsGroupItem>
 
-									<SelectContent alignOffset={-5}>
-										{themeColors.map((themeColor) => (
-											<SelectItem key={themeColor} value={themeColor}>
-												<span className="flex items-center gap-2">
-													<span
-														className={cn(
-															"size-2.5 rounded-full",
-															themeColor === "default"
-																? "bg-muted dark:bg-accent"
-																: "bg-primary",
-														)}
-														data-theme={themeColor}
-													/>
-													{t(themeColor)}
-												</span>
-											</SelectItem>
-										))}
-									</SelectContent>
-								</Select>
-							</SettingsGroupItem>
-						</SettingsGroup>
-					</SettingsCategory>
+								<Separator />
+
+								<SettingsGroupItem
+									icon={<PaintBrushIcon className="size-5" />}
+									title={t("themeColor")}
+								>
+									<Select
+										defaultValue={themeColor}
+										onValueChange={(value) =>
+											setThemeColor(value as ThemeColor)
+										}
+										value={themeColor}
+									>
+										<SelectTrigger className="w-fit bg-background">
+											<SelectValue />
+										</SelectTrigger>
+
+										<SelectContent alignOffset={-5}>
+											{themeColors.map((themeColor) => (
+												<SelectItem key={themeColor} value={themeColor}>
+													<span className="flex items-center gap-2">
+														<span
+															className={cn(
+																"size-2.5 rounded-full",
+																themeColor === "default"
+																	? "bg-muted dark:bg-accent"
+																	: "bg-primary",
+															)}
+															data-theme={themeColor}
+														/>
+														{t(themeColor)}
+													</span>
+												</SelectItem>
+											))}
+										</SelectContent>
+									</Select>
+								</SettingsGroupItem>
+							</SettingsGroup>
+						</SettingsCategory>
+					</div>
 				</div>
 			</DrawerContent>
 		</Drawer>
@@ -216,7 +264,7 @@ function SettingsGroupItem({
 	children: ReactNode;
 }) {
 	return (
-		<li className="flex items-center justify-between py-2.5">
+		<li className="flex h-14 items-center justify-between">
 			<div className="flex items-center gap-2.5">
 				{icon}
 				{title}

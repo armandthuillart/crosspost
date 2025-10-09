@@ -7,19 +7,24 @@
 		"termsAndPolicies": "Conditions"
 	},
 	"AppSettings": {
+		"account": "Compte",
 		"app": "Application",
 		"appearance": "Apparence",
 		"appLanguage": "Langue de l'application",
 		"blue": "Bleu",
 		"dark": "Sombre",
 		"default": "Par défaut",
+		"email": "Email",
 		"green": "Vert",
 		"light": "Clair",
+		"manage": "Gérer",
 		"orange": "Orange",
 		"pink": "Rose",
+		"subscription": "Abonnement",
 		"system": "Système",
 		"themeColor": "Couleur d'accentuation",
-		"title": "Paramètres"
+		"title": "Paramètres",
+		"upgrade": "Mettre à niveau"
 	},
 	"AppShortcuts": {
 		"description": "Pour nos amateurs de clavier.",

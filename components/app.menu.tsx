@@ -49,7 +49,7 @@ export function AppMenu({ user }: AppMenuProps) {
 	}
 
 	return (
-		<AppSettings>
+		<AppSettings user={user ?? null}>
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
 					<SidebarMenuButton className="h-auto justify-between rounded-full pr-4 pl-2">

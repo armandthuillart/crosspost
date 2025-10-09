@@ -7,19 +7,24 @@
 		"termsAndPolicies": "Terms & policies"
 	},
 	"AppSettings": {
+		"account": "Account",
 		"app": "App",
 		"appearance": "Appearance",
 		"appLanguage": "App language",
 		"blue": "Blue",
 		"dark": "Dark",
 		"default": "Default",
+		"email": "Email",
 		"green": "Green",
 		"light": "Light",
+		"manage": "Manage",
 		"orange": "Orange",
 		"pink": "Pink",
+		"subscription": "Subscription",
 		"system": "System",
 		"themeColor": "Accent color",
-		"title": "Settings"
+		"title": "Settings",
+		"upgrade": "Upgrade"
 	},
 	"AppShortcuts": {
 		"description": "For our keyboard enthusiasts.",

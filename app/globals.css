@@ -310,3 +310,8 @@
 		@apply border-border outline-ring/50 caret-primary;
 	}
 }
+
+::selection {
+	color: var(--color-primary);
+	background-color: var(--color-selection);
+}

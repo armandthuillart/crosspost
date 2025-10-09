@@ -16,7 +16,6 @@ import type * as betterAuth_adapter from "../betterAuth/adapter.js";
 import type * as betterAuth_auth from "../betterAuth/auth.js";
 import type * as betterAuth_crons from "../betterAuth/crons.js";
 import type * as betterAuth_generatedSchema from "../betterAuth/generatedSchema.js";
-import type * as betterAuth_users from "../betterAuth/users.js";
 import type * as chat from "../chat.js";
 import type * as drafts from "../drafts.js";
 import type * as http from "../http.js";
@@ -50,7 +49,6 @@ declare const fullApi: ApiFromModules<{
   "betterAuth/auth": typeof betterAuth_auth;
   "betterAuth/crons": typeof betterAuth_crons;
   "betterAuth/generatedSchema": typeof betterAuth_generatedSchema;
-  "betterAuth/users": typeof betterAuth_users;
   chat: typeof chat;
   drafts: typeof drafts;
   http: typeof http;
@@ -3879,14 +3877,6 @@ export declare const components: {
           onUpdateHandle?: string;
         },
         any
-      >;
-    };
-    users: {
-      syncTier: FunctionReference<
-        "mutation",
-        "internal",
-        { externalId: string; tier: "anonymous" | "free" | "pro" },
-        null
       >;
     };
   };

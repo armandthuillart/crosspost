@@ -26,12 +26,12 @@ export const webhooks = action({
 
 			if (externalId) {
 				if (isPro) {
-					await ctx.runMutation(api.betterAuth.users.syncTier, {
+					await ctx.runMutation(api.users.syncTier, {
 						externalId,
 						tier: "pro",
 					});
 				} else {
-					await ctx.runMutation(api.betterAuth.users.syncTier, {
+					await ctx.runMutation(api.users.syncTier, {
 						externalId,
 						tier: "free",
 					});

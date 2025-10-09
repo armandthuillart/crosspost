@@ -87,7 +87,7 @@ export function Chat({
 			<ChatHeader isAnonymous={isAnonymous} isFree={isFree} />
 
 			<div className="flex h-full flex-col overflow-y-scroll group-data-chat/chat:gap-32">
-				<div className="flex h-full flex-col group-data-chat/chat:h-full group-data-chat/chat:justify-center group-data-chat/chat:overflow-hidden max-md:shrink-0 group-not-data-chat/chat:md:gap-6 group-not-data-chat/chat:md:pt-44 group-not-data-chat/chat:lg:pt-78">
+				<div className="flex h-full flex-col group-data-chat/chat:h-full group-data-chat/chat:justify-center group-data-chat/chat:overflow-hidden max-md:shrink-0 group-not-data-chat/chat:md:gap-6 group-not-data-chat/chat:md:pt-44 group-not-data-chat/chat:lg:pt-[30dvh]">
 					{!isChat ? (
 						<ChatGreetings />
 					) : (

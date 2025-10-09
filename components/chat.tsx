@@ -102,7 +102,7 @@ export function Chat({
 					)}
 
 					<div className="px-4">
-						<div className="relative mx-auto flex w-full max-w-(--chat-content-max-width) flex-col gap-4 pb-2 @[34rem]:[--chat-content-max-width:40rem] @[64rem]:[--chat-content-max-width:48rem] [--chat-content-max-width:32rem] md:flex-col-reverse md:pb-4 md:group-not-data-chat/chat:pb-0">
+						<div className="relative mx-auto flex w-full max-w-(--chat-content-max-width) flex-col gap-4 @[34rem]:[--chat-content-max-width:40rem] @[64rem]:[--chat-content-max-width:48rem] [--chat-content-max-width:32rem] max-md:mb-4 md:flex-col-reverse md:group-not-data-chat/chat:pb-0">
 							{isChat && (
 								<ChatBanner
 									isAnonymous={isAnonymous}

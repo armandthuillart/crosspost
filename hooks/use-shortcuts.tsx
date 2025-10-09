@@ -39,9 +39,10 @@ export function useShortcut(shortcut: ShortcutConfig, callback: () => void) {
 	}, [shortcut, callback]);
 }
 
-type ShortcutName = "TOGGLE_SIDEBAR" | "OPEN_SETTINGS" | "SEE_SHORTCUTS";
+type ShortcutName = "TOGGLE_SIDEBAR" | "SEE_SHORTCUTS";
 
 type ShortcutConfig = {
+	id: string;
 	key: string;
 	label: string;
 	shift?: boolean;
@@ -49,18 +50,15 @@ type ShortcutConfig = {
 };
 
 export const SHORTCUTS: Record<ShortcutName, ShortcutConfig> = {
-	OPEN_SETTINGS: {
-		key: ",",
-		label: "Open settings",
-		modifier: true,
-	},
 	SEE_SHORTCUTS: {
+		id: "shortcuts",
 		key: "?",
 		label: "See shortcuts",
 		modifier: true,
 		shift: true,
 	},
 	TOGGLE_SIDEBAR: {
+		id: "sidebar",
 		key: "b",
 		label: "Toggle sidebar",
 		modifier: true,

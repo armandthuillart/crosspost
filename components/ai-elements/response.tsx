@@ -2,7 +2,6 @@
 
 import type { Route } from "next";
 import Link from "next/link";
-import { memo } from "react";
 import { Streamdown, type StreamdownProps } from "streamdown";
 import { ExternalLinkIcon } from "~/components/ui/icons";
 import { cn } from "~/lib/utils";
@@ -75,7 +74,7 @@ const components: StreamdownProps["components"] = {
 	),
 };
 
-function PureResponse({ className, ...props }: StreamdownProps) {
+export function Response({ className, ...props }: StreamdownProps) {
 	return (
 		<Streamdown
 			className={cn(
@@ -87,5 +86,3 @@ function PureResponse({ className, ...props }: StreamdownProps) {
 		/>
 	);
 }
-
-export const Response = memo(PureResponse);

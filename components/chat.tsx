@@ -3,7 +3,7 @@
 import { useUIMessages } from "@convex-dev/agent/react";
 import { type Preloaded, usePreloadedQuery } from "convex/react";
 import { useParams } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { ParamsOf } from "~/.next/types/routes";
 import { ChatBanner } from "~/components/chat.banner";
 import { ChatGreetings } from "~/components/chat.greetings";
@@ -75,9 +75,9 @@ export function Chat({
 
 	const inputRef = useRef<InputRef>(null);
 
-	const handleSubmit = useCallback((prompt: string) => {
+	const handleSubmit = (prompt: string) => {
 		inputRef.current?.onSubmit(prompt);
-	}, []);
+	};
 
 	return (
 		<main

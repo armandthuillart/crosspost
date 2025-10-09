@@ -28,6 +28,8 @@
 	},
 	"AppShortcuts": {
 		"description": "Pour nos amateurs de clavier.",
+		"shortcuts": "Voir les raccourcis",
+		"sidebar": "Basculer la barre latérale",
 		"title": "Raccourcis clavier"
 	},
 	"AppSidebar": {

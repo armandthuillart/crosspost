@@ -16,7 +16,6 @@ import {
 	type ComponentProps,
 	forwardRef,
 	type ReactNode,
-	useCallback,
 	useLayoutEffect,
 	useRef,
 } from "react";
@@ -160,31 +159,31 @@ function Tweet({
 	const tweetRef = useRef<HTMLDivElement>(null);
 	const [, setTweetMarginTop] = useAtom(tweetMarginTopAtom);
 
-	const centerTweet = useCallback(() => {
-		const post = tweetRef.current;
-
-		if (!post || !children) {
-			return;
-		}
-
-		const cardContent = post.closest(
-			'[data-slot="card-content"]',
-		) as HTMLElement;
-
-		if (!cardContent) {
-			return;
-		}
-
-		const cardHeight = cardContent.offsetHeight;
-		const postHeight = post.offsetHeight;
-		const postOffsetTop = post.offsetTop - cardContent.offsetTop;
-
-		const marginAdjustment = (cardHeight - postHeight) / 2 - postOffsetTop;
-
-		setTweetMarginTop(marginAdjustment);
-	}, [setTweetMarginTop, children]);
-
 	useLayoutEffect(() => {
+		const centerTweet = () => {
+			const post = tweetRef.current;
+
+			if (!post || !children) {
+				return;
+			}
+
+			const cardContent = post.closest(
+				'[data-slot="card-content"]',
+			) as HTMLElement;
+
+			if (!cardContent) {
+				return;
+			}
+
+			const cardHeight = cardContent.offsetHeight;
+			const postHeight = post.offsetHeight;
+			const postOffsetTop = post.offsetTop - cardContent.offsetTop;
+
+			const marginAdjustment = (cardHeight - postHeight) / 2 - postOffsetTop;
+
+			setTweetMarginTop(marginAdjustment);
+		};
+
 		centerTweet();
 
 		const node = tweetRef.current;
@@ -198,7 +197,7 @@ function Tweet({
 		return () => {
 			resizeObserver.disconnect();
 		};
-	}, [centerTweet]);
+	}, [setTweetMarginTop, children]);
 
 	return (
 		<motion.div

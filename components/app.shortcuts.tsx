@@ -40,7 +40,7 @@ export function AppShortcuts() {
 
 				<ul className="flex flex-col px-6">
 					{Object.entries(SHORTCUTS).map(
-						([key, { key: keyboardKey, label, shift, modifier }]) => {
+						([key, { id, key: keyboardKey, shift, modifier }]) => {
 							const isMac = /Mac|iPod|iPhone|iPad|Apple/.test(
 								navigator.userAgent,
 							);
@@ -50,14 +50,19 @@ export function AppShortcuts() {
 									className="flex items-center justify-between py-2"
 									key={key}
 								>
-									<span className="text-sm">{label}</span>
+									<span className="text-sm">
+										{id === "shortcuts" ? t("shortcuts") : t("sidebar")}
+									</span>
+
 									<div className="flex gap-2">
 										{modifier && (
 											<Kbd className="size-8 uppercase">
 												{isMac ? "⌘" : "Ctrl"}
 											</Kbd>
 										)}
+
 										{shift && <Kbd className="h-8 px-3 uppercase">Shift</Kbd>}
+
 										<Kbd className="size-8 uppercase">{keyboardKey}</Kbd>
 									</div>
 								</li>

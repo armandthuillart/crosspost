@@ -1,6 +1,6 @@
 "use client";
 
-import { type ComponentProps, memo } from "react";
+import type { ComponentProps } from "react";
 import { Button, type ButtonProps } from "~/components/ui/button";
 import { SendIcon, StopIcon } from "~/components/ui/icons";
 import { Kbd } from "~/components/ui/kbd";
@@ -54,51 +54,53 @@ function PromptInputTextarea({
 	);
 }
 
-const PromptInputSubmit = memo(({ className, ...props }: ButtonProps) => (
-	<Button
-		className="rounded-full [grid-area:right]"
-		size="icon"
-		type="submit"
-		{...props}
-	>
-		<SendIcon className="size-5" />
-	</Button>
-));
+function PromptInputSubmit({ className, ...props }: ButtonProps) {
+	return (
+		<Button
+			className="rounded-full [grid-area:right]"
+			size="icon"
+			type="submit"
+			{...props}
+		>
+			<SendIcon className="size-5" />
+		</Button>
+	);
+}
 
-const PromptInputStop = memo(({ className, ...props }: ButtonProps) => (
-	<Button
-		className="rounded-full bg-background [grid-area:right] hover:bg-background"
-		size="icon"
-		type="button"
-		variant="secondary"
-		{...props}
-	>
-		<StopIcon className="size-5" />
-	</Button>
-));
+function PromptInputStop({ className, ...props }: ButtonProps) {
+	return (
+		<Button
+			className="rounded-full bg-background [grid-area:right] hover:bg-background"
+			size="icon"
+			type="button"
+			variant="secondary"
+			{...props}
+		>
+			<StopIcon className="size-5" />
+		</Button>
+	);
+}
 
-const PromptInputButton = memo(
-	({
-		className,
-		children,
-		tooltip,
-		kbd,
-		...props
-	}: ButtonProps & { kbd: string; tooltip: string }) => (
-		<TooltipProvider>
-			<Tooltip >
-				<TooltipTrigger className="h-9 [grid-area:left]" {...props}>
-					{children}
-				</TooltipTrigger>
-				<TooltipContent className="flex gap-1.5" side="bottom">
-					{tooltip}{" "}
-					<Kbd className="-mr-1 !text-primary-foreground !bg-primary-foreground/20 !size-4 flex min-w-auto items-center justify-center rounded">
-						{kbd}
-					</Kbd>
-				</TooltipContent>
-			</Tooltip>
-		</TooltipProvider>
-	),
+const PromptInputButton = ({
+	className,
+	children,
+	tooltip,
+	kbd,
+	...props
+}: ButtonProps & { kbd: string; tooltip: string }) => (
+	<TooltipProvider>
+		<Tooltip>
+			<TooltipTrigger className="h-9 [grid-area:left]" {...props}>
+				{children}
+			</TooltipTrigger>
+			<TooltipContent className="flex gap-1.5" side="bottom">
+				{tooltip}{" "}
+				<Kbd className="-mr-1 !text-primary-foreground !bg-primary-foreground/20 !size-4 flex min-w-auto items-center justify-center rounded">
+					{kbd}
+				</Kbd>
+			</TooltipContent>
+		</Tooltip>
+	</TooltipProvider>
 );
 
 export {

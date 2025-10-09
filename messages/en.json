@@ -28,6 +28,8 @@
 	},
 	"AppShortcuts": {
 		"description": "For our keyboard enthusiasts.",
+		"shortcuts": "See shortcuts",
+		"sidebar": "Toggle sidebar",
 		"title": "Keyboard shortcuts"
 	},
 	"AppSidebar": {

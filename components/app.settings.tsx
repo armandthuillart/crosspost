@@ -5,6 +5,7 @@ import { type Locale, useLocale, useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import { type ReactNode, useEffect, useState, useTransition } from "react";
 import { themeColors } from "~/app/theme-provider";
+import { Button } from "~/components/ui/button";
 import {
 	Drawer,
 	DrawerContent,
@@ -27,16 +28,14 @@ import {
 	SelectValue,
 } from "~/components/ui/select";
 import { Separator } from "~/components/ui/separator";
-import { SHORTCUTS, useShortcut } from "~/hooks/use-shortcuts";
 import { usePathname, useRouter } from "~/i18n/navigation";
 import { routing } from "~/i18n/routing";
 import { themeColorAtom } from "~/lib/atoms";
-import { authClient, checkout, customer } from "~/lib/auth-client";
+import { checkout, customer } from "~/lib/auth-client";
 import type { ThemeColor, User } from "~/lib/types";
 import { cn } from "~/lib/utils";
-import { Button } from "./ui/button";
 
-export const snapPoints = ["500px", 0.8];
+export const snapPoints = [0.355, 0.8];
 export const snapPointsAtom = atom<number | string | null>(snapPoints[0]);
 
 interface AppSettingsProps {
@@ -66,17 +65,6 @@ export function AppSettings({ user, children }: AppSettingsProps) {
 	useEffect(() => {
 		document.documentElement.setAttribute("data-theme", themeColor);
 	}, [themeColor]);
-
-	useShortcut(SHORTCUTS.OPEN_SETTINGS, () => {
-		if (!isOpen) {
-			setIsOpen(true);
-			setSnap(snapPoints[0]);
-		} else if (snap === snapPoints[0]) {
-			setSnap(snapPoints[1]);
-		} else {
-			setIsOpen(false);
-		}
-	});
 
 	async function handleSubscription() {
 		if (user?.tier === "free") {

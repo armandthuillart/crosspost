@@ -1,13 +1,7 @@
 "use client";
 
 import { useAtom } from "jotai";
-import {
-	type ComponentProps,
-	memo,
-	useCallback,
-	useEffect,
-	useRef,
-} from "react";
+import { type ComponentProps, useEffect, useRef } from "react";
 import { StickToBottom, useStickToBottomContext } from "use-stick-to-bottom";
 import { Button, type ButtonProps } from "~/components/ui/button";
 import { ScrollIcon } from "~/components/ui/icons";
@@ -47,14 +41,9 @@ function ConversationContent({
 	);
 }
 
-function PureConversationScrollButton({ className, ...props }: ButtonProps) {
+function ConversationScrollButton({ className, ...props }: ButtonProps) {
 	const { isAtBottom, scrollToBottom } = useStickToBottomContext();
-
 	const [isVisible] = useAtom(showBannerAtom);
-
-	const handleScroll = useCallback(() => {
-		scrollToBottom();
-	}, [scrollToBottom]);
 
 	return (
 		!isAtBottom && (
@@ -64,7 +53,7 @@ function PureConversationScrollButton({ className, ...props }: ButtonProps) {
 					isVisible && "bottom-32",
 					className,
 				)}
-				onClick={handleScroll}
+				onClick={() => scrollToBottom()}
 				size="icon"
 				variant="secondary"
 				{...props}
@@ -74,8 +63,6 @@ function PureConversationScrollButton({ className, ...props }: ButtonProps) {
 		)
 	);
 }
-
-const ConversationScrollButton = memo(PureConversationScrollButton);
 
 interface ConversationLoadMoreButtonProps {
 	loadMore: (numItems: number) => void;

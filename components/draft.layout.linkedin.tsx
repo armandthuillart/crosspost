@@ -5,7 +5,6 @@ import { motion } from "motion/react";
 import {
 	type ComponentProps,
 	type ReactNode,
-	useCallback,
 	useLayoutEffect,
 	useRef,
 } from "react";
@@ -101,31 +100,31 @@ function Post({
 	const postRef = useRef<HTMLDivElement>(null);
 	const [, setPostMarginTop] = useAtom(postMarginTopAtom);
 
-	const centerPost = useCallback(() => {
-		const post = postRef.current;
-
-		if (!post || !children) {
-			return;
-		}
-
-		const cardContent = post.closest(
-			'[data-slot="card-content"]',
-		) as HTMLElement;
-
-		if (!cardContent) {
-			return;
-		}
-
-		const cardHeight = cardContent.offsetHeight;
-		const postHeight = post.offsetHeight;
-		const postOffsetTop = post.offsetTop - cardContent.offsetTop;
-
-		const marginAdjustment = (cardHeight - postHeight) / 2 - postOffsetTop;
-
-		setPostMarginTop(marginAdjustment);
-	}, [setPostMarginTop, children]);
-
 	useLayoutEffect(() => {
+		const centerPost = () => {
+			const post = postRef.current;
+
+			if (!post || !children) {
+				return;
+			}
+
+			const cardContent = post.closest(
+				'[data-slot="card-content"]',
+			) as HTMLElement;
+
+			if (!cardContent) {
+				return;
+			}
+
+			const cardHeight = cardContent.offsetHeight;
+			const postHeight = post.offsetHeight;
+			const postOffsetTop = post.offsetTop - cardContent.offsetTop;
+
+			const marginAdjustment = (cardHeight - postHeight) / 2 - postOffsetTop;
+
+			setPostMarginTop(marginAdjustment);
+		};
+
 		centerPost();
 
 		const node = postRef.current;
@@ -139,7 +138,7 @@ function Post({
 		return () => {
 			resizeObserver.disconnect();
 		};
-	}, [centerPost]);
+	}, [setPostMarginTop, children]);
 
 	return (
 		<motion.div

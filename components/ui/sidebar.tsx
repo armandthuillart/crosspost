@@ -7,9 +7,7 @@ import {
 	type CSSProperties,
 	createContext,
 	type MouseEvent,
-	useCallback,
 	useContext,
-	useMemo,
 	useState,
 } from "react";
 import { Button, type ButtonProps } from "~/components/ui/button";
@@ -46,6 +44,7 @@ const SidebarContext = createContext<SidebarContextProps | null>(null);
 
 function useSidebar() {
 	const context = useContext(SidebarContext);
+
 	if (!context) {
 		throw new Error("useSidebar must be used within a SidebarProvider.");
 	}
@@ -74,24 +73,21 @@ function SidebarProvider({
 	const [_open, _setOpen] = useState(defaultOpen);
 	const open = openProp ?? _open;
 
-	const setOpen = useCallback(
-		(value: boolean | ((value: boolean) => boolean)) => {
-			const openState = typeof value === "function" ? value(open) : value;
-			if (setOpenProp) {
-				setOpenProp(openState);
-			} else {
-				_setOpen(openState);
-			}
+	const setOpen = (value: boolean | ((value: boolean) => boolean)) => {
+		const openState = typeof value === "function" ? value(open) : value;
+		if (setOpenProp) {
+			setOpenProp(openState);
+		} else {
+			_setOpen(openState);
+		}
 
-			// biome-ignore lint/suspicious/noDocumentCookie: it's okay
-			document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
-		},
-		[setOpenProp, open],
-	);
+		// biome-ignore lint/suspicious/noDocumentCookie: it's okay
+		document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
+	};
 
-	const toggleSidebar = useCallback(() => {
+	const toggleSidebar = () => {
 		return isMobile ? setOpenMobile((open) => !open) : setOpen((open) => !open);
-	}, [isMobile, setOpen]);
+	};
 
 	useShortcut(SHORTCUTS.TOGGLE_SIDEBAR, () => {
 		toggleSidebar();
@@ -99,19 +95,16 @@ function SidebarProvider({
 
 	const state = open ? "expanded" : "collapsed";
 
-	const contextValue = useMemo<SidebarContextProps>(
-		() => ({
-			defaultHidden,
-			isMobile,
-			isOpen: open,
-			isOpenMobile: openMobile,
-			setIsOpen: setOpen,
-			setIsOpenMobile: setOpenMobile,
-			state,
-			toggleSidebar,
-		}),
-		[state, open, setOpen, isMobile, openMobile, toggleSidebar, defaultHidden],
-	);
+	const contextValue: SidebarContextProps = {
+		defaultHidden,
+		isMobile,
+		isOpen: open,
+		isOpenMobile: openMobile,
+		setIsOpen: setOpen,
+		setIsOpenMobile: setOpenMobile,
+		state,
+		toggleSidebar,
+	};
 
 	return (
 		<SidebarContext.Provider value={contextValue}>

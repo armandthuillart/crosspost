@@ -1,6 +1,6 @@
 "use client";
 
-import { type RefObject, useCallback, useEffect } from "react";
+import { type RefObject, useEffect } from "react";
 
 interface PureAutoFocusOptions {
 	shouldFocus?: (event: KeyboardEvent) => boolean;
@@ -15,8 +15,12 @@ export function usePureAutoFocus({
 	onAutoFocus,
 	shouldFocus = defaultShouldFocus,
 }: PureAutoFocusOptions): void {
-	const handleKeyboardEvent = useCallback(
-		(event: KeyboardEvent) => {
+	useEffect(() => {
+		if (!enabled) {
+			return;
+		}
+
+		const handleKeyboardEvent = (event: KeyboardEvent) => {
 			if (document.activeElement === targetRef.current) {
 				return;
 			}
@@ -32,14 +36,7 @@ export function usePureAutoFocus({
 			event.preventDefault();
 			targetRef.current?.focus();
 			onAutoFocus?.(event);
-		},
-		[targetRef, onAutoFocus, shouldFocus],
-	);
-
-	useEffect(() => {
-		if (!enabled) {
-			return;
-		}
+		};
 
 		document.addEventListener("keydown", handleKeyboardEvent, {
 			passive: false,
@@ -48,7 +45,7 @@ export function usePureAutoFocus({
 		return () => {
 			document.removeEventListener("keydown", handleKeyboardEvent);
 		};
-	}, [enabled, handleKeyboardEvent]);
+	}, [enabled, targetRef, onAutoFocus, shouldFocus]);
 }
 
 function defaultShouldFocus(event: KeyboardEvent): boolean {
@@ -115,25 +112,22 @@ export function useAutoFocus({
 	targetRef,
 	onValueChange,
 }: AutoFocusOptions): void {
-	const handleAutoFocus = useCallback(
-		(event: KeyboardEvent) => {
-			if (event.key.length === 1) {
-				const newValue = value + event.key;
+	const handleAutoFocus = (event: KeyboardEvent) => {
+		if (event.key.length === 1) {
+			const newValue = value + event.key;
+
+			requestAnimationFrame(() => {
+				onValueChange(newValue);
 
 				requestAnimationFrame(() => {
-					onValueChange(newValue);
-
-					requestAnimationFrame(() => {
-						targetRef.current?.setSelectionRange(
-							newValue.length,
-							newValue.length,
-						);
-					});
+					targetRef.current?.setSelectionRange(
+						newValue.length,
+						newValue.length,
+					);
 				});
-			}
-		},
-		[value, onValueChange, targetRef],
-	);
+			});
+		}
+	};
 
 	usePureAutoFocus({
 		enabled,

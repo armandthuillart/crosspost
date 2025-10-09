@@ -8,7 +8,6 @@ import {
 	type FormEvent,
 	forwardRef,
 	type KeyboardEvent,
-	useCallback,
 	useImperativeHandle,
 	useLayoutEffect,
 	useRef,
@@ -85,69 +84,54 @@ export const ChatInput = forwardRef<InputRef, ChatInputProps>(
 
 		const abortStreamByOrder = useMutation(api.chat.abortStreamByOrder);
 
-		const resetHeight = useCallback(() => {
+		const resetHeight = () => {
 			if (inputRef.current) {
 				inputRef.current.style.height = "auto";
 				inputRef.current.style.height = "24px";
 			}
-		}, []);
+		};
 
-		const handleSubmit = useCallback(
-			async (event: FormEvent<HTMLFormElement>) => {
-				event.preventDefault();
-				if (!isDirty) return;
+		const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+			event.preventDefault();
+			if (!isDirty) return;
 
-				if (!user) {
-					const { error } = await authClient.signIn.anonymous();
+			if (!user) {
+				const { error } = await authClient.signIn.anonymous();
 
-					if (error) {
-						console.error("Failed to sign in anonymously", error);
-						return;
-					}
-				}
-
-				let threadId = chatId;
-
-				if (!chatId) {
-					onStartNewChat?.();
-					threadId = await createChat();
-					router.replace(`/chat/${threadId}`);
-					setThreadId(threadId);
-				}
-
-				if (!threadId) {
+				if (error) {
+					console.error("Failed to sign in anonymously", error);
 					return;
 				}
+			}
 
-				void sendMessage({
-					city: userLocation.city,
-					country: userLocation.country,
-					prompt,
-					region: userLocation.region,
-					threadId,
-				}).catch((e) => {
-					if (isRateLimitError(e)) {
-						showBanner(true);
-					}
-				});
+			let threadId = chatId;
 
-				setPrompt("");
-				resetHeight();
-			},
-			[
-				user,
-				chatId,
+			if (!chatId) {
+				onStartNewChat?.();
+				threadId = await createChat();
+				router.replace(`/chat/${threadId}`);
+				setThreadId(threadId);
+			}
+
+			if (!threadId) {
+				return;
+			}
+
+			void sendMessage({
+				city: userLocation.city,
+				country: userLocation.country,
 				prompt,
-				isDirty,
-				showBanner,
-				createChat,
-				sendMessage,
-				resetHeight,
-				userLocation,
-				router.replace,
-				onStartNewChat,
-			],
-		);
+				region: userLocation.region,
+				threadId,
+			}).catch((e) => {
+				if (isRateLimitError(e)) {
+					showBanner(true);
+				}
+			});
+
+			setPrompt("");
+			resetHeight();
+		};
 
 		// biome-ignore lint/correctness/useExhaustiveDependencies: intentionally depend only on prompt to avoid feedback loops from setState
 		useLayoutEffect(() => {
@@ -195,30 +179,24 @@ export const ChatInput = forwardRef<InputRef, ChatInputProps>(
 			if (nextIsExpanded !== isExpanded) setIsExpanded(nextIsExpanded);
 		}, [prompt]);
 
-		const handleChange = useCallback(
-			(event: React.ChangeEvent<HTMLTextAreaElement>) => {
-				setPrompt(event.currentTarget.value);
-			},
-			[],
-		);
+		const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+			setPrompt(event.currentTarget.value);
+		};
 
-		const handleKeyDown = useCallback(
-			(event: KeyboardEvent<HTMLTextAreaElement>) => {
-				const isEnter = event.key === "Enter";
-				const isShiftKey = event.shiftKey;
-				const isComposing = event.nativeEvent.isComposing;
+		const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
+			const isEnter = event.key === "Enter";
+			const isShiftKey = event.shiftKey;
+			const isComposing = event.nativeEvent.isComposing;
 
-				if (isEnter && !isShiftKey && !isComposing) {
-					event.preventDefault();
+			if (isEnter && !isShiftKey && !isComposing) {
+				event.preventDefault();
 
-					if (prompt.length > 0) {
-						const form = event.currentTarget.form;
-						if (form) form.requestSubmit();
-					}
+				if (prompt.length > 0) {
+					const form = event.currentTarget.form;
+					if (form) form.requestSubmit();
 				}
-			},
-			[prompt.length],
-		);
+			}
+		};
 
 		useAutoFocus({
 			onValueChange: setPrompt,
@@ -249,6 +227,8 @@ export const ChatInput = forwardRef<InputRef, ChatInputProps>(
 			? "Ask to post about anything..."
 			: `Ask to post about ${typewriter}`;
 
+		// TODO: Imperative code using refs should be avoided in most cases.
+		// Should be replaced by some architectural changes (via props or state).
 		useImperativeHandle(
 			ref,
 			() => ({

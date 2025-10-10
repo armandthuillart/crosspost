@@ -120,17 +120,18 @@ export const streamChat = internalAction({
 				tools: {
 					"get-draft": getDraft,
 					"rename-chat": renameChat,
-					"web-search": anthropic.tools.webSearch_20250305({
-						maxUses: 5,
-						...((city || country || region) && {
-							userLocation: {
-								...(city && { city }),
-								...(country && { country }),
-								...(region && { region }),
-								type: "approximate",
-							},
-						}),
-					}),
+					// ...(isPro && {
+					// "web-search": anthropic.tools.webSearch_20250305({
+					// 	maxUses: 5,
+					// 	...((city || country || region) && {
+					// 		userLocation: {
+					// 			...(city && { city }),
+					// 			...(country && { country }),
+					// 			...(region && { region }),
+					// 			type: "approximate",
+					// 		},
+					// 	}),
+					// })}),
 				},
 			},
 			{ saveStreamDeltas: true },

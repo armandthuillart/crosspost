@@ -1,4 +1,4 @@
-import { type AnthropicProviderOptions, anthropic } from "@ai-sdk/anthropic";
+import type { AnthropicProviderOptions } from "@ai-sdk/anthropic";
 import { type GatewayProviderOptions, gateway } from "@ai-sdk/gateway";
 import {
 	abortStream,
@@ -106,10 +106,10 @@ export const streamChat = internalAction({
 				promptMessageId,
 				providerOptions: {
 					anthropic: {
-						thinking: {
-							budgetTokens: 0.001,
-							type: isPro ? "enabled" : "disabled",
-						},
+						// thinking: {
+						// 	budgetTokens: 0.001,
+						// 	type: isPro ? "enabled" : "disabled",
+						// },
 					} as AnthropicProviderOptions,
 					gateway: {
 						only: ["vertex", "anthropic"],

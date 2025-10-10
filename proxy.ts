@@ -3,9 +3,9 @@ import type { NextRequest } from "next/server";
 import createMiddleware from "next-intl/middleware";
 import { routing } from "~/i18n/routing";
 
-const i18nMiddleware = createMiddleware(routing);
+const i18n = createMiddleware(routing);
 
-export async function middleware(request: NextRequest) {
+export default async function proxy(request: NextRequest) {
 	const { city, region, country } = geolocation(request);
 
 	if (city && region && country) {
@@ -14,9 +14,9 @@ export async function middleware(request: NextRequest) {
 		request.headers.set("x-user-country", encodeURIComponent(country));
 	}
 
-	return i18nMiddleware(request);
+	return i18n(request);
 }
 
 export const config = {
-	matcher: "/((?!api|trpc|_next|_vercel|.*\\..*).*)",
+	matcher: "/((?!api|trpc|_next|_vercel|icon|.*\\..*).*)",
 };

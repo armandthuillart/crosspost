@@ -46,17 +46,22 @@ export function getURL(platform: Platform, content: string): string {
 		return text;
 	}
 
-	const params = new URLSearchParams();
-	params.append("text", parse(content));
+	const parsedContent = parse(content);
 
-	const baseUrls: Record<Platform, string> = {
+	if (platform === "linkedin") {
+		const encodedContent = encodeURIComponent(parsedContent);
+		return `https://www.linkedin.com/feed/?shareActive&mini=true&text=${encodedContent}`;
+	}
+
+	const params = new URLSearchParams();
+	params.append("text", parsedContent);
+
+	const baseUrls: Record<Exclude<Platform, "linkedin">, string> = {
 		bluesky: "https://bsky.app/intent/compose",
-		linkedin: "https://www.linkedin.com/feed/?shareActive&mini=true",
 		threads: "https://www.threads.net/intent/post",
 		x: "https://x.com/intent/post",
 	};
 
 	const baseUrl = baseUrls[platform];
-
 	return `${baseUrl}?${params.toString()}`;
 }

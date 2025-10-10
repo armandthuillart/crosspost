@@ -42,6 +42,7 @@ export async function generateMetadata({
 	return {
 		description: t("description"),
 		keywords: t("keywords").split(","),
+		metadataBase: process.env.SITE_URL,
 		title: appName,
 	};
 }

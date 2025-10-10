@@ -1,163 +1,60 @@
 "use client";
 
-import { atom, useAtom } from "jotai";
-import { motion } from "motion/react";
-import {
-	type ComponentProps,
-	type ReactNode,
-	useLayoutEffect,
-	useRef,
-} from "react";
-import { Avatar, AvatarImage } from "~/components/ui/avatar";
+import { useTranslations } from "next-intl";
+import type { ComponentProps, SVGProps } from "react";
+import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 
-const postMarginTopAtom = atom<number>(0);
-
 function Page({ children, className, ...props }: ComponentProps<"div">) {
-	const [postMarginTop] = useAtom(postMarginTopAtom);
-
 	return (
 		<div
 			className={cn(
-				"mx-auto flex w-full max-w-138.75 flex-col gap-2",
+				"mx-auto flex size-full max-w-138.75 flex-col gap-2",
 				className,
 			)}
-			data-feed
-			style={{ marginTop: postMarginTop }}
 			{...props}
 		>
-			<Post
-				avatar="https://media.licdn.com/dms/image/v2/C560BAQHaVYd13rRz3A/company-logo_200_200/company-logo_200_200/0/1638831590218/linkedin_logo?e=1762387200&v=beta&t=94MZ61zXYUsTUPobMzFL1GhmOwbJiBT1D-MZ7RlROMI"
-				content="A reminder for today and every day: you are so much more than your job title."
-				createdAt="1 week"
-				displayName="LinkedIn"
-				hasSquareAvatar
-				likeCount={300}
-				replyCount={100}
-				repostCount={10}
-			/>
-			<Post
-				avatar="https://media.licdn.com/dms/image/v2/C560BAQHaVYd13rRz3A/company-logo_200_200/company-logo_200_200/0/1638831590218/linkedin_logo?e=1762387200&v=beta&t=94MZ61zXYUsTUPobMzFL1GhmOwbJiBT1D-MZ7RlROMI"
-				content="Work isn’t the point. But it can make the point possible."
-				createdAt="8d"
-				displayName="LinkedIn"
-				hasSquareAvatar
-				likeCount={200}
-				replyCount={40}
-				repostCount={15}
-			/>
+			<div className="flex size-full flex-col justify-end overflow-hidden">
+				<Placeholder />
+			</div>
+
 			{children}
-			<Post
-				avatar="https://media.licdn.com/dms/image/v2/C560BAQHaVYd13rRz3A/company-logo_200_200/company-logo_200_200/0/1638831590218/linkedin_logo?e=1762387200&v=beta&t=94MZ61zXYUsTUPobMzFL1GhmOwbJiBT1D-MZ7RlROMI"
-				content="Performance should not be measured by how many hours you sit at a desk."
-				createdAt="6d"
-				displayName="LinkedIn"
-				hasSquareAvatar
-				likeCount={180}
-				replyCount={100}
-				repostCount={40}
-			/>
-			<Post
-				avatar="https://media.licdn.com/dms/image/v2/C560BAQHaVYd13rRz3A/company-logo_200_200/company-logo_200_200/0/1638831590218/linkedin_logo?e=1762387200&v=beta&t=94MZ61zXYUsTUPobMzFL1GhmOwbJiBT1D-MZ7RlROMI"
-				content="Today we’re celebrating National hashtag#AIinWork Day — a day to help you build the skills to thrive in an AI-powered workplace. Explore free learning resources, get practical tips, and see how to get started here: https://lnkd.in/aiinwork"
-				createdAt="3d"
-				displayName="LinkedIn"
-				hasSquareAvatar
-				likeCount={130}
-				replyCount={100}
-				repostCount={405}
-			/>
+
+			<div className="flex size-full flex-col overflow-hidden">
+				<Placeholder />
+			</div>
 		</div>
 	);
 }
 
-interface PostProps {
-	avatar?: string;
+interface PostProps extends ComponentProps<"div"> {
 	content?: string;
-	children?: ReactNode;
-	className?: string;
-	likeCount?: number;
-	createdAt?: string;
-	replyCount?: number;
-	repostCount?: number;
-	displayName?: string;
-	hasSquareAvatar?: boolean;
 }
 
-function Post({
-	avatar,
-	content,
-	children,
-	className,
-	likeCount = 50,
-	createdAt = "now",
-	replyCount = 20,
-	displayName = "You",
-	repostCount = 10,
-	hasSquareAvatar,
-}: PostProps) {
-	const postRef = useRef<HTMLDivElement>(null);
-	const [, setPostMarginTop] = useAtom(postMarginTopAtom);
-
-	useLayoutEffect(() => {
-		const centerPost = () => {
-			const post = postRef.current;
-
-			if (!post || !children) {
-				return;
-			}
-
-			const cardContent = post.closest(
-				'[data-slot="card-content"]',
-			) as HTMLElement;
-
-			if (!cardContent) {
-				return;
-			}
-
-			const cardHeight = cardContent.offsetHeight;
-			const postHeight = post.offsetHeight;
-			const postOffsetTop = post.offsetTop - cardContent.offsetTop;
-
-			const marginAdjustment = (cardHeight - postHeight) / 2 - postOffsetTop;
-
-			setPostMarginTop(marginAdjustment);
-		};
-
-		centerPost();
-
-		const node = postRef.current;
-		if (!node) return;
-
-		const resizeObserver = new ResizeObserver(() => {
-			centerPost();
-		});
-		resizeObserver.observe(node);
-
-		return () => {
-			resizeObserver.disconnect();
-		};
-	}, [setPostMarginTop, children]);
+function Post({ content, children, className }: PostProps) {
+	const t = useTranslations("Draft");
 
 	return (
-		<motion.div
+		<div
 			className={cn(
 				"@container/post relative rounded-lg border bg-card",
 				className,
 			)}
-			ref={postRef}
 		>
 			<div className="flex items-center gap-2 pt-3 pr-18 pb-2 pl-4">
-				<Avatar className={cn("size-12", hasSquareAvatar && "rounded-none")}>
-					{avatar ? <AvatarImage src={avatar} /> : <AvatarIcon />}
+				<Avatar className="size-12">
+					<AvatarIcon />
 				</Avatar>
 
 				<div className="flex flex-col">
-					<div className="font-semibold text-base/4.75">{displayName}</div>
-					<div className="text-muted-foreground text-xs/3.75">Entrepreneur</div>
+					<div className="font-semibold text-base/4.75">{t("you")}</div>
+					<div className="text-muted-foreground text-xs/3.75">
+						{t("professional")}
+					</div>
+
 					<div className="text-muted-foreground text-xs/4">
-						{createdAt} •{" "}
+						{t("now")} •{" "}
 						<svg
 							aria-hidden="true"
 							className="inline align-sub"
@@ -173,7 +70,7 @@ function Post({
 				</div>
 			</div>
 
-			<div className="absolute top-1 right-2 flex"></div>
+			<div className="absolute top-1 right-2 flex" />
 
 			<div className="flex w-full px-4 pb-2">
 				<div className="flex w-full flex-col">
@@ -188,11 +85,11 @@ function Post({
 						<CongratsIcon />
 						<LoveIcon />
 						<span className="pl-1 text-black/60 text-sm dark:text-white/60">
-							You and {likeCount} others
+							{t("youAndOthers", { count: 0 })}
 						</span>
 					</div>
 					<span className="pl-1 text-black/60 text-sm dark:text-white/60">
-						{replyCount} comments · {repostCount} reposts
+						{t("commentsAndReposts", { count: 0 })}
 					</span>
 				</div>
 			</div>
@@ -218,7 +115,7 @@ function Post({
 							strokeWidth="2"
 						/>
 					</svg>
-					<span className="@max-md/post:hidden">Like</span>
+					<span className="@max-md/post:hidden">{t("like")}</span>
 				</Button>
 
 				<Button
@@ -248,7 +145,7 @@ function Post({
 							strokeWidth="2"
 						/>
 					</svg>
-					<span className="@max-md/post:hidden">Comment</span>
+					<span className="@max-md/post:hidden">{t("comment")}</span>
 				</Button>
 
 				<Button
@@ -277,7 +174,7 @@ function Post({
 							strokeWidth="2"
 						/>
 					</svg>
-					<span className="@max-md/post:hidden">Repost</span>
+					<span className="@max-md/post:hidden">{t("repost")}</span>
 				</Button>
 
 				<Button
@@ -306,14 +203,111 @@ function Post({
 							strokeWidth="2"
 						/>
 					</svg>
-					<span className="@max-md/post:hidden">Send</span>
+					<span className="@max-md/post:hidden">{t("send")}</span>
 				</Button>
 			</div>
-		</motion.div>
+		</div>
+	);
+}
+
+const Icon = ({ className, ...props }: SVGProps<SVGSVGElement>) => {
+	return (
+		<svg
+			aria-hidden="true"
+			className={cn("text-[#007EBB]", className)}
+			fill="currentColor"
+			height="24"
+			viewBox="0 0 24 24"
+			width="24"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<path
+				clipRule="evenodd"
+				d="M4.41667 21.75H19.5833C20.78 21.75 21.75 20.78 21.75 19.5833V4.41667C21.75 3.22005 20.78 2.25 19.5833 2.25H4.41667C3.22005 2.25 2.25 3.22005 2.25 4.41667V19.5833C2.25 20.78 3.22005 21.75 4.41667 21.75Z"
+				fillRule="evenodd"
+			/>
+			<path
+				className="group-data-[state=active]/tabs-trigger:fill-white"
+				clipRule="evenodd"
+				d="M17.75 17.75H15.3357V13.638C15.3357 12.5106 14.9074 11.8805 14.015 11.8805C13.0443 11.8805 12.5371 12.5362 12.5371 13.638V17.75H10.2104V9.91667H12.5371V10.9718C12.5371 10.9718 13.2367 9.67735 14.8989 9.67735C16.5605 9.67735 17.75 10.692 17.75 12.7904V17.75ZM7.43471 8.89096C6.6422 8.89096 6 8.24372 6 7.44548C6 6.64723 6.6422 6 7.43471 6C8.22722 6 8.86903 6.64723 8.86903 7.44548C8.86903 8.24372 8.22722 8.89096 7.43471 8.89096ZM6.23332 17.75H8.65943V9.91667H6.23332V17.75Z"
+				fill="var(--color-background)"
+				fillRule="evenodd"
+			/>
+		</svg>
+	);
+};
+
+function Placeholder({ className }: ComponentProps<"div">) {
+	return (
+		<div
+			className={cn(
+				"@container/post relative rounded-lg border bg-card",
+				className,
+			)}
+		>
+			<div className="flex items-center gap-2 pt-3 pr-18 pb-2 pl-4">
+				<Avatar className="size-12">
+					<AvatarFallback className="rounded-full bg-accent" />
+				</Avatar>
+
+				<div className="flex flex-col">
+					<div className="flex h-4.75 items-center">
+						<span className="h-2.5 w-6 rounded-full bg-accent" />
+					</div>
+
+					<div className="flex h-3.75 items-center">
+						<span className="h-2.5 w-18 rounded-full bg-accent" />
+					</div>
+
+					<div className="flex h-4 items-center">
+						<span className="h-2.5 w-12.5 rounded-full bg-accent" />
+					</div>
+				</div>
+			</div>
+
+			<div className="flex w-full px-4 pb-2">
+				<div className="flex w-full flex-col">
+					<div className="flex h-5 items-center">
+						<span className="h-2.5 w-5/10 rounded-full bg-accent" />
+					</div>
+
+					<div className="flex h-5 items-center">
+						<span className="h-2.5 w-5/10 rounded-full bg-accent" />
+					</div>
+				</div>
+			</div>
+
+			<div className="px-4">
+				<div className="flex h-8 items-center justify-between border-accent border-b">
+					<span className="h-2.5 w-39 rounded-full bg-accent" />
+					<span className="h-2.5 w-39 rounded-full bg-accent" />
+				</div>
+			</div>
+
+			<div className="flex gap-1 px-4 py-1">
+				<div className="flex h-10 w-full items-center justify-center">
+					<span className="h-2.5 w-12 rounded bg-accent" />
+				</div>
+
+				<div className="flex h-10 w-full items-center justify-center">
+					<span className="h-2.5 w-12 rounded bg-accent" />
+				</div>
+
+				<div className="flex h-10 w-full items-center justify-center">
+					<span className="h-2.5 w-12 rounded bg-accent" />
+				</div>
+
+				<div className="flex h-10 w-full items-center justify-center">
+					<span className="h-2.5 w-12 rounded bg-accent" />
+				</div>
+			</div>
+		</div>
 	);
 }
 
 export const LinkedIn = Object.assign(Page, {
+	Icon,
 	Post,
 });
 

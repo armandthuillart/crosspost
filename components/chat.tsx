@@ -4,13 +4,12 @@ import { useUIMessages } from "@convex-dev/agent/react";
 import { type Preloaded, usePreloadedQuery } from "convex/react";
 import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import type { ParamsOf } from "~/.next/types/routes";
+import type { ParamsOf } from "~/.next/dev/types/routes";
 import { ChatBanner } from "~/components/chat.banner";
 import { ChatGreetings } from "~/components/chat.greetings";
 import { ChatHeader } from "~/components/chat.header";
 import { ChatInput, type InputRef } from "~/components/chat.input";
 import { ChatMessages } from "~/components/chat.messages";
-// import { ChatPostsGallery } from "~/components/chat.posts-gallery";
 import { ChatSuggestions } from "~/components/chat.suggestions";
 import type { MyMessage } from "~/lib/types";
 import { attr } from "~/lib/utils";
@@ -127,8 +126,6 @@ export function Chat({
 						</div>
 					</div>
 				</div>
-
-				{/* {!isChat && <ChatPostsGallery />} */}
 			</div>
 		</main>
 	);

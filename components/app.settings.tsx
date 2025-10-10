@@ -35,7 +35,7 @@ import { checkout, customer } from "~/lib/auth-client";
 import type { ThemeColor, User } from "~/lib/types";
 import { cn } from "~/lib/utils";
 
-export const snapPoints = [0.355, 0.8];
+export const snapPoints = ["435px", 0.8];
 export const snapPointsAtom = atom<number | string | null>(snapPoints[0]);
 
 interface AppSettingsProps {

@@ -2,19 +2,8 @@ import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 
 const nextConfig: NextConfig = {
-	devIndicators: {
-		position: "bottom-right",
-	},
-	experimental: {
-		reactCompiler: true,
-	},
-	images: {
-		remotePatterns: [
-			{ hostname: "cdn.bsky.app" },
-			{ hostname: "static.licdn.com" },
-			{ hostname: "*.cdninstagram.com" },
-		],
-	},
+	devIndicators: { position: "top-right" },
+	reactCompiler: true,
 	typedRoutes: true,
 };
 

@@ -262,6 +262,7 @@
 	--selection-foreground: oklch(66.7% 0.161 246);
 	--muted: oklch(98.8% 0.000000000000000663 0);
 	--muted-foreground: oklch(49.4% 0.0294 241);
+	--accent: oklch(18.8% 0.0128 249deg / 10%);
 	--text-base: 0.9375rem;
 	--text-base--line-height: 1.25rem;
 	--text-sm: 0.8125rem;
@@ -274,6 +275,7 @@
 	--selection-foreground: oklch(66.7% 0.161 246);
 	--muted: oklch(13.4% 0.0000000000000000703 0);
 	--muted-foreground: oklch(56.3% 0.00981 248);
+	--accent: oklch(93.3% 0.00255 229deg / 10%);
 	--text-base: 0.9375rem;
 	--text-base--line-height: 1.25rem;
 	--text-sm: 0.8125rem

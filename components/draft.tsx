@@ -1,15 +1,19 @@
 "use client";
 
-import type { ComponentProps, ComponentType, ReactNode } from "react";
+import {
+	type ComponentProps,
+	type ComponentType,
+	type ReactNode,
+	useState,
+} from "react";
 import { DraftEditor } from "~/components/draft.editor";
-import { DraftHeader } from "~/components/draft.header";
 import { Bluesky } from "~/components/draft.layout.bluesky";
 import { LinkedIn } from "~/components/draft.layout.linkedin";
 import { Threads } from "~/components/draft.layout.threads";
 import { X } from "~/components/draft.layout.x";
-import { DraftVersions } from "~/components/draft.versions";
+import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
-import { Tabs, TabsContent } from "~/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import type { Platform, UIDraft } from "~/lib/types";
 import { cn, getURL } from "~/lib/utils";
 
@@ -56,7 +60,7 @@ const PLATFORM_CONFIG: Record<Platform, Options> = {
 	x: {
 		components: {
 			layout: X,
-			post: { component: X.Post, props: { hasGrok: true } },
+			post: { component: X.Post, props: {} },
 		},
 		maxLength: 280,
 	},
@@ -82,19 +86,34 @@ function renderUI(platform: Platform, content: string) {
 	);
 }
 
+function renderIcon(platform: Platform, className: string) {
+	if (platform === "x") return <X.Icon className={className} />;
+	if (platform === "bluesky") return <Bluesky.Icon className={className} />;
+	if (platform === "threads") return <Threads.Icon className={className} />;
+	if (platform === "linkedin") return <LinkedIn.Icon className={className} />;
+}
+
+function getLabel(platform: Platform) {
+	if (platform === "x") return "X";
+	if (platform === "bluesky") return "Bluesky";
+	if (platform === "threads") return "Threads";
+	if (platform === "linkedin") return "LinkedIn";
+}
+
 interface DraftProps {
-	title: string;
 	versions: UIDraft["versions"];
 }
 
-export function Draft({ title, versions }: DraftProps) {
+export function Draft({ versions }: DraftProps) {
 	const platforms = (Object.keys(versions) as Platform[]).sort(
 		(a, b) => a.length - b.length,
 	);
 
 	const defaultPlatform = platforms[0];
 
-	function handlePublish(platform: Platform) {
+	const [platform, setPlatform] = useState<Platform>(defaultPlatform);
+
+	function handlePost() {
 		const content = versions[platform];
 		if (!content) return;
 		const url = getURL(platform, content);
@@ -103,29 +122,53 @@ export function Draft({ title, versions }: DraftProps) {
 
 	return (
 		<Tabs
-			className="relative not-first:mt-4 mb-4 w-full"
+			className="relative not-first:mt-4 mb-4 w-full gap-0 overflow-hidden rounded-4xl bg-muted"
 			defaultValue={defaultPlatform}
+			onValueChange={(value) => setPlatform(value as Platform)}
+			value={platform}
 		>
-			<DraftVersions platforms={platforms} />
+			<div className="flex items-center justify-between p-2">
+				<TabsList className="p-0">
+					{platforms.map((platform) => (
+						<TabsTrigger
+							className="group/tabs-trigger h-8 rounded-full border-0 px-3 data-[state=inactive]:text-muted-foreground data-[state=active]:shadow-none"
+							key={platform}
+							value={platform}
+						>
+							{renderIcon(
+								platform,
+								"group-data-[state=inactive]/tabs-trigger:!text-muted-foreground",
+							)}
 
-			{platforms.map((platform) => {
-				const content = versions[platform] ?? "";
-				return (
+							<span className="capitalize group-not-data-[state=active]/tabs-trigger:hidden">
+								{getLabel(platform)}
+							</span>
+						</TabsTrigger>
+					))}
+				</TabsList>
+
+				<Button className="rounded-full" onClick={handlePost} size="sm">
+					Post
+				</Button>
+			</div>
+
+			<div className="p-2 pt-0">
+				{platforms.map((platform) => (
 					<TabsContent key={platform} value={platform}>
-						<Card className="relative h-88 overflow-hidden rounded-2xl p-0 shadow-sm">
-							<DraftHeader
-								onPublish={() => handlePublish(platform)}
-								title={title}
-							/>
+						<Card className="relative h-88 rounded-2xl border-0 p-0 shadow-none">
 							<CardContent
-								className={cn("z-0 overflow-hidden bg-background", platform)}
+								className={cn(
+									"size-full overflow-hidden rounded-[inherit] bg-background",
+									platform === "linkedin" && "not-dark:ring ring-border",
+									platform,
+								)}
 							>
-								{renderUI(platform, content)}
+								{renderUI(platform, versions[platform] ?? "")}
 							</CardContent>
 						</Card>
 					</TabsContent>
-				);
-			})}
+				))}
+			</div>
 		</Tabs>
 	);
 }

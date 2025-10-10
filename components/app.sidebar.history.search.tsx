@@ -3,7 +3,7 @@
 import { useMutation } from "convex/react";
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import type { ParamsOf } from "~/.next/types/routes";
+import type { ParamsOf } from "~/.next/dev/types/routes";
 import { Button } from "~/components/ui/button";
 import { SearchIcon, TrashIcon } from "~/components/ui/icons";
 import { useRouter } from "~/i18n/navigation";

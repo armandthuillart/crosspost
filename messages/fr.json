@@ -84,6 +84,24 @@
 			"title": "Réécris à ce que"
 		}
 	},
+	"Draft": {
+		"Comment": "Commenter",
+		"commentsAndReposts": "{count} commentaires · {count} reposts",
+		"discover": "Découvrir",
+		"following": "Suivre",
+		"forYou": "Pour vous",
+		"like": "J'aime",
+		"now": "maintenant",
+		"professional": "Professionnel",
+		"repost": "Reposter",
+		"send": "Partager",
+		"you": "Vous",
+		"youAndOthers": "Vous et {count} autres"
+	},
+	"DraftEditor": {
+		"characters": "caractères",
+		"placeholder": "Écrivez quelque chose..."
+	},
 	"LocaleLayout": {
 		"description": "Publiez sur les réseaux sociaux en parlant avec l'IA.",
 		"keywords": "ia, ia chat, crosspost, marketing, broadcast, crosspost, réseaux sociaux, planificateur de publication"

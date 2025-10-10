@@ -1,4 +1,7 @@
-import { headers } from "next/headers";
+"use server";
+
+import { revalidatePath } from "next/cache";
+import { cookies, headers } from "next/headers";
 
 export async function getLocation() {
 	const headersList = await headers();
@@ -14,4 +17,10 @@ export async function getLocation() {
 			? decodeURIComponent(headersList.get("x-user-region")!)
 			: undefined,
 	};
+}
+
+export async function setThemeColorCookie(themeColor: string) {
+	const cookieStore = await cookies();
+	cookieStore.set("theme-color", themeColor);
+	revalidatePath("/icon");
 }

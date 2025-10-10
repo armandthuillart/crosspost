@@ -18,14 +18,13 @@ export function MessagePart({ part, role, isStreaming }: MessagePartProps) {
 		case "reasoning":
 			return <ShiningText text="Thinking deeper..." />;
 		case "tool-get-draft": {
-			const title = part.input?.title;
 			const versions = part.input?.versions;
 
-			if (!title || !versions) {
+			if (!versions) {
 				return <ShiningText text="Creating a draft..." />;
 			}
 
-			return <Draft title={title} versions={versions} />;
+			return <Draft versions={versions} />;
 		}
 		case "tool-rename-chat": {
 			const { state } = part;

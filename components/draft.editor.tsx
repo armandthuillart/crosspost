@@ -17,6 +17,7 @@ import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import type { EditorState } from "lexical";
 import { $createParagraphNode, $createTextNode, $getRoot } from "lexical";
+import { useTranslations } from "next-intl";
 import { useEffect } from "react";
 import { createPortal } from "react-dom";
 import { Button } from "~/components/ui/button";
@@ -52,6 +53,8 @@ function PopulateEditorPlugin({ content }: { content: string }) {
 }
 
 export function DraftEditor({ content, maxLength }: DraftEditorProps) {
+	const t = useTranslations("DraftEditor");
+
 	const initialConfig: InitialConfigType = {
 		namespace: "MyEditor",
 		nodes: [LinkNode, OverflowNode],
@@ -65,8 +68,8 @@ export function DraftEditor({ content, maxLength }: DraftEditorProps) {
 		},
 	};
 
-	function handleChange(editorState: EditorState) {
-		console.log(editorState);
+	function handleChange(_editorState: EditorState) {
+		// TODO: Debounce and update convex backend
 	}
 
 	function renderProgress({
@@ -89,10 +92,9 @@ export function DraftEditor({ content, maxLength }: DraftEditorProps) {
 						variant="ghost"
 					>
 						<svg
-							aria-label="Character usage"
+							aria-hidden="true"
 							className={getColor(progress)}
 							height="20"
-							role="img"
 							viewBox="0 0 24 24"
 							width="20"
 						>
@@ -131,7 +133,7 @@ export function DraftEditor({ content, maxLength }: DraftEditorProps) {
 					<div className="flex items-center justify-between gap-3 text-xs">
 						<p>{(progress * 100).toFixed(2)}%</p>
 						<p className="font-mono text-muted-foreground">
-							{usedLength} / {maxLength} chars
+							{usedLength} / {maxLength} {t("characters")}
 						</p>
 					</div>
 					<Progress value={progress * 100} />
@@ -139,46 +141,45 @@ export function DraftEditor({ content, maxLength }: DraftEditorProps) {
 			</HoverCard>
 		);
 
-		if (typeof window === "undefined") {
-			return <div />;
-		}
-
-		const parent = document.querySelector('[data-slot="card"]');
+		const parent =
+			typeof window !== "undefined"
+				? document.querySelector('[data-slot="card"]')
+				: null;
 
 		if (!parent) {
-			return <div />;
+			return element;
 		}
 
-		return createPortal(element, parent);
+		const node = createPortal(element, parent);
+
+		return node ?? <div />;
 	}
 
 	return (
-		<LexicalComposer initialConfig={initialConfig}>
-			<RichTextPlugin
-				contentEditable={<ContentEditable className="outline-none" />}
-				ErrorBoundary={LexicalErrorBoundary}
-				placeholder={<Placeholder />}
-			/>
-			<PopulateEditorPlugin content={content} />
-			<LinkPlugin />
-			<HistoryPlugin />
-			<OnChangePlugin onChange={handleChange} />
-			<AutoFocusPlugin />
-			<CharacterLimitPlugin
-				charset="UTF-8"
-				maxLength={maxLength}
-				renderer={renderProgress}
-			/>
-		</LexicalComposer>
-	);
-}
-
-function Placeholder() {
-	return (
-		<div className="relative">
-			<span className="-top-6 pointer-events-none absolute left-0 mt-0.5 size-full text-muted-foreground">
-				Write something...
-			</span>
+		<div>
+			<LexicalComposer initialConfig={initialConfig}>
+				<RichTextPlugin
+					contentEditable={<ContentEditable className="outline-none" />}
+					ErrorBoundary={LexicalErrorBoundary}
+					placeholder={
+						<div className="relative">
+							<span className="-top-6 pointer-events-none absolute left-0 mt-0.5 size-full text-muted-foreground">
+								{t("placeholder")}
+							</span>
+						</div>
+					}
+				/>
+				<PopulateEditorPlugin content={content} />
+				<LinkPlugin />
+				<HistoryPlugin />
+				<OnChangePlugin onChange={handleChange} />
+				<AutoFocusPlugin />
+				<CharacterLimitPlugin
+					charset="UTF-8"
+					maxLength={maxLength}
+					renderer={renderProgress}
+				/>
+			</LexicalComposer>
 		</div>
 	);
 }

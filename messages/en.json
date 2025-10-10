@@ -84,6 +84,24 @@
 			"title": "Make my tweet"
 		}
 	},
+	"Draft": {
+		"comment": "Comment",
+		"commentsAndReposts": "{count} comments · {count} reposts",
+		"discover": "Discover",
+		"following": "Following",
+		"forYou": "For you",
+		"like": "Like",
+		"now": "now",
+		"professional": "Professional",
+		"repost": "Repost",
+		"send": "Send",
+		"you": "You",
+		"youAndOthers": "You and {count} others"
+	},
+	"DraftEditor": {
+		"characters": "characters",
+		"placeholder": "Write something..."
+	},
 	"LocaleLayout": {
 		"description": "Create and post to social media by chatting with AI.",
 		"keywords": "ai, ai chat, crosspost, marketing, broadcast, crosspost, social media, post scheduler"

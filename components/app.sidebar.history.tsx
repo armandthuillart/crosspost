@@ -2,7 +2,7 @@ import type { ThreadDoc } from "@convex-dev/agent/validators";
 import type { PaginationResult } from "convex/server";
 import { useParams } from "next/navigation";
 import type { MouseEvent } from "react";
-import type { ParamsOf } from "~/.next/types/routes";
+import type { ParamsOf } from "~/.next/dev/types/routes";
 import { Checkbox } from "~/components/ui/checkbox";
 import { SidebarMenuButton, SidebarMenuItem } from "~/components/ui/sidebar";
 import { useRouter } from "~/i18n/navigation";

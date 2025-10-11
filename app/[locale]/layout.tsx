@@ -59,7 +59,7 @@ export default async function LocaleLayout({
 
 	setRequestLocale(locale);
 
-	const themeColor = cookieStore.get("theme-color")?.value as ThemeColor;
+	const themeColor = cookieStore.get("THEME_COLOR")?.value as ThemeColor;
 
 	return (
 		<html

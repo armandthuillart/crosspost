@@ -33,6 +33,19 @@ export const createAuth = (
 	{ optionsOnly } = { optionsOnly: false },
 ) => {
 	return betterAuth({
+		advanced: {
+			cookies: {
+				session_data: {
+					name: "SESSION_DATA",
+				},
+				session_token: {
+					name: "SESSION_TOKEN",
+				},
+				state: {
+					name: "SESSION_STATE",
+				},
+			},
+		},
 		baseURL: siteUrl,
 		database: adapter(ctx),
 		databaseHooks: {

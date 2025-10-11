@@ -21,6 +21,6 @@ export async function getLocation() {
 
 export async function setThemeColorCookie(themeColor: string) {
 	const cookieStore = await cookies();
-	cookieStore.set("theme-color", themeColor);
+	cookieStore.set("THEME_COLOR", themeColor);
 	revalidatePath("/icon");
 }

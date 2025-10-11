@@ -27,7 +27,7 @@ const atomWithCookie = () => ({
 });
 
 export const themeColorAtom = atomWithStorage<ThemeColor>(
-	"theme-color",
+	"THEME_COLOR",
 	"default",
 	atomWithCookie(),
 );

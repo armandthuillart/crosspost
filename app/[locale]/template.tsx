@@ -30,7 +30,7 @@ export default async function Template({ children }: { children: ReactNode }) {
 		return <SidebarProvider defaultOpen={false}>{children}</SidebarProvider>;
 	}
 
-	const isOpen = cookieStore.get("sidebar")?.value;
+	const isOpen = cookieStore.get("SIDEBAR")?.value;
 
 	return (
 		<SidebarProvider defaultOpen={isOpen === "true"}>

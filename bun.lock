@@ -3,7 +3,7 @@
   "workspaces": {
     "": {
       "dependencies": {
-        "@ai-sdk/anthropic": "^2.0.26",
+        "@ai-sdk/anthropic": "^2.0.27",
         "@ai-sdk/gateway": "^1.0.39",
         "@convex-dev/agent": "^0.2.11-alpha.3",
         "@convex-dev/better-auth": "^0.9.2",

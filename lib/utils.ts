@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import type { Platform } from "~/lib/types";
+import type { Platform } from "../lib/types";
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
@@ -64,4 +64,18 @@ export function getURL(platform: Platform, content: string): string {
 
 	const baseUrl = baseUrls[platform];
 	return `${baseUrl}?${params.toString()}`;
+}
+
+export async function tryCatch<T>(
+	promise: Promise<T>,
+): Promise<{ data: T | null; error: Error | null }> {
+	try {
+		const data = await promise;
+		return { data, error: null };
+	} catch (error: unknown) {
+		return {
+			data: null,
+			error: error instanceof Error ? error : new Error(String(error)),
+		};
+	}
 }

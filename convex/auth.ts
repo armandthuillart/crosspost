@@ -15,13 +15,18 @@ import { tier } from "./schema";
 
 const siteUrl = process.env.SITE_URL;
 
-export const { getAuth, adapter, registerRoutes, safeGetAuthUser } =
-	createClient<DataModel, typeof authSchema>(components.betterAuth, {
-		local: {
-			schema: authSchema,
-		},
-		verbose: false,
-	});
+export const {
+	adapter,
+	getAuth,
+	getAnyUserById,
+	registerRoutes,
+	safeGetAuthUser,
+} = createClient<DataModel, typeof authSchema>(components.betterAuth, {
+	local: {
+		schema: authSchema,
+	},
+	verbose: false,
+});
 
 export const createAuth = (
 	ctx: GenericCtx<DataModel>,

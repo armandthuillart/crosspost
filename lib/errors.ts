@@ -1,3 +1,5 @@
+import { ConvexError } from "convex/values";
+
 type ErrorType =
 	| "bad_request"
 	| "unauthorized"
@@ -31,19 +33,25 @@ const visibilityBySurface: Record<Surface, ErrorVisibility> = {
 	suggestions: "response",
 };
 
-export class ChatSDKError extends Error {
+export class ChatSDKError extends ConvexError<{
+	type: ErrorType;
+	surface: Surface;
+	statusCode: number;
+}> {
 	public type: ErrorType;
-	public cause?: string;
 	public surface: Surface;
 	public statusCode: number;
 
-	constructor(errorCode: ErrorCode, cause?: string) {
-		super();
-
+	constructor(errorCode: ErrorCode) {
 		const [type, surface] = errorCode.split(":");
 
+		super({
+			statusCode: getStatusCodeByType(type as ErrorType),
+			surface: surface as Surface,
+			type: type as ErrorType,
+		});
+
 		this.type = type as ErrorType;
-		this.cause = cause;
 		this.surface = surface as Surface;
 		this.message = getMessageByErrorCode(errorCode);
 		this.statusCode = getStatusCodeByType(this.type);
@@ -53,22 +61,24 @@ export class ChatSDKError extends Error {
 		const code: ErrorCode = `${this.type}:${this.surface}`;
 		const visibility = visibilityBySurface[this.surface];
 
-		const { message, cause, statusCode } = this;
+		const { message, statusCode } = this;
 
 		if (visibility === "log") {
 			console.error({
-				cause,
 				code,
 				message,
 			});
 
 			return Response.json(
-				{ code: "", message: "Something went wrong. Please try again later." },
+				{
+					code: "",
+					message: "Something went wrong. Please try again later.",
+				},
 				{ status: statusCode },
 			);
 		}
 
-		return Response.json({ cause, code, message }, { status: statusCode });
+		return Response.json({ code, message }, { status: statusCode });
 	}
 }
 
@@ -128,4 +138,19 @@ function getStatusCodeByType(type: ErrorType) {
 		default:
 			return 500;
 	}
+}
+
+export function isChatSDKError(error: unknown): error is ConvexError<{
+	type: ErrorType;
+	surface: Surface;
+	statusCode: number;
+}> {
+	return (
+		error instanceof ConvexError &&
+		typeof error.data === "object" &&
+		error.data !== null &&
+		"type" in error.data &&
+		"surface" in error.data &&
+		"statusCode" in error.data
+	);
 }

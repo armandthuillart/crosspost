@@ -49,12 +49,14 @@ export function SibebarHistorySearch({
 	async function handleDelete() {
 		if (!threadIds) return;
 
-		if (chatId && threadIds.includes(chatId as string)) {
-			router.push("/");
-		}
+		const shouldNavigate = chatId && threadIds.includes(chatId as string);
 
 		void deleteChats({ threadIds });
 		setThreadIds(null);
+
+		if (shouldNavigate) {
+			router.push("/");
+		}
 	}
 
 	return (

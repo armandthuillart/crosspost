@@ -111,6 +111,13 @@
 	"Manifest": {
 		"description": "Create and post to social media by chatting with AI."
 	},
+	"NotFound": {
+		"chat": {
+			"button": "New chat",
+			"description": "It may have been deleted or no longer exists.",
+			"title": "Can't open this chat"
+		}
+	},
 	"PostGallery": {
 		"description": "What has been posted recently with {appName}.",
 		"title": "Wall of posts"

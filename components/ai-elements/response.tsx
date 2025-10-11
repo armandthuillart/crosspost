@@ -63,7 +63,7 @@ const components: StreamdownProps["components"] = {
 		</ol>
 	),
 	p: ({ node, children, ...props }) => (
-		<p className="mt-2 mb-1 text-base leading-7" {...props}>
+		<p className="not-last:mt-2 mb-1 text-base leading-7" {...props}>
 			{children}
 		</p>
 	),

@@ -52,8 +52,6 @@ export function Chat({
 		stream: true,
 	});
 
-	console.log(uiMessages);
-
 	const messages = status === "LoadingFirstPage" ? initialMessages : uiMessages;
 
 	const order = messages.find((m) => m.status === "streaming")?.order ?? 0;

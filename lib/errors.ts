@@ -9,13 +9,14 @@ type ErrorType =
 	| "offline";
 
 type Surface =
-	| "chat"
-	| "auth"
 	| "api"
-	| "stream"
-	| "database"
-	| "history"
+	| "auth"
+	| "chat"
 	| "draft"
+	| "stream"
+	| "history"
+	| "document"
+	| "database"
 	| "suggestions";
 
 type ErrorCode = `${ErrorType}:${Surface}`;
@@ -27,6 +28,7 @@ const visibilityBySurface: Record<Surface, ErrorVisibility> = {
 	auth: "response",
 	chat: "response",
 	database: "log",
+	document: "response",
 	draft: "response",
 	history: "response",
 	stream: "response",
@@ -106,6 +108,9 @@ function getMessageByErrorCode(errorCode: ErrorCode): string {
 			return "You need to sign in to view this chat. Please sign in and try again.";
 		case "offline:chat":
 			return "We're having trouble sending your message. Please check your internet connection and try again.";
+
+		case "not_found:document":
+			return "The requested document was not found. Please check the document ID and try again.";
 
 		case "not_found:draft":
 			return "The requested draft was not found. Please check the draft ID and try again.";

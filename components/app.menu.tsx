@@ -24,7 +24,7 @@ import {
 } from "~/components/ui/icons";
 import { SidebarMenuButton } from "~/components/ui/sidebar";
 import { usePathname, useRouter } from "~/i18n/navigation";
-import { showShortcutsAtom } from "~/lib/atoms";
+import { showPoliciesAtom, showShortcutsAtom } from "~/lib/atoms";
 import { signOut } from "~/lib/auth-client";
 import type { User } from "~/lib/types";
 
@@ -36,6 +36,7 @@ export function AppMenu({ user }: AppMenuProps) {
 	const t = useTranslations("AppMenu");
 	const router = useRouter();
 	const pathname = usePathname();
+	const setShowPolicies = useSetAtom(showPoliciesAtom);
 	const setShowShortcuts = useSetAtom(showShortcutsAtom);
 
 	async function handleSignOut() {
@@ -84,15 +85,12 @@ export function AppMenu({ user }: AppMenuProps) {
 						</DropdownMenuSubTrigger>
 
 						<DropdownMenuSubContent>
-							<DropdownMenuItem>
+							<DropdownMenuItem onClick={() => setShowPolicies(true)}>
 								<SignatureIcon className="size-4" />
 								{t("termsAndPolicies")}
 							</DropdownMenuItem>
 
-							<DropdownMenuItem
-								className="w-full"
-								onClick={() => setShowShortcuts(true)}
-							>
+							<DropdownMenuItem onClick={() => setShowShortcuts(true)}>
 								<KeyboardKeyIcon className="size-4" />
 								{t("keyboardShortcuts")}
 							</DropdownMenuItem>

@@ -5,6 +5,8 @@ import type { ThemeColor } from "~/lib/types";
 
 export const showShortcutsAtom = atom(false);
 
+export const showPoliciesAtom = atom(false);
+
 export const showBannerAtom = atomWithStorage("banner", false);
 
 const atomWithCookie = () => ({

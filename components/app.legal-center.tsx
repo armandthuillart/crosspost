@@ -17,18 +17,17 @@ import type { LegalDocument } from "~/lib/types";
 import { cn } from "~/lib/utils";
 import { api } from "../convex/_generated/api";
 
-export function AppLegalDocuments() {
-	const [isOpen, setIsOpen] = useAtom(showPoliciesAtom);
+export function AppLegalCenter() {
 	const locale = useLocale();
 	const fetchLegalDocuments = useAction(api.notion.fetchLegalDocuments);
 
+	const [isOpen, setIsOpen] = useAtom(showPoliciesAtom);
 	const [documents, setDocuments] = useState<LegalDocument[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [hasFetched, setHasFetched] = useState(false);
 	const [selectedDoc, setSelectedDoc] = useState<string | null>(null);
 
 	useEffect(() => {
-		// Only fetch when drawer is open and we haven't fetched yet
 		if (isOpen && !hasFetched) {
 			async function fetchDocs() {
 				try {
@@ -60,7 +59,7 @@ export function AppLegalDocuments() {
 			snapPoints={[0.5, 1]}
 		>
 			<DrawerContent className="-mx-px fixed inset-0 top-auto flex h-full flex-col bg-background data-[vaul-drawer-direction=bottom]:max-h-9/10 data-[vaul-drawer-direction=bottom]:rounded-t-3xl">
-				<div className="mx-auto flex w-full max-w-6xl flex-col overflow-hidden">
+				<div className="mx-auto flex w-full max-w-lg flex-col p-4 pt-5">
 					<DrawerHeader>
 						<DrawerTitle className="text-xl">Legal Documents</DrawerTitle>
 					</DrawerHeader>

@@ -64,7 +64,7 @@ export const createAuth = (
 		},
 		logger: {
 			disabled: optionsOnly,
-			level: "debug",
+			level: "error",
 		},
 		plugins: [
 			anonymous({

@@ -26,6 +26,9 @@ export function MessagePart({ part, role, isStreaming }: MessagePartProps) {
 
 			return <Draft versions={versions} />;
 		}
+		case "tool-web-search": {
+			return <ShiningText text="Searching the web..." />;
+		}
 		case "tool-rename-chat": {
 			const { state } = part;
 

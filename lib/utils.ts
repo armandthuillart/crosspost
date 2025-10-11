@@ -10,17 +10,6 @@ export function attr(key: string, condition: boolean) {
 	return condition ? { [`data-${key}`]: true } : {};
 }
 
-export function formatNumberToK(number: number) {
-	if (number >= 1000) {
-		const value = number / 1000;
-		const formatted = Number.isInteger(value)
-			? value.toString()
-			: value.toFixed(1).replace(/\.0$/, "");
-		return `${formatted}k`;
-	}
-	return number.toString();
-}
-
 export function getURL(platform: Platform, content: string): string {
 	function parse(content: string): string {
 		const hashtags = content.match(/#\w+/g)?.map((tag) => tag.slice(1)) || [];

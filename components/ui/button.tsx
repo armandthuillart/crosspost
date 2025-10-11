@@ -58,7 +58,7 @@ export interface ButtonProps
 	isLoading?: boolean;
 }
 
-function Button({
+export function Button({
 	size,
 	asChild = false,
 	variant,
@@ -92,5 +92,3 @@ function Button({
 		</Component>
 	);
 }
-
-export { Button, buttonVariants };

@@ -2,19 +2,19 @@
 
 import { type RefObject, useEffect } from "react";
 
-interface PureAutoFocusOptions {
-	shouldFocus?: (event: KeyboardEvent) => boolean;
+interface KeyboardAutoFocusOptions {
+	isValidKey?: (event: KeyboardEvent) => boolean;
 	onAutoFocus?: (event: KeyboardEvent) => void;
 	targetRef: RefObject<HTMLElement | null>;
 	enabled?: boolean;
 }
 
-export function usePureAutoFocus({
+function useKeyboardAutoFocus({
 	enabled = true,
 	targetRef,
 	onAutoFocus,
-	shouldFocus = defaultShouldFocus,
-}: PureAutoFocusOptions): void {
+	isValidKey = defaultIsValidKey,
+}: KeyboardAutoFocusOptions): void {
 	useEffect(() => {
 		if (!enabled) {
 			return;
@@ -25,11 +25,11 @@ export function usePureAutoFocus({
 				return;
 			}
 
-			if (isAnyInputFocused()) {
+			if (!shouldAllowAutoFocus()) {
 				return;
 			}
 
-			if (!shouldFocus(event)) {
+			if (!isValidKey(event)) {
 				return;
 			}
 
@@ -45,10 +45,10 @@ export function usePureAutoFocus({
 		return () => {
 			document.removeEventListener("keydown", handleKeyboardEvent);
 		};
-	}, [enabled, targetRef, onAutoFocus, shouldFocus]);
+	}, [enabled, targetRef, onAutoFocus, isValidKey]);
 }
 
-function defaultShouldFocus(event: KeyboardEvent): boolean {
+function defaultIsValidKey(event: KeyboardEvent): boolean {
 	const { key, ctrlKey, metaKey, altKey, shiftKey } = event;
 
 	if (ctrlKey || metaKey || altKey || shiftKey) {
@@ -68,77 +68,57 @@ function defaultShouldFocus(event: KeyboardEvent): boolean {
 		"ArrowRight",
 	].includes(key);
 
-	if (hasOpenDialog()) {
-		return false;
-	}
-
-	if (isTypingInMessageEditor()) {
-		return false;
-	}
-
 	return isPrintableKey || isNavigationKey;
 }
 
-function isAnyInputFocused(): boolean {
-	const activeElement = document.activeElement;
-	return (
-		activeElement?.tagName === "INPUT" ||
-		activeElement?.tagName === "TEXTAREA" ||
-		!!activeElement?.hasAttribute("contenteditable")
-	);
+function shouldAllowAutoFocus(): boolean {
+	const active = document.activeElement;
+	if (!active) return true;
+
+	// Don't auto-focus if typing in input or inside dialog/edit mode
+	const isEditable =
+		active.tagName === "INPUT" ||
+		active.tagName === "TEXTAREA" ||
+		active.hasAttribute("contenteditable");
+
+	return !isEditable && !active.closest('[role="dialog"], [data-mode="edit"]');
 }
 
-function hasOpenDialog(): boolean {
-	return (
-		document.querySelector('[role="alertdialog"]') !== null ||
-		document.querySelector('[role="dialog"]') !== null
-	);
-}
-
-function isTypingInMessageEditor(): boolean {
-	return document.activeElement?.closest('[data-mode="edit"]') !== null;
-}
-
-interface AutoFocusOptions {
+interface TextareaAutoFocusOptions {
 	value: string;
 	enabled?: boolean;
 	targetRef: RefObject<HTMLTextAreaElement | null>;
 	onValueChange: (value: string) => void;
 }
 
-export function useAutoFocus({
+export function useTextareaAutoFocus({
 	value,
 	enabled = true,
 	targetRef,
 	onValueChange,
-}: AutoFocusOptions): void {
+}: TextareaAutoFocusOptions): void {
 	const handleAutoFocus = (event: KeyboardEvent) => {
 		if (event.key.length === 1) {
 			const newValue = value + event.key;
+			onValueChange(newValue);
 
+			// Set cursor to end after React renders
 			requestAnimationFrame(() => {
-				onValueChange(newValue);
-
-				requestAnimationFrame(() => {
-					targetRef.current?.setSelectionRange(
-						newValue.length,
-						newValue.length,
-					);
-				});
+				targetRef.current?.setSelectionRange(newValue.length, newValue.length);
 			});
 		}
 	};
 
-	usePureAutoFocus({
+	useKeyboardAutoFocus({
 		enabled,
-		onAutoFocus: handleAutoFocus,
-		shouldFocus: (event) => {
-			if (!defaultShouldFocus(event)) {
+		isValidKey: (event) => {
+			if (!defaultIsValidKey(event)) {
 				return false;
 			}
 
 			return event.key.length === 1;
 		},
+		onAutoFocus: handleAutoFocus,
 		targetRef,
 	});
 }

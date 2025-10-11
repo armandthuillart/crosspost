@@ -390,7 +390,6 @@ function SidebarFooter({ className, ...props }: React.ComponentProps<"div">) {
 
 export {
 	Sidebar,
-	useSidebar,
 	SidebarMenu,
 	SidebarGroup,
 	SidebarHeader,

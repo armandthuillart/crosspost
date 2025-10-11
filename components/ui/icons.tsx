@@ -364,54 +364,6 @@ export const TrashIcon = (props: SVGProps<SVGSVGElement>) => {
 	);
 };
 
-export const AssistantsIcon = (props: SVGProps<SVGSVGElement>) => {
-	return (
-		<svg
-			aria-hidden="true"
-			fill="none"
-			stroke="currentColor"
-			viewBox="0 0 24 24"
-			xmlns="http://www.w3.org/2000/svg"
-			{...props}
-		>
-			<path
-				d="M5.44505 14.7749C5.60832 14.4695 5.88358 14.2462 6.22227 14.1851C6.56095 14.124 6.89427 14.2375 7.14978 14.4674M11.2356 17.7768C10.909 18.3876 10.3585 18.8342 9.68113 18.9564C9.00377 19.0786 8.33713 18.8516 7.82611 18.3919M10.5592 13.8523C10.7225 13.5469 10.9978 13.3235 11.3365 13.2624C11.6751 13.2013 12.0085 13.3149 12.264 13.5447M13.0697 7.64205C11.9191 8.7281 10.171 9.59181 8.13072 9.95991C6.09043 10.328 4.15906 10.1281 2.7148 9.51019C2.62237 9.47065 2.52281 9.45715 2.42629 9.47456C2.14172 9.5259 1.95507 9.82308 2.0094 10.1383L2.94728 15.5805C3.64672 19.6391 7.04654 21.5881 8.62355 22.2854C9.14604 22.5165 9.72177 22.546 10.2823 22.4449C10.8429 22.3437 11.374 22.1145 11.7877 21.7146C13.0366 20.5074 15.5798 17.4863 14.8804 13.4276L13.9425 7.98545C13.8882 7.6702 13.6135 7.45627 13.3289 7.50761C13.2324 7.52502 13.1433 7.57255 13.0697 7.64205Z"
-				strokeLinecap="round"
-				strokeLinejoin="round"
-				strokeWidth="2"
-			/>
-			<path
-				d="M14.3157 17.5C14.6792 17.4998 15.039 17.4347 15.3764 17.2854C16.9535 16.5881 20.3533 14.6391 21.0527 10.5805L21.9906 5.13832C22.0449 4.82308 21.8583 4.5259 21.5737 4.47456C21.4772 4.45715 21.3776 4.47065 21.2852 4.51019C19.8409 5.1281 17.9096 5.328 15.8693 4.95991C13.829 4.59181 12.0809 3.7281 10.9303 2.64205C10.8567 2.57255 10.7676 2.52502 10.6711 2.50761C10.3865 2.45627 10.1118 2.6702 10.0575 2.98545L9.1196 8.42763C9.0374 8.90465 8.99998 9.36734 9 9.81444"
-				strokeLinejoin="round"
-				strokeWidth="2"
-			/>
-		</svg>
-	);
-};
-
-export const LifeBuoyIcon = (props: SVGProps<SVGSVGElement>) => {
-	return (
-		<svg
-			aria-hidden="true"
-			fill="none"
-			stroke="currentColor"
-			strokeLinecap="round"
-			strokeLinejoin="round"
-			strokeWidth="2"
-			viewBox="0 0 24 24"
-			xmlns="http://www.w3.org/2000/svg"
-			{...props}
-		>
-			<circle cx="12" cy="12" r="10" />
-			<path d="m4.93 4.93 4.24 4.24" />
-			<path d="m14.83 9.17 4.24-4.24" />
-			<path d="m14.83 14.83 4.24 4.24" />
-			<path d="m9.17 14.83-4.24 4.24" />
-			<circle cx="12" cy="12" r="4" />
-		</svg>
-	);
-};
-
 export const SignatureIcon = (props: SVGProps<SVGSVGElement>) => {
 	return (
 		<svg
@@ -483,7 +435,7 @@ export const ChevronRightIcon = (props: SVGProps<SVGSVGElement>) => {
 	);
 };
 
-export const ShareIcon = (props: SVGProps<SVGSVGElement>) => {
+export const ChevronDownIcon = (props: SVGProps<SVGSVGElement>) => {
 	return (
 		<svg
 			aria-hidden="true"
@@ -494,22 +446,17 @@ export const ShareIcon = (props: SVGProps<SVGSVGElement>) => {
 			{...props}
 		>
 			<path
-				d="M9.39583 4.5H8.35417C5.40789 4.5 3.93475 4.5 3.01946 5.37868C2.10417 6.25736 2.10417 7.67157 2.10417 10.5V14.5C2.10417 17.3284 2.10417 18.7426 3.01946 19.6213C3.93475 20.5 5.40789 20.5 8.35417 20.5H12.5608C15.5071 20.5 16.9802 20.5 17.8955 19.6213C18.4885 19.052 18.6973 18.2579 18.7708 17"
+				d="M5.99977 9.00005L11.9998 15L17.9998 9"
 				strokeLinecap="round"
 				strokeLinejoin="round"
-				strokeWidth="2"
-			/>
-			<path
-				d="M16.1667 7V3.85355C16.1667 3.65829 16.3316 3.5 16.535 3.5C16.6326 3.5 16.7263 3.53725 16.7954 3.60355L21.5275 8.14645C21.7634 8.37282 21.8958 8.67986 21.8958 9C21.8958 9.32014 21.7634 9.62718 21.5275 9.85355L16.7954 14.3964C16.7263 14.4628 16.6326 14.5 16.535 14.5C16.3316 14.5 16.1667 14.3417 16.1667 14.1464V11H13.1157C8.875 11 7.3125 14.5 7.3125 14.5V12C7.3125 9.23858 9.64435 7 12.5208 7H16.1667Z"
-				strokeLinecap="round"
-				strokeLinejoin="round"
-				strokeWidth="2"
+				strokeMiterlimit="16"
+				strokeWidth="1.5"
 			/>
 		</svg>
 	);
 };
 
-export const RedoIcon = (props: SVGProps<SVGSVGElement>) => {
+export const ChevronUpIcon = (props: SVGProps<SVGSVGElement>) => {
 	return (
 		<svg
 			aria-hidden="true"
@@ -520,42 +467,11 @@ export const RedoIcon = (props: SVGProps<SVGSVGElement>) => {
 			{...props}
 		>
 			<path
-				d="M20.9991 3V4.27816C20.9991 6.47004 20.9991 7.56599 20.2918 8.16512C19.5846 8.76425 18.5036 8.58408 16.3415 8.22373L14.9991 8"
+				d="M18 15L12 9L6 15"
 				strokeLinecap="round"
 				strokeLinejoin="round"
-				strokeWidth="2"
-			/>
-			<path
-				d="M12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C15.3313 3 18.2398 4.80989 19.796 7.5"
-				strokeLinecap="round"
-				strokeLinejoin="round"
-				strokeWidth="2"
-			/>
-		</svg>
-	);
-};
-
-export const UndoIcon = (props: SVGProps<SVGSVGElement>) => {
-	return (
-		<svg
-			aria-hidden="true"
-			fill="none"
-			stroke="currentColor"
-			viewBox="0 0 24 24"
-			xmlns="http://www.w3.org/2000/svg"
-			{...props}
-		>
-			<path
-				d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C8.66873 3 5.76018 4.80989 4.20404 7.5"
-				strokeLinecap="round"
-				strokeLinejoin="round"
-				strokeWidth="2"
-			/>
-			<path
-				d="M3 3V4.27816C3 6.47004 3 7.56599 3.70725 8.16512C4.4145 8.76425 5.49553 8.58408 7.6576 8.22373L9 8"
-				strokeLinecap="round"
-				strokeLinejoin="round"
-				strokeWidth="2"
+				strokeMiterlimit="16"
+				strokeWidth="1.5"
 			/>
 		</svg>
 	);

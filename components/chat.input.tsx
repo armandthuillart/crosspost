@@ -23,7 +23,7 @@ import {
 } from "~/components/ai-elements/prompt-input";
 import { Button } from "~/components/ui/button";
 import { PlusIcon } from "~/components/ui/icons";
-import { useAutoFocus } from "~/hooks/use-auto-focus";
+import { useTextareaAutoFocus } from "~/hooks/use-auto-focus";
 import { useTypewriter } from "~/hooks/use-typewriter";
 import { useRouter } from "~/i18n/navigation";
 import { showBannerAtom } from "~/lib/atoms";
@@ -123,9 +123,9 @@ export const ChatInput = forwardRef<InputRef, ChatInputProps>(
 			void sendMessage({
 				city: userLocation.city,
 				country: userLocation.country,
+				locale,
 				prompt,
 				region: userLocation.region,
-				locale,
 				threadId,
 			}).catch((e) => {
 				if (isRateLimitError(e)) {
@@ -202,7 +202,7 @@ export const ChatInput = forwardRef<InputRef, ChatInputProps>(
 			}
 		};
 
-		useAutoFocus({
+		useTextareaAutoFocus({
 			onValueChange: setPrompt,
 			targetRef: inputRef,
 			value: prompt,

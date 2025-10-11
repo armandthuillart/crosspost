@@ -10,6 +10,7 @@ import { Button } from "~/components/ui/button";
 import {
 	Drawer,
 	DrawerContent,
+	DrawerDescription,
 	DrawerHeader,
 	DrawerTitle,
 } from "~/components/ui/drawer";
@@ -35,10 +36,9 @@ import { themeColorAtom } from "~/lib/atoms";
 import { checkout, customer } from "~/lib/auth-client";
 import type { ThemeColor, User } from "~/lib/types";
 import { cn } from "~/lib/utils";
-import { DialogDescription } from "./ui/dialog";
 
-export const snapPoints = [0.5, 1];
-export const snapPointsAtom = atom<number | string | null>(snapPoints[0]);
+const snapPoints = [0.5, 1];
+const snapPointsAtom = atom<number | string | null>(snapPoints[0]);
 
 interface AppSettingsProps {
 	user: User | null;
@@ -97,7 +97,7 @@ export function AppSettings({ user, children }: AppSettingsProps) {
 					<DrawerHeader>
 						<DrawerTitle className="text-xl">{t("title")}</DrawerTitle>
 						<VisuallyHidden.Root>
-							<DialogDescription>{t("title")}</DialogDescription>
+							<DrawerDescription>{t("title")}</DrawerDescription>
 						</VisuallyHidden.Root>
 					</DrawerHeader>
 

@@ -5,7 +5,7 @@ import { Button } from "~/components/ui/button";
 import { StarIcon } from "~/components/ui/icons";
 import { checkout } from "~/lib/auth-client";
 
-export function ChatHeaderUpgradeButton() {
+export function CTA() {
 	const t = useTranslations("ChatHeaderUpgradeButton");
 
 	async function handleCheckout() {

@@ -19,9 +19,14 @@ import { CopyIcon, TickIcon } from "~/components/ui/icons";
 import type { MyMessage } from "~/lib/types";
 import { attr } from "~/lib/utils";
 
+function hasContent(message: MyMessage): boolean {
+	return message.parts.some((part) => part.type === "text" && part.text !== "");
+}
+
 interface ChatMessagesProps {
 	messages: Array<MyMessage>;
 	loadMore: (numItems: number) => void;
+	isPending: boolean;
 	isStreaming: boolean;
 	canLoadMore: boolean;
 	isLoadingMore: boolean;
@@ -31,6 +36,7 @@ interface ChatMessagesProps {
 export function ChatMessages({
 	loadMore,
 	messages,
+	isPending,
 	canLoadMore,
 	isStreaming,
 	isLoadingMore,
@@ -48,10 +54,6 @@ export function ChatMessages({
 			setCopiedMessageId(null);
 		}, 2000);
 	}
-
-	const isThinking =
-		messages.at(-1)?.role === "user" &&
-		messages.some((m) => m.status === "pending");
 
 	return (
 		<Conversation>
@@ -86,17 +88,19 @@ export function ChatMessages({
 									/>
 								))}
 
-								<Actions>
-									<Action onClick={() => handleCopy(m)} tooltip={t("copy")}>
-										{hasCopied ? <TickIcon /> : <CopyIcon />}
-									</Action>
-								</Actions>
+								{hasContent(m) && (
+									<Actions>
+										<Action onClick={() => handleCopy(m)} tooltip={t("copy")}>
+											{hasCopied ? <TickIcon /> : <CopyIcon />}
+										</Action>
+									</Actions>
+								)}
 							</MessageContent>
 						</Message>
 					);
 				})}
 
-				{isThinking && (
+				{isPending && (
 					<Message from="assistant">
 						<MessageContent>
 							<MessageThinking />

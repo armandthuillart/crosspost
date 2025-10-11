@@ -38,6 +38,7 @@
 		"chats": "Chats",
 		"clear": "Clear"
 	},
+
 	"ChatHeader": {
 		"signIn": "Sign in",
 		"signUp": "Sign up for free"
@@ -47,6 +48,7 @@
 	},
 	"ChatInput": {
 		"anything": "anything",
+		"attach": "Add files and more",
 		"placeholder": "Ask to post about {action}...",
 		"you": "you",
 		"yourApp": "your app",

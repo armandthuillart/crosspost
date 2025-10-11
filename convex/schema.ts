@@ -17,7 +17,6 @@ export const platform = v.union(
 export default defineSchema({
 	drafts: defineTable({
 		threadId: v.string(),
-		title: v.string(),
 		userId: v.string(),
 	})
 		.index("by_user", ["userId"])
@@ -25,7 +24,6 @@ export default defineSchema({
 	posts: defineTable({
 		content: v.string(),
 		platform,
-		title: v.string(),
 	}),
 	versions: defineTable({
 		content: v.string(),

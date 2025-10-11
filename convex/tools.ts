@@ -12,7 +12,7 @@ export const getDraft = createTool({
 		"Create a new post draft. It will return the draft id if successful.",
 	handler: async (
 		{ threadId, runMutation, userId },
-		{ title, versions },
+		{ versions },
 	): Promise<Id<"drafts">> => {
 		if (!threadId) {
 			throw new ChatSDKError("bad_request:draft");
@@ -24,7 +24,6 @@ export const getDraft = createTool({
 
 		return await runMutation(api.drafts.createDraft, {
 			threadId,
-			title,
 			userId,
 			versions,
 		});

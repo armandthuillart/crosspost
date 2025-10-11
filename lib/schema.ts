@@ -6,7 +6,6 @@ export const tierSchema = z.enum(["anonymous", "free", "pro"]);
 export const platformSchema = z.enum(["threads", "linkedin", "bluesky", "x"]);
 
 export const draftSchema = z.object({
-	title: z.string().describe("The title of the draft"),
 	versions: z
 		.object({
 			bluesky: z

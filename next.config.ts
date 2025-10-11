@@ -3,6 +3,7 @@ import createNextIntlPlugin from "next-intl/plugin";
 
 const nextConfig: NextConfig = {
 	devIndicators: { position: "top-right" },
+	experimental: { browserDebugInfoInTerminal: true },
 	reactCompiler: true,
 	typedRoutes: true,
 };

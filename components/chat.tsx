@@ -28,15 +28,15 @@ export function Chat({
 }: ChatProps) {
 	const { chatId } = useParams<ParamsOf<"/[locale]/chat/[chatId]">>();
 
-	const [isPending, setIsPending] = useState(false);
+	const [hasBeenSubmitted, setHasBeenSubmitted] = useState(false);
 
 	useEffect(() => {
 		if (chatId) {
-			setIsPending(false);
+			setHasBeenSubmitted(false);
 		}
 	}, [chatId]);
 
-	const isChat = !!chatId || isPending;
+	const isChat = !!chatId || hasBeenSubmitted;
 
 	const user = usePreloadedQuery(preloadedUser);
 	const isPro = user?.tier === "pro";
@@ -52,9 +52,12 @@ export function Chat({
 		stream: true,
 	});
 
+	console.log(uiMessages);
+
 	const messages = status === "LoadingFirstPage" ? initialMessages : uiMessages;
 
 	const order = messages.find((m) => m.status === "streaming")?.order ?? 0;
+	const isPending = messages.some((m) => m.status === "pending");
 	const isStreaming = messages.some((m) => m.status === "streaming");
 	const hasSubmitted = messages.some((m) => m.status === "pending");
 
@@ -83,7 +86,7 @@ export function Chat({
 			className="group/chat @container/chat relative flex size-full flex-col"
 			{...attr("chat", isChat)}
 		>
-			<ChatHeader isAnonymous={isAnonymous} isFree={isFree} />
+			<ChatHeader isAnonymous={isAnonymous} isChat={isChat} isFree={isFree} />
 
 			<div className="flex h-full flex-col overflow-y-scroll group-data-chat/chat:gap-32">
 				<div className="flex h-full flex-col group-data-chat/chat:h-full group-data-chat/chat:justify-center group-data-chat/chat:overflow-hidden max-md:shrink-0 group-not-data-chat/chat:md:gap-6 group-not-data-chat/chat:md:pt-44 group-not-data-chat/chat:lg:pt-[30dvh]">
@@ -94,6 +97,7 @@ export function Chat({
 							canLoadMore={status === "CanLoadMore"}
 							hasSentMessage={hasSentMessage}
 							isLoadingMore={status === "LoadingMore"}
+							isPending={isPending}
 							isStreaming={isStreaming}
 							loadMore={loadMore}
 							messages={messages as Array<MyMessage>}
@@ -117,7 +121,7 @@ export function Chat({
 								hasSubmitted={hasSubmitted}
 								isChat={isChat}
 								isStreaming={isStreaming}
-								onStartNewChat={() => setIsPending(true)}
+								onStartNewChat={() => setHasBeenSubmitted(true)}
 								order={order}
 								ref={inputRef}
 								user={user}

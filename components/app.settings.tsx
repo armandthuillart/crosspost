@@ -3,6 +3,7 @@
 import { atom, useAtom } from "jotai";
 import { type Locale, useLocale, useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
+import { VisuallyHidden } from "radix-ui";
 import { type ReactNode, useEffect, useState, useTransition } from "react";
 import { themeColors } from "~/app/theme-provider";
 import { Button } from "~/components/ui/button";
@@ -34,8 +35,9 @@ import { themeColorAtom } from "~/lib/atoms";
 import { checkout, customer } from "~/lib/auth-client";
 import type { ThemeColor, User } from "~/lib/types";
 import { cn } from "~/lib/utils";
+import { DialogDescription } from "./ui/dialog";
 
-export const snapPoints = ["435px", 0.8];
+export const snapPoints = [0.5, 1];
 export const snapPointsAtom = atom<number | string | null>(snapPoints[0]);
 
 interface AppSettingsProps {
@@ -94,6 +96,9 @@ export function AppSettings({ user, children }: AppSettingsProps) {
 				>
 					<DrawerHeader>
 						<DrawerTitle className="text-xl">{t("title")}</DrawerTitle>
+						<VisuallyHidden.Root>
+							<DialogDescription>{t("title")}</DialogDescription>
+						</VisuallyHidden.Root>
 					</DrawerHeader>
 
 					<div className="flex flex-col gap-8">

@@ -4,7 +4,6 @@ import type { ReactNode } from "react";
 import { AppShortcuts } from "~/components/app.shortcuts";
 import { AppSidebar } from "~/components/app.sidebar";
 import { SidebarProvider } from "~/components/ui/sidebar";
-import { WelcomeBack } from "~/components/welcome-back";
 import { getToken } from "~/lib/auth-server";
 import { api } from "../../convex/_generated/api";
 
@@ -30,12 +29,10 @@ export default async function Template({ children }: { children: ReactNode }) {
 		return <SidebarProvider defaultOpen={false}>{children}</SidebarProvider>;
 	}
 
-	const isBack = cookieStore.has("remember");
 	const isOpen = cookieStore.get("sidebar")?.value;
 
 	return (
 		<SidebarProvider defaultOpen={isOpen === "true"}>
-			{isBack && <WelcomeBack />}
 			<AppShortcuts />
 			<AppSidebar
 				preloadedChats={preloadedChats}

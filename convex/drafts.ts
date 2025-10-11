@@ -6,7 +6,6 @@ import { mutation } from "./_generated/server";
 export const createDraft = mutation({
 	args: v.object({
 		threadId: v.string(),
-		title: v.string(),
 		userId: v.string(),
 		versions: v.object({
 			bluesky: v.optional(v.string()),
@@ -17,15 +16,14 @@ export const createDraft = mutation({
 	}),
 	handler: async (
 		ctx,
-		{ title, threadId, versions, userId },
+		{ threadId, versions, userId },
 	): Promise<Id<"drafts">> => {
 		const draftId = await ctx.db.insert("drafts", {
 			threadId,
-			title,
 			userId,
 		});
 
-		// Is there a way to have it type safe either anonymous, free or pro?
+		// TODO: Rewrite so it's type safe either anonymous, free or pro. Not string.
 		for (const [platformName, content] of Object.entries(versions)) {
 			await ctx.db.insert("versions", {
 				content,

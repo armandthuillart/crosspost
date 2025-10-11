@@ -46,8 +46,9 @@
 		"upgrade": "Mettre à niveau"
 	},
 	"ChatInput": {
-		"anything": "n'importe quoi",
-		"placeholder": "Demande de poster à propos de {action}...",
+		"anything": "tout",
+		"attach": "Importer et plus encore",
+		"placeholder": "Poster à propos de {action}...",
 		"you": "toi",
 		"yourApp": "ton appli",
 		"yourBusiness": "ton business",

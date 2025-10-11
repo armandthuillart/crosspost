@@ -4,7 +4,7 @@ import { optimisticallySendMessage } from "@convex-dev/agent/react";
 import { isRateLimitError } from "@convex-dev/rate-limiter";
 import { useMutation } from "convex/react";
 import { useAtom } from "jotai";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import {
 	type FormEvent,
 	forwardRef,
@@ -66,6 +66,7 @@ export const ChatInput = forwardRef<InputRef, ChatInputProps>(
 		ref,
 	) => {
 		const t = useTranslations("ChatInput");
+		const locale = useLocale();
 		const router = useRouter();
 		const [threadId, setThreadId] = useState(chatId);
 
@@ -124,6 +125,7 @@ export const ChatInput = forwardRef<InputRef, ChatInputProps>(
 				country: userLocation.country,
 				prompt,
 				region: userLocation.region,
+				locale,
 				threadId,
 			}).catch((e) => {
 				if (isRateLimitError(e)) {
@@ -247,7 +249,7 @@ export const ChatInput = forwardRef<InputRef, ChatInputProps>(
 
 		return (
 			<PromptInput onSubmit={handleSubmit} {...attr("expanded", isExpanded)}>
-				<PromptInputButton asChild kbd="/" tooltip="Add files and more">
+				<PromptInputButton asChild kbd="/" tooltip={t("attach")}>
 					<Button
 						className="rounded-full bg-background text-muted-foreground hover:bg-background"
 						size="icon"

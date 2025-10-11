@@ -1,4 +1,4 @@
-import type { AnthropicProviderOptions } from "@ai-sdk/anthropic";
+import { type AnthropicProviderOptions, anthropic } from "@ai-sdk/anthropic";
 import { type GatewayProviderOptions, gateway } from "@ai-sdk/gateway";
 import {
 	abortStream,
@@ -44,11 +44,12 @@ export const sendMessage = mutation({
 	args: {
 		city: v.optional(v.string()),
 		country: v.optional(v.string()),
+		locale: v.union(v.literal("en"), v.literal("fr")),
 		prompt: v.string(),
 		region: v.optional(v.string()),
 		threadId: v.string(),
 	},
-	handler: async (ctx, { city, prompt, threadId, country, region }) => {
+	handler: async (ctx, { city, locale, prompt, threadId, country, region }) => {
 		const user = await verifyOwnership(ctx, threadId);
 
 		if (!user) {
@@ -73,6 +74,7 @@ export const sendMessage = mutation({
 			city,
 			country,
 			isPro: user.tier === "pro",
+			locale,
 			promptMessageId,
 			region,
 			threadId,
@@ -87,6 +89,7 @@ export const streamChat = internalAction({
 		city: v.optional(v.string()),
 		country: v.optional(v.string()),
 		isPro: v.boolean(),
+		locale: v.union(v.literal("en"), v.literal("fr")),
 		promptMessageId: v.string(),
 		region: v.optional(v.string()),
 		threadId: v.string(),
@@ -94,47 +97,43 @@ export const streamChat = internalAction({
 	},
 	handler: async (
 		ctx,
-		{ isPro, city, userId, threadId, country, region, promptMessageId },
+		{ isPro, city, locale, userId, threadId, country, region, promptMessageId },
 	) => {
 		const { consumeStream } = await chatAgent.streamText(
 			ctx,
 			{ threadId, userId },
 			{
-				model: isPro
-					? gateway.languageModel("anthropic/claude-sonnet-4.5")
-					: gateway.languageModel("anthropic/claude-3.5-haiku"),
+				model: gateway.languageModel("anthropic/claude-sonnet-4.5"),
 				promptMessageId,
 				providerOptions: {
 					anthropic: {
-						// thinking: {
-						// 	budgetTokens: 0.001,
-						// 	type: isPro ? "enabled" : "disabled",
-						// },
+						thinking: {
+							budgetTokens: 0.001,
+							type: isPro ? "enabled" : "disabled",
+						},
 					} as AnthropicProviderOptions,
-					gateway: {
-						only: ["vertex", "anthropic"],
-						order: ["anthropic", "vertex"],
-					} as GatewayProviderOptions,
+					gateway: { only: ["anthropic"] } as GatewayProviderOptions,
 				},
-				system: CHAT_PROMPT({ city, country }),
+				system: CHAT_PROMPT({ city, country, locale }),
 				tools: {
 					"get-draft": getDraft,
 					"rename-chat": renameChat,
-					// ...(isPro && {
-					// "web-search": anthropic.tools.webSearch_20250305({
-					// 	maxUses: 5,
-					// 	...((city || country || region) && {
-					// 		userLocation: {
-					// 			...(city && { city }),
-					// 			...(country && { country }),
-					// 			...(region && { region }),
-					// 			type: "approximate",
-					// 		},
-					// 	}),
-					// })}),
+					...(isPro && {
+						"web-search": anthropic.tools.webSearch_20250305({
+							maxUses: 5,
+							...((city || country || region) && {
+								userLocation: {
+									...(city && { city }),
+									...(country && { country }),
+									...(region && { region }),
+									type: "approximate",
+								},
+							}),
+						}),
+					}),
 				},
 			},
-			{ saveStreamDeltas: true },
+			{ saveStreamDeltas: { chunking: "word", throttleMs: 0 } },
 		);
 
 		await consumeStream();

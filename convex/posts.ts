@@ -6,10 +6,12 @@ export const createPost = internalMutation({
 	args: v.object({
 		content: v.string(),
 		platform,
-		title: v.string(),
 	}),
-	handler: async (ctx, { title, content, platform }) => {
-		return await ctx.db.insert("posts", { content, platform, title });
+	handler: async (ctx, { content, platform }) => {
+		return await ctx.db.insert("posts", {
+			content,
+			platform,
+		});
 	},
 	returns: v.id("posts"),
 });

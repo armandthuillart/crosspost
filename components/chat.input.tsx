@@ -111,7 +111,7 @@ export const ChatInput = forwardRef<InputRef, ChatInputProps>(
 
 			if (!chatId) {
 				onStartNewChat?.();
-				threadId = await createChat();
+				threadId = await createChat({ locale });
 				router.replace(`/chat/${threadId}`);
 				setThreadId(threadId);
 			}

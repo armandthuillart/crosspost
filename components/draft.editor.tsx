@@ -1,5 +1,6 @@
 "use client";
 
+import { SECOND } from "@convex-dev/rate-limiter";
 import { LinkNode } from "@lexical/link";
 import { OverflowNode } from "@lexical/overflow";
 import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
@@ -15,10 +16,11 @@ import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { LinkPlugin } from "@lexical/react/LexicalLinkPlugin";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
+import { useMutation } from "convex/react";
 import type { EditorState } from "lexical";
 import { $createParagraphNode, $createTextNode, $getRoot } from "lexical";
 import { useTranslations } from "next-intl";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { Button } from "~/components/ui/button";
 import {
@@ -27,10 +29,15 @@ import {
 	HoverCardTrigger,
 } from "~/components/ui/hover-card";
 import { getColor, Progress } from "~/components/ui/progress";
+import type { Platform } from "~/lib/types";
+import { api } from "../convex/_generated/api";
+import type { Id } from "../convex/_generated/dataModel";
 
 interface DraftEditorProps {
-	maxLength: number;
+	draftId: Id<"drafts">;
 	content: string;
+	platform: Platform;
+	maxLength: number;
 }
 
 function PopulateEditorPlugin({ content }: { content: string }) {
@@ -52,8 +59,15 @@ function PopulateEditorPlugin({ content }: { content: string }) {
 	return null;
 }
 
-export function DraftEditor({ content, maxLength }: DraftEditorProps) {
+export function DraftEditor({
+	draftId,
+	content,
+	platform,
+	maxLength,
+}: DraftEditorProps) {
 	const t = useTranslations("DraftEditor");
+	const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+	const updateDraft = useMutation(api.drafts.updateDraft);
 
 	const initialConfig: InitialConfigType = {
 		namespace: "MyEditor",
@@ -68,8 +82,23 @@ export function DraftEditor({ content, maxLength }: DraftEditorProps) {
 		},
 	};
 
-	function handleChange(_editorState: EditorState) {
-		// TODO: Debounce and update convex backend
+	function handleChange(editorState: EditorState) {
+		editorState.read(() => {
+			const root = $getRoot();
+			const content = root.getTextContent();
+
+			if (timeoutRef.current) {
+				clearTimeout(timeoutRef.current);
+			}
+
+			timeoutRef.current = setTimeout(() => {
+				updateDraft({
+					content,
+					draftId,
+					platform,
+				});
+			}, 2 * SECOND);
+		});
 	}
 
 	function renderProgress({

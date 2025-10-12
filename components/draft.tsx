@@ -16,6 +16,7 @@ import { Card, CardContent } from "~/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import type { Platform, UIDraft } from "~/lib/types";
 import { cn, getURL } from "~/lib/utils";
+import type { Id } from "../convex/_generated/dataModel";
 
 interface Options {
 	maxLength: number;
@@ -66,11 +67,14 @@ const PLATFORM_CONFIG: Record<Platform, Options> = {
 	},
 };
 
-function renderUI(platform: Platform, content: string) {
+function renderUI(
+	content: string,
+	platform: Platform,
+	children: (content: string) => ReactNode,
+) {
 	const config = PLATFORM_CONFIG[platform];
 
 	const {
-		maxLength,
 		components: {
 			layout: Layout,
 			post: { component: Post, props },
@@ -79,9 +83,7 @@ function renderUI(platform: Platform, content: string) {
 
 	return (
 		<Layout>
-			<Post {...props}>
-				<DraftEditor content={content} maxLength={maxLength} />
-			</Post>
+			<Post {...props}>{children(content)}</Post>
 		</Layout>
 	);
 }
@@ -101,17 +103,16 @@ function getLabel(platform: Platform) {
 }
 
 interface DraftProps {
+	id: Id<"drafts">;
 	versions: UIDraft["versions"];
 }
 
-export function Draft({ versions }: DraftProps) {
+export function Draft({ id, versions }: DraftProps) {
 	const platforms = (Object.keys(versions) as Platform[]).sort(
 		(a, b) => a.length - b.length,
 	);
 
-	const defaultPlatform = platforms[0];
-
-	const [platform, setPlatform] = useState<Platform>(defaultPlatform);
+	const [platform, setPlatform] = useState<Platform>(platforms[0]);
 
 	function handlePost() {
 		const content = versions[platform];
@@ -123,7 +124,7 @@ export function Draft({ versions }: DraftProps) {
 	return (
 		<Tabs
 			className="relative not-first:mt-4 mb-4 w-full gap-0 overflow-hidden rounded-4xl bg-muted"
-			defaultValue={defaultPlatform}
+			defaultValue={platforms[0]}
 			onValueChange={(value) => setPlatform(value as Platform)}
 			value={platform}
 		>
@@ -153,21 +154,32 @@ export function Draft({ versions }: DraftProps) {
 			</div>
 
 			<div className="p-2 pt-0">
-				{platforms.map((platform) => (
-					<TabsContent key={platform} value={platform}>
-						<Card className="relative h-88 rounded-2xl border-0 p-0 shadow-none">
-							<CardContent
-								className={cn(
-									"size-full overflow-hidden rounded-[inherit] bg-background",
-									platform === "linkedin" && "not-dark:ring ring-border",
-									platform,
-								)}
-							>
-								{renderUI(platform, versions[platform] ?? "")}
-							</CardContent>
-						</Card>
-					</TabsContent>
-				))}
+				{platforms.map((platform) => {
+					const content = versions[platform] ?? "";
+
+					return (
+						<TabsContent key={platform} value={platform}>
+							<Card className="relative h-88 rounded-2xl border-0 p-0 shadow-none">
+								<CardContent
+									className={cn(
+										"size-full overflow-hidden rounded-[inherit] bg-background",
+										platform === "linkedin" && "not-dark:ring ring-border",
+										platform,
+									)}
+								>
+									{renderUI(content, platform, (content) => (
+										<DraftEditor
+											content={content}
+											draftId={id}
+											maxLength={PLATFORM_CONFIG[platform].maxLength}
+											platform={platform}
+										/>
+									))}
+								</CardContent>
+							</Card>
+						</TabsContent>
+					);
+				})}
 			</div>
 		</Tabs>
 	);

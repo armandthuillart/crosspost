@@ -18,13 +18,11 @@ export function MessagePart({ part, role, isStreaming }: MessagePartProps) {
 		case "reasoning":
 			return <ShiningText text="Thinking deeper..." />;
 		case "tool-get-draft": {
-			const versions = part.input?.versions;
-
-			if (!versions) {
+			if (!part.output || !part.input) {
 				return <ShiningText text="Creating a draft..." />;
 			}
 
-			return <Draft versions={versions} />;
+			return <Draft id={part.output} versions={part.input.versions ?? {}} />;
 		}
 		case "tool-web-search": {
 			return <ShiningText text="Searching the web..." />;

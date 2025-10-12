@@ -35,15 +35,10 @@ export const createAuth = (
 	return betterAuth({
 		advanced: {
 			cookies: {
-				session_data: {
-					name: "SESSION_DATA",
-				},
-				session_token: {
-					name: "SESSION_TOKEN",
-				},
-				state: {
-					name: "SESSION_STATE",
-				},
+				AUTH_TOKEN: { name: "AUTH_TOKEN" },
+				session_data: { name: "SESSION_DATA" },
+				session_token: { name: "SESSION_TOKEN" },
+				state: { name: "SESSION_STATE" },
 			},
 		},
 		baseURL: siteUrl,

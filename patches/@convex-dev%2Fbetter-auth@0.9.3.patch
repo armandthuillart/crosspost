@@ -1,0 +1,63 @@
+diff --git a/dist/commonjs/plugins/convex/index.d.ts b/dist/commonjs/plugins/convex/index.d.ts
+index 9cd0f755575fe22c3a2b03a0d826ace50f3e6039..f271c29dcd34cecbf4681c238d3c821db0342223 100644
+--- a/dist/commonjs/plugins/convex/index.d.ts
++++ b/dist/commonjs/plugins/convex/index.d.ts
+@@ -1,4 +1,5 @@
+-export declare const JWT_COOKIE_NAME = "convex_jwt";
++export declare const JWT_COOKIE_NAME = "AUTH_TOKEN";
++
+ export declare const convex: (opts?: {
+     jwtExpirationSeconds?: number;
+     deleteExpiredSessionsOnLogin?: boolean;
+diff --git a/dist/commonjs/plugins/convex/index.js b/dist/commonjs/plugins/convex/index.js
+index c605a217da16e1d9933ee35b6e01a9a3297b7c89..a0f410fa56c4603d4079e087048e1ef6df4d950a 100644
+--- a/dist/commonjs/plugins/convex/index.js
++++ b/dist/commonjs/plugins/convex/index.js
+@@ -1,6 +1,8 @@
+ import { createAuthMiddleware, sessionMiddleware } from "better-auth/api";
+ import { createAuthEndpoint, jwt as jwtPlugin, bearer as bearerPlugin, oidcProvider as oidcProviderPlugin, } from "better-auth/plugins";
+-export const JWT_COOKIE_NAME = "convex_jwt";
++
++export const JWT_COOKIE_NAME = "AUTH_TOKEN";
++
+ export const convex = (opts = {}) => {
+     const { jwtExpirationSeconds = 60 * 15 } = opts;
+     const oidcProvider = oidcProviderPlugin({
+diff --git a/dist/esm/plugins/convex/index.d.ts b/dist/esm/plugins/convex/index.d.ts
+index 9cd0f755575fe22c3a2b03a0d826ace50f3e6039..f271c29dcd34cecbf4681c238d3c821db0342223 100644
+--- a/dist/esm/plugins/convex/index.d.ts
++++ b/dist/esm/plugins/convex/index.d.ts
+@@ -1,4 +1,5 @@
+-export declare const JWT_COOKIE_NAME = "convex_jwt";
++export declare const JWT_COOKIE_NAME = "AUTH_TOKEN";
++
+ export declare const convex: (opts?: {
+     jwtExpirationSeconds?: number;
+     deleteExpiredSessionsOnLogin?: boolean;
+diff --git a/dist/esm/plugins/convex/index.js b/dist/esm/plugins/convex/index.js
+index c605a217da16e1d9933ee35b6e01a9a3297b7c89..a0f410fa56c4603d4079e087048e1ef6df4d950a 100644
+--- a/dist/esm/plugins/convex/index.js
++++ b/dist/esm/plugins/convex/index.js
+@@ -1,6 +1,8 @@
+ import { createAuthMiddleware, sessionMiddleware } from "better-auth/api";
+ import { createAuthEndpoint, jwt as jwtPlugin, bearer as bearerPlugin, oidcProvider as oidcProviderPlugin, } from "better-auth/plugins";
+-export const JWT_COOKIE_NAME = "convex_jwt";
++
++export const JWT_COOKIE_NAME = "AUTH_TOKEN";
++
+ export const convex = (opts = {}) => {
+     const { jwtExpirationSeconds = 60 * 15 } = opts;
+     const oidcProvider = oidcProviderPlugin({
+diff --git a/src/plugins/convex/index.ts b/src/plugins/convex/index.ts
+index cd59aca8228dfc4c4edf781f9c8be9799166bae1..9d8825d8057e22f369272a54b246a38eba3306d3 100644
+--- a/src/plugins/convex/index.ts
++++ b/src/plugins/convex/index.ts
+@@ -7,7 +7,7 @@ import {
+   oidcProvider as oidcProviderPlugin,
+ } from "better-auth/plugins";
+ 
+-export const JWT_COOKIE_NAME = "convex_jwt";
++export const JWT_COOKIE_NAME = "AUTH_TOKEN";
+ 
+ export const convex = (
+   opts: {

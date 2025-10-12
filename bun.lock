@@ -56,6 +56,10 @@
       },
     },
   },
+  "patchedDependencies": {
+    "@convex-dev/better-auth@0.9.3": "patches/@convex-dev%2Fbetter-auth@0.9.3.patch",
+    "next-intl@4.3.12": "patches/next-intl@4.3.12.patch",
+  },
   "packages": {
     "@ai-sdk/anthropic": ["@ai-sdk/anthropic@2.0.27", "", { "dependencies": { "@ai-sdk/provider": "2.0.0", "@ai-sdk/provider-utils": "3.0.12" }, "peerDependencies": { "zod": "^3.25.76 || ^4.1.8" } }, "sha512-tGXdWNs+dMZLsn6yVroz9PqPZbCY6kqwGl/xxFVxJWDrTPGj3+1t1vE7pzTZ3vDOiG05iVC7wzlXwV2Or650YA=="],
 

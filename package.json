@@ -51,6 +51,10 @@
 		"tsx": "^4.20.6",
 		"typescript": "^5.9.3"
 	},
+	"patchedDependencies": {
+		"@convex-dev/better-auth@0.9.3": "patches/@convex-dev%2Fbetter-auth@0.9.3.patch",
+		"next-intl@4.3.12": "patches/next-intl@4.3.12.patch"
+	},
 	"scripts": {
 		"build": "next build",
 		"check": "biome check",

@@ -14,18 +14,25 @@ import {
 import { MINUTE } from "@convex-dev/rate-limiter";
 import { type PaginationResult, paginationOptsValidator } from "convex/server";
 import { v } from "convex/values";
+import type { Locale } from "next-intl";
 import { ChatSDKError } from "../lib/errors";
 import { CHAT_PROMPT } from "../lib/prompts";
 import { api, components, internal } from "./_generated/api";
 import { internalAction, mutation, query } from "./_generated/server";
 import { chatAgent } from "./agents";
 import { rateLimiter } from "./rateLimiting";
+import { locale } from "./schema";
 import { getDraft, renameChat } from "./tools";
 import { verifyOwnership } from "./utils";
 
+const CHAT_TITLE = ({ locale }: { locale: Locale }) => {
+	if (locale === "en") return "New Chat";
+	if (locale === "fr") return "Nouvelle discussion";
+};
+
 export const createChat = mutation({
-	args: {},
-	handler: async (ctx): Promise<string> => {
+	args: { locale },
+	handler: async (ctx, { locale }): Promise<string> => {
 		const user = await ctx.runQuery(api.auth.getUser, {});
 
 		if (!user) {
@@ -33,7 +40,7 @@ export const createChat = mutation({
 		}
 
 		return await createThread(ctx, components.agent, {
-			title: "New Chat",
+			title: CHAT_TITLE({ locale }),
 			userId: user.id,
 		});
 	},
@@ -44,7 +51,7 @@ export const sendMessage = mutation({
 	args: {
 		city: v.optional(v.string()),
 		country: v.optional(v.string()),
-		locale: v.union(v.literal("en"), v.literal("fr")),
+		locale,
 		prompt: v.string(),
 		region: v.optional(v.string()),
 		threadId: v.string(),
@@ -89,7 +96,7 @@ export const streamChat = internalAction({
 		city: v.optional(v.string()),
 		country: v.optional(v.string()),
 		isPro: v.boolean(),
-		locale: v.union(v.literal("en"), v.literal("fr")),
+		locale,
 		promptMessageId: v.string(),
 		region: v.optional(v.string()),
 		threadId: v.string(),

@@ -14,6 +14,8 @@ export const platform = v.union(
 	v.literal("x"),
 );
 
+export const locale = v.union(v.literal("en"), v.literal("fr"));
+
 export default defineSchema({
 	drafts: defineTable({
 		threadId: v.string(),

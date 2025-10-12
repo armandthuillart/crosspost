@@ -19,7 +19,6 @@ import type * as betterAuth_generatedSchema from "../betterAuth/generatedSchema.
 import type * as chat from "../chat.js";
 import type * as drafts from "../drafts.js";
 import type * as http from "../http.js";
-import type * as notion from "../notion.js";
 import type * as polar from "../polar.js";
 import type * as posts from "../posts.js";
 import type * as rateLimiting from "../rateLimiting.js";
@@ -53,7 +52,6 @@ declare const fullApi: ApiFromModules<{
   chat: typeof chat;
   drafts: typeof drafts;
   http: typeof http;
-  notion: typeof notion;
   polar: typeof polar;
   posts: typeof posts;
   rateLimiting: typeof rateLimiting;

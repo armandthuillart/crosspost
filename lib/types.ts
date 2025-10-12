@@ -1,5 +1,6 @@
 import type { UIMessage } from "@convex-dev/agent/react";
 import type { InferUITool, UIDataTypes, UITool } from "ai";
+import type { ReactNode } from "react";
 import type { z } from "zod";
 import type { getDraft, renameChat } from "../convex/tools";
 import type { draftSchema, platformSchema, tierSchema } from "../lib/schema";
@@ -30,7 +31,9 @@ export type MyMessage = UIMessage<unknown, UIDataTypes, MyUITools>;
 
 export type ThemeColor = "default" | "green" | "blue" | "pink" | "orange";
 
-export type LegalDocument = {
-	content: string;
+export interface LegalDocument {
 	id: string;
-};
+	body: ReactNode;
+	title: string;
+	description: string | undefined;
+}

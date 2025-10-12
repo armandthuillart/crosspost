@@ -5,7 +5,7 @@ import { routing } from "~/i18n/routing";
 
 const i18n = createMiddleware(routing);
 
-export default async function proxy(request: NextRequest) {
+export async function proxy(request: NextRequest) {
 	const { city, region, country } = geolocation(request);
 
 	if (city && region && country) {

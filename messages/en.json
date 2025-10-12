@@ -1,4 +1,8 @@
 {
+	"AppLegalDocuments": {
+		"description": "Our policies, terms, and other legal documents.",
+		"title": "Legal documents"
+	},
 	"AppMenu": {
 		"help": "Help",
 		"keyboardShortcuts": "Keyboard shortcuts",

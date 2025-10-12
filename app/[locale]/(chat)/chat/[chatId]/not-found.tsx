@@ -3,7 +3,7 @@ import { Button } from "~/components/ui/button";
 import { SidebarTrigger } from "~/components/ui/sidebar";
 import { Link } from "~/i18n/navigation";
 
-export default function NotFound() {
+export default function ChatNotFound() {
 	const t = useTranslations("NotFound");
 
 	return (

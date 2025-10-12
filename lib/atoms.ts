@@ -3,11 +3,9 @@ import { atomWithStorage } from "jotai/utils";
 import { setThemeColorCookie } from "~/app/actions";
 import type { ThemeColor } from "~/lib/types";
 
-export const showShortcutsAtom = atom(false);
-
-export const showPoliciesAtom = atom(false);
-
 export const showBannerAtom = atomWithStorage("banner", false);
+export const showPoliciesAtom = atom(false);
+export const showShortcutsAtom = atom(false);
 
 const atomWithCookie = () => ({
 	getItem: (key: string): ThemeColor => {

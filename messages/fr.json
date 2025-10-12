@@ -1,4 +1,8 @@
 {
+	"AppLegalDocuments": {
+		"description": "Nos politiques, conditions, et autres documents légaux.",
+		"title": "Documents légaux"
+	},
 	"AppMenu": {
 		"help": "Centre d'aide",
 		"keyboardShortcuts": "Raccourcis clavier",

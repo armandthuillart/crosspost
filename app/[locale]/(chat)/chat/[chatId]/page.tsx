@@ -8,9 +8,9 @@ import { getToken } from "~/lib/auth-server";
 import { isChatSDKError } from "~/lib/errors";
 import type { MyMessage } from "~/lib/types";
 import { tryCatch } from "~/lib/utils";
-import { api } from "../../../../convex/_generated/api";
+import { api } from "../../../../../convex/_generated/api";
 
-export default async function Page({
+export default async function ChatPage({
 	params,
 }: PageProps<"/[locale]/chat/[chatId]">) {
 	const [userLocation, token, { chatId: threadId, locale }] = await Promise.all(

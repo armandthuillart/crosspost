@@ -38,8 +38,9 @@ export function AppMenu({ user }: AppMenuProps) {
 	const t = useTranslations("AppMenu");
 	const router = useRouter();
 	const pathname = usePathname();
-	const setShowPolicies = useSetAtom(showPoliciesAtom);
+
 	const setShowShortcuts = useSetAtom(showShortcutsAtom);
+	const setShowPolicies = useSetAtom(showPoliciesAtom);
 
 	async function handleSignOut() {
 		await signOut();

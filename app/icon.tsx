@@ -6,7 +6,7 @@ export const contentType = "image/png";
 
 export default async function Icon() {
 	const cookieStore = await cookies();
-	const themeColor = cookieStore.get("theme-color")?.value as ThemeColor;
+	const themeColor = cookieStore.get("THEME_COLOR")?.value as ThemeColor;
 
 	const hexColors: Record<ThemeColor, string> = {
 		blue: "#339CFF",

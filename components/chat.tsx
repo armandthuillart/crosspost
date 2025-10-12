@@ -4,7 +4,7 @@ import { useUIMessages } from "@convex-dev/agent/react";
 import { type Preloaded, usePreloadedQuery } from "convex/react";
 import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import type { ParamsOf } from "~/.next/types/routes";
+import type { ParamsOf } from "~/.next/dev/types/routes";
 import { ChatBanner } from "~/components/chat.banner";
 import { ChatGreetings } from "~/components/chat.greetings";
 import { ChatHeader } from "~/components/chat.header";

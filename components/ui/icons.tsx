@@ -202,24 +202,6 @@ export const TickIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
 	);
 };
 
-export const ExternalLinkIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
-	return (
-		<svg
-			aria-hidden="true"
-			fill="currentColor"
-			viewBox="0 0 24 24"
-			xmlns="http://www.w3.org/2000/svg"
-			{...props}
-		>
-			<path
-				clipRule="evenodd"
-				d="M8 5C7.44772 5 7 5.44772 7 6C7 6.55228 7.44772 7 8 7H15.5858L5.29289 17.2929C4.90237 17.6834 4.90237 18.3166 5.29289 18.7071C5.68342 19.0976 6.31658 19.0976 6.70711 18.7071L17 8.41421V16C17 16.5523 17.4477 17 18 17C18.5523 17 19 16.5523 19 16V6C19 5.44772 18.5523 5 18 5H8Z"
-				fillRule="evenodd"
-			/>
-		</svg>
-	);
-};
-
 export const CloseIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
 	return (
 		<svg
@@ -722,6 +704,53 @@ export const SquareLinkIcon = (props: SVGProps<SVGSVGElement>) => {
 				strokeLinejoin="round"
 				strokeWidth="2"
 			/>
+		</svg>
+	);
+};
+
+export const ArrowUpRightIcon = (props: SVGProps<SVGSVGElement>) => {
+	return (
+		<svg
+			aria-hidden="true"
+			fill="none"
+			viewBox="0 0 24 24"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<path
+				d="M17.5 15V6.5H9.00003M17.0714 6.9286L6.50003 17.5"
+				stroke="currentColor"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+			/>
+		</svg>
+	);
+};
+
+export const ArrowLeftIcon = (props: SVGProps<SVGSVGElement>) => {
+	return (
+		<svg
+			aria-hidden="true"
+			fill="currentColor"
+			viewBox="0 0 24 24"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<path d="M10.3691 5.22437C10.7619 4.90402 11.3409 4.92662 11.707 5.29273C12.0731 5.65885 12.0957 6.23785 11.7754 6.63063L11.707 6.7068L7.41404 10.9998H19L19.1025 11.0046C19.6066 11.056 20 11.4821 20 11.9998C20 12.5174 19.6066 12.9436 19.1025 12.9949L19 12.9998H7.41404L11.707 17.2927L11.7754 17.3689C12.0957 17.7617 12.0731 18.3407 11.707 18.7068C11.3409 19.0729 10.7619 19.0955 10.3691 18.7752L10.2929 18.7068L4.29294 12.7068C3.90243 12.3163 3.90244 11.6833 4.29294 11.2927L10.2929 5.29273L10.3691 5.22437Z" />
+		</svg>
+	);
+};
+
+export const ArrowRightIcon = (props: SVGProps<SVGSVGElement>) => {
+	return (
+		<svg
+			aria-hidden="true"
+			fill="currentColor"
+			viewBox="0 0 24 24"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<path d="M12.293 5.29273C12.6591 4.92662 13.2381 4.90402 13.6309 5.22437L13.707 5.29273L19.707 11.2927L19.7754 11.3689C20.0957 11.7617 20.0731 12.3407 19.707 12.7068L13.707 18.7068C13.3165 19.0973 12.6835 19.0973 12.293 18.7068C11.9025 18.3163 11.9025 17.6833 12.293 17.2927L16.5859 12.9998H5C4.44772 12.9998 4 12.552 4 11.9998C4 11.4475 4.44772 10.9998 5 10.9998H16.5859L12.293 6.7068L12.2246 6.63063C11.9043 6.23785 11.9269 5.65885 12.293 5.29273Z" />
 		</svg>
 	);
 };

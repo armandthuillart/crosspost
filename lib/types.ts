@@ -3,11 +3,9 @@ import type { InferUITool, UIDataTypes, UITool } from "ai";
 import type { ReactNode } from "react";
 import type { z } from "zod";
 import type { getDraft, renameChat } from "../convex/tools";
-import type { draftSchema, platformSchema, tierSchema } from "../lib/schema";
+import type { platformSchema, tierSchema } from "../lib/schema";
 
 export type Tier = z.infer<typeof tierSchema>;
-
-export type UIDraft = z.infer<typeof draftSchema>;
 
 export type Platform = z.infer<typeof platformSchema>;
 

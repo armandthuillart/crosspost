@@ -4,27 +4,26 @@ import { api } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
 
 export function optimisticallyUpdateDraft(
-	{ getQuery, setQuery }: OptimisticLocalStore,
-	{
-		content,
-		draftId,
-		platform,
-	}: {
+	localStore: OptimisticLocalStore,
+	args: {
 		content: string;
 		draftId: Id<"drafts">;
 		platform: Platform;
 	},
 ) {
-	const draft = getQuery(api.drafts.getDraft, {
-		draftId,
+	const draft = localStore.getQuery(api.drafts.getDraft, {
+		draftId: args.draftId,
 	});
 
 	if (draft !== undefined) {
-		const optimistic = { ...draft.versions, [platform]: content };
+		const optimistic = {
+			...draft.versions,
+			[args.platform]: args.content,
+		};
 
-		setQuery(
+		localStore.setQuery(
 			api.drafts.getDraft,
-			{ draftId },
+			{ draftId: args.draftId },
 			{ ...draft, versions: optimistic },
 		);
 	}

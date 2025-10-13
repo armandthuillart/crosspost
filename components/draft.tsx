@@ -20,6 +20,7 @@ import type { Platform } from "~/lib/types";
 import { cn, getURL } from "~/lib/utils";
 import { api } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
+import { ShareIcon } from "~/components/ui/icons";
 
 interface Options {
 	maxLength: number;
@@ -164,6 +165,7 @@ export function Draft({ draftId }: DraftProps) {
 
 				<Button className="rounded-full" onClick={handlePost} size="sm">
 					Post
+					<ShareIcon className="size-4" />
 				</Button>
 			</div>
 

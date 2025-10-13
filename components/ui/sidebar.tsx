@@ -182,12 +182,17 @@ function Sidebar({ className, children, ...props }: ComponentProps<"div">) {
 			<div
 				className={cn(
 					"sidebar-hover-panel -left-(--sidebar-width) absolute inset-y-0 z-10 w-(--sidebar-width) py-20 transition-all duration-500 ease-snappy group-has-[.sidebar-hover-panel:hover]/sidebar-wrapper:left-0 group-has-[.sidebar-menu-trigger[data-state='open']]/sidebar-wrapper:left-0 group-data-[state=collapsed]/sidebar:group-has-[.sidebar-trigger:hover]/sidebar-wrapper:left-0",
-					state === "expanded" &&
-						"!-left-(--sidebar-width) border-transparent bg-transparent py-0 opacity-0",
+					state === "expanded" && "py-0",
 				)}
 				data-slot="sidebar-hover-panel"
 			>
-				<div className="flex size-full flex-col rounded-r-4xl border border-sidebar-border bg-sidebar shadow-xs">
+				<div
+					className={cn(
+						"flex size-full flex-col rounded-r-4xl border border-sidebar-border bg-sidebar transition-all duration-500 ease-snappy",
+						state === "expanded" &&
+							"border-transparent bg-transparent opacity-0",
+					)}
+				>
 					{children}
 				</div>
 			</div>

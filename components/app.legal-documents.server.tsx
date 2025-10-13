@@ -7,9 +7,7 @@ import { getMDXComponents } from "~/mdx-components";
 export async function AppLegalDocuments() {
 	const locale = await getLocale();
 
-	const pages = source.getPages(locale);
-
-	const legalDocuments: LegalDocument[] = pages.map((page) => {
+	const pages: LegalDocument[] = source.getPages(locale).map((page) => {
 		const MDX = page.data.body;
 
 		return {
@@ -20,5 +18,5 @@ export async function AppLegalDocuments() {
 		};
 	});
 
-	return <AppLegalDocumentsClient legalDocuments={legalDocuments} />;
+	return <AppLegalDocumentsClient pages={pages} />;
 }

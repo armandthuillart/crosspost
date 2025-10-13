@@ -54,7 +54,7 @@ export function ChatHeader({ isChat, isFree, isAnonymous }: ChatHeaderProps) {
 	}
 
 	return (
-		<header className="absolute inset-0 bottom-auto z-50 flex items-center justify-between p-2">
+		<header className="absolute inset-0 bottom-auto z-50 flex items-center justify-between p-2 @max-8xl/chat:group-data-chat/chat:bg-background">
 			<SidebarTrigger />
 			{!isChat && isFree && <CTA />}
 		</header>

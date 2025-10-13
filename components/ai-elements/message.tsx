@@ -28,7 +28,7 @@ function MessageContent({
 	return (
 		<div
 			className={cn(
-				"mx-auto flex w-full max-w-(--chat-content-max-width) flex-col @[34rem]:[--chat-content-max-width:40rem] @[64rem]:[--chat-content-max-width:48rem] [--chat-content-max-width:32rem] group-data-user/message:gap-1 group-not-data-user/message:group-data-scroll-padding/message:min-h-96",
+				"mx-auto flex w-full max-w-(--chat-content-max-width) flex-col @[34rem]:[--chat-content-max-width:40rem] @[64rem]:[--chat-content-max-width:48rem] [--chat-content-max-width:32rem] group-data-user/message:gap-1 group-not-data-user/message:group-data-scroll-padding/message:min-h-24 group-not-data-user/message:group-data-scroll-padding/message:md:min-h-96",
 				className,
 			)}
 			{...props}

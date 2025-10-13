@@ -22,7 +22,7 @@ export function MessagePart({ part, role, isStreaming }: MessagePartProps) {
 				return <ShiningText text="Creating a draft..." />;
 			}
 
-			return <Draft id={part.output} versions={part.input.versions ?? {}} />;
+			return <Draft draftId={part.output} />;
 		}
 		case "tool-web-search": {
 			return <ShiningText text="Searching the web..." />;

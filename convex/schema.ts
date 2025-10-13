@@ -14,6 +14,13 @@ export const platform = v.union(
 	v.literal("x"),
 );
 
+export const versions = v.object({
+	bluesky: v.optional(v.string()),
+	linkedin: v.optional(v.string()),
+	threads: v.optional(v.string()),
+	x: v.optional(v.string()),
+});
+
 export const locale = v.union(v.literal("en"), v.literal("fr"));
 
 export default defineSchema({

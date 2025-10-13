@@ -1,5 +1,6 @@
 "use client";
 
+import { useQuery } from "convex/react";
 import {
 	type ComponentProps,
 	type ComponentType,
@@ -13,9 +14,11 @@ import { Threads } from "~/components/draft.layout.threads";
 import { X } from "~/components/draft.layout.x";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
+import { ShiningText } from "~/components/ui/shining-text";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
-import type { Platform, UIDraft } from "~/lib/types";
+import type { Platform } from "~/lib/types";
 import { cn, getURL } from "~/lib/utils";
+import { api } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
 
 interface Options {
@@ -103,20 +106,31 @@ function getLabel(platform: Platform) {
 }
 
 interface DraftProps {
-	id: Id<"drafts">;
-	versions: UIDraft["versions"];
+	draftId: Id<"drafts">;
 }
 
-export function Draft({ id, versions }: DraftProps) {
-	const platforms = (Object.keys(versions) as Platform[]).sort(
-		(a, b) => a.length - b.length,
-	);
+export function Draft({ draftId }: DraftProps) {
+	const draft = useQuery(api.drafts.getDraft, { draftId });
+
+	const platforms = draft
+		? (Object.keys(draft.versions) as Platform[]).sort(
+				(a, b) => a.length - b.length,
+			)
+		: [];
 
 	const [platform, setPlatform] = useState<Platform>(platforms[0]);
 
+	if (!draft) {
+		return <ShiningText text="Loading draft..." />;
+	}
+
 	function handlePost() {
-		const content = versions[platform];
+		if (!draft) return;
+
+		const content = draft.versions[platform];
+
 		if (!content) return;
+
 		const url = getURL(platform, content);
 		window.open(url, "_blank", "noopener,noreferrer");
 	}
@@ -155,7 +169,7 @@ export function Draft({ id, versions }: DraftProps) {
 
 			<div className="p-2 pt-0">
 				{platforms.map((platform) => {
-					const content = versions[platform] ?? "";
+					const content = draft.versions[platform];
 
 					return (
 						<TabsContent key={platform} value={platform}>
@@ -167,10 +181,10 @@ export function Draft({ id, versions }: DraftProps) {
 										platform,
 									)}
 								>
-									{renderUI(content, platform, (content) => (
+									{renderUI(content ?? "", platform, (content) => (
 										<DraftEditor
 											content={content}
-											draftId={id}
+											draftId={draftId}
 											maxLength={PLATFORM_CONFIG[platform].maxLength}
 											platform={platform}
 										/>

@@ -14,13 +14,13 @@ import { Threads } from "~/components/draft.layout.threads";
 import { X } from "~/components/draft.layout.x";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
+import { ShareIcon } from "~/components/ui/icons";
 import { ShiningText } from "~/components/ui/shining-text";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import type { Platform } from "~/lib/types";
 import { cn, getURL } from "~/lib/utils";
 import { api } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
-import { ShareIcon } from "~/components/ui/icons";
 
 interface Options {
 	maxLength: number;

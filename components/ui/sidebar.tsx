@@ -27,7 +27,6 @@ const SIDEBAR_COOKIE_NAME = "SIDEBAR";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
 const SIDEBAR_WIDTH = "16rem";
 const SIDEBAR_WIDTH_MOBILE = "16.25rem";
-const SIDEBAR_WIDTH_ICON = "3rem";
 
 type SidebarContextProps = {
 	state: "expanded" | "collapsed";
@@ -35,7 +34,6 @@ type SidebarContextProps = {
 	isMobile: boolean;
 	setIsOpen: (isOpen: boolean) => void;
 	isOpenMobile: boolean;
-	defaultHidden: boolean;
 	toggleSidebar: () => void;
 	setIsOpenMobile: (isOpenMobile: boolean) => void;
 };
@@ -52,33 +50,33 @@ function useSidebar() {
 	return context;
 }
 
-function SidebarProvider({
-	defaultHidden = false,
-	defaultOpen = true,
-	open: openProp,
-	onOpenChange: setOpenProp,
-	className,
-	style,
-	children,
-	...props
-}: ComponentProps<"div"> & {
-	defaultHidden?: boolean;
+interface SidebarProviderProps extends ComponentProps<"div"> {
+	onOpenChange?: (isOpen: boolean) => void;
 	defaultOpen?: boolean;
-	open?: boolean;
-	onOpenChange?: (open: boolean) => void;
-}) {
+	isOpen?: boolean;
+}
+
+function SidebarProvider({
+	onOpenChange: setIsOpenProp,
+	defaultOpen = true,
+	className,
+	children,
+	isOpen: isOpenProp,
+	...props
+}: SidebarProviderProps) {
 	const isMobile = useIsMobile();
-	const [openMobile, setOpenMobile] = useState(false);
 
-	const [_open, _setOpen] = useState(defaultOpen);
-	const open = openProp ?? _open;
+	const [_isOpen, _setIsOpen] = useState(defaultOpen);
+	const [isOpenMobile, setIsOpenMobile] = useState(false);
 
-	const setOpen = (value: boolean | ((value: boolean) => boolean)) => {
-		const openState = typeof value === "function" ? value(open) : value;
-		if (setOpenProp) {
-			setOpenProp(openState);
+	const isOpen = isOpenProp ?? _isOpen;
+
+	const setIsOpen = (value: boolean | ((value: boolean) => boolean)) => {
+		const openState = typeof value === "function" ? value(isOpen) : value;
+		if (isOpenProp) {
+			setIsOpenProp?.(openState);
 		} else {
-			_setOpen(openState);
+			_setIsOpen(openState);
 		}
 
 		// biome-ignore lint/suspicious/noDocumentCookie: it's okay
@@ -86,22 +84,23 @@ function SidebarProvider({
 	};
 
 	const toggleSidebar = () => {
-		return isMobile ? setOpenMobile((open) => !open) : setOpen((open) => !open);
+		return isMobile
+			? setIsOpenMobile((isOpen) => !isOpen)
+			: setIsOpen((isOpen) => !isOpen);
 	};
 
 	useShortcut(SHORTCUTS.TOGGLE_SIDEBAR, () => {
 		toggleSidebar();
 	});
 
-	const state = open ? "expanded" : "collapsed";
+	const state = isOpen ? "expanded" : "collapsed";
 
 	const contextValue: SidebarContextProps = {
-		defaultHidden,
 		isMobile,
-		isOpen: open,
-		isOpenMobile: openMobile,
-		setIsOpen: setOpen,
-		setIsOpenMobile: setOpenMobile,
+		isOpen,
+		isOpenMobile,
+		setIsOpen,
+		setIsOpenMobile,
 		state,
 		toggleSidebar,
 	};
@@ -111,13 +110,7 @@ function SidebarProvider({
 			<div
 				className={cn("group/sidebar-wrapper flex h-dvh w-full", className)}
 				data-slot="sidebar-wrapper"
-				style={
-					{
-						"--sidebar-width": SIDEBAR_WIDTH,
-						"--sidebar-width-icon": SIDEBAR_WIDTH_ICON,
-						...style,
-					} as CSSProperties
-				}
+				style={{ "--sidebar-width": SIDEBAR_WIDTH } as CSSProperties}
 				{...props}
 			>
 				{children}
@@ -126,34 +119,13 @@ function SidebarProvider({
 	);
 }
 
-function Sidebar({
-	side = "left",
-	variant = "sidebar",
-	children,
-	className,
-	collapsible = "offcanvas",
-	...props
-}: ComponentProps<"div"> & {
-	side?: "left" | "right";
-	variant?: "sidebar" | "floating" | "inset";
-	collapsible?: "offcanvas" | "icon" | "none";
-}) {
+function Sidebar({ className, children, ...props }: ComponentProps<"div">) {
 	const { isMobile, state, isOpenMobile, setIsOpenMobile } = useSidebar();
 
-	if (collapsible === "none") {
-		return (
-			<div
-				className={cn(
-					"flex h-full w-(--sidebar-width) flex-col bg-sidebar text-sidebar-foreground",
-					className,
-				)}
-				data-slot="sidebar"
-				{...props}
-			>
-				{children}
-			</div>
-		);
-	}
+	const styles = {
+		"--initial-transform": "calc(100% + 8px)",
+		"--sidebar-width": SIDEBAR_WIDTH_MOBILE,
+	} as CSSProperties;
 
 	if (isMobile) {
 		return (
@@ -163,21 +135,17 @@ function Sidebar({
 				open={isOpenMobile}
 			>
 				<DrawerContent
-					className="bg-sidebar p-0 text-sidebar-foreground data-[vaul-drawer-direction=left]:w-(--sidebar-width) [&>button]:hidden"
+					className="group/sidebar bg-sidebar p-0 text-sidebar-foreground data-[vaul-drawer-direction=left]:w-(--sidebar-width) [&>button]:hidden"
 					data-mobile="true"
 					data-sidebar="sidebar"
 					data-slot="sidebar"
-					style={
-						{
-							"--initial-transform": "calc(100% + 8px)",
-							"--sidebar-width": SIDEBAR_WIDTH_MOBILE,
-						} as CSSProperties
-					}
+					style={styles}
 				>
 					<DrawerHeader className="sr-only">
 						<DrawerTitle>Sidebar</DrawerTitle>
 						<DrawerDescription>Displays the mobile sidebar.</DrawerDescription>
 					</DrawerHeader>
+
 					<div className="flex h-full w-full flex-col">{children}</div>
 				</DrawerContent>
 			</Drawer>
@@ -186,20 +154,18 @@ function Sidebar({
 
 	return (
 		<div
-			className="group peer hidden text-sidebar-foreground md:block"
-			data-collapsible={state === "collapsed" ? collapsible : ""}
-			data-side={side}
+			className="group/sidebar hidden text-sidebar-foreground md:block"
 			data-slot="sidebar"
 			data-state={state}
-			data-variant={variant}
 		>
 			<div
-				className="relative w-(--sidebar-width) bg-transparent transition-[width] duration-500 ease-snappy group-data-[collapsible=icon]:w-(--sidebar-width-icon) group-data-[collapsible=offcanvas]:w-0"
+				className="relative w-(--sidebar-width) bg-transparent transition-[width] duration-500 ease-snappy group-data-[state=collapsed]/sidebar:w-0"
 				data-slot="sidebar-gap"
 			/>
+
 			<div
 				className={cn(
-					"fixed inset-y-0 left-0 z-10 hidden h-svh w-(--sidebar-width) transition-[left,width] duration-500 ease-snappy group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)] group-data-[collapsible=icon]:w-(--sidebar-width-icon) md:flex",
+					"sidebar-container group-data-[state=collapsed]/sidebar:-left-(--sidebar-width) fixed inset-y-0 left-0 z-20 hidden h-svh w-(--sidebar-width) transition-[left,width] duration-500 ease-snappy md:flex",
 					className,
 				)}
 				data-slot="sidebar-container"
@@ -207,9 +173,21 @@ function Sidebar({
 			>
 				<div
 					className="flex size-full flex-col bg-sidebar"
-					data-sidebar="sidebar"
 					data-slot="sidebar-inner"
 				>
+					{children}
+				</div>
+			</div>
+
+			<div
+				className={cn(
+					"sidebar-hover-panel -left-(--sidebar-width) absolute inset-y-0 z-10 w-(--sidebar-width) py-20 transition-all duration-500 ease-snappy group-has-[.sidebar-hover-panel:hover]/sidebar-wrapper:left-0 group-has-[.sidebar-menu-trigger[data-state='open']]/sidebar-wrapper:left-0 group-data-[state=collapsed]/sidebar:group-has-[.sidebar-trigger:hover]/sidebar-wrapper:left-0",
+					state === "expanded" &&
+						"!-left-(--sidebar-width) border-transparent bg-transparent py-0 opacity-0",
+				)}
+				data-slot="sidebar-hover-panel"
+			>
+				<div className="flex size-full flex-col rounded-r-4xl border border-sidebar-border bg-sidebar shadow-xs">
 					{children}
 				</div>
 			</div>
@@ -220,11 +198,7 @@ function Sidebar({
 function SidebarContent({ className, ...props }: ComponentProps<"div">) {
 	return (
 		<div
-			className={cn(
-				"flex min-h-0 flex-1 flex-col overflow-auto group-data-[collapsible=icon]:overflow-hidden",
-				className,
-			)}
-			data-sidebar="content"
+			className={cn("flex min-h-0 flex-1 flex-col overflow-auto", className)}
 			data-slot="sidebar-content"
 			{...props}
 		/>
@@ -235,14 +209,13 @@ function SidebarHeader({ className, ...props }: ComponentProps<"div">) {
 	return (
 		<div
 			className={cn("flex justify-between gap-2 px-3 pt-2 pb-0", className)}
-			data-sidebar="header"
 			data-slot="sidebar-header"
 			{...props}
 		/>
 	);
 }
 
-function SidebarTrigger({ className, onClick, ...props }: ButtonProps) {
+function SidebarTrigger({ onClick, ...props }: ButtonProps) {
 	const { toggleSidebar } = useSidebar();
 
 	function handleClick(event: MouseEvent<HTMLButtonElement>) {
@@ -252,8 +225,7 @@ function SidebarTrigger({ className, onClick, ...props }: ButtonProps) {
 
 	return (
 		<Button
-			className={cn(className)}
-			data-sidebar="trigger"
+			className="sidebar-trigger"
 			data-slot="sidebar-trigger"
 			onClick={handleClick}
 			size="icon"
@@ -332,6 +304,13 @@ const sidebarMenuButtonVariants = cva(
 	},
 );
 
+interface SidebarMenuButtonProps
+	extends ComponentProps<"button">,
+		VariantProps<typeof sidebarMenuButtonVariants> {
+	asChild?: boolean;
+	isActive?: boolean;
+}
+
 function SidebarMenuButton({
 	size = "default",
 	asChild = false,
@@ -339,10 +318,7 @@ function SidebarMenuButton({
 	isActive = false,
 	className,
 	...props
-}: ComponentProps<"button"> & {
-	asChild?: boolean;
-	isActive?: boolean;
-} & VariantProps<typeof sidebarMenuButtonVariants>) {
+}: SidebarMenuButtonProps) {
 	const Comp = asChild ? SlotPrimitive.Root : "button";
 
 	return (
@@ -358,16 +334,15 @@ function SidebarMenuButton({
 }
 
 function SidebarGroupLabel({
-	className,
 	asChild = false,
+	className,
 	...props
-}: React.ComponentProps<"div"> & { asChild?: boolean }) {
+}: ComponentProps<"div"> & { asChild?: boolean }) {
 	const Comp = asChild ? SlotPrimitive.Root : "div";
 	return (
 		<Comp
 			className={cn(
 				"flex shrink-0 items-center rounded-md px-2.5 py-2 text-muted-foreground text-sm outline-hidden ring-sidebar-ring focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0",
-				"group-data-[collapsible=icon]:-mt-8 group-data-[collapsible=icon]:opacity-0",
 				className,
 			)}
 			data-sidebar="group-label"

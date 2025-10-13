@@ -56,7 +56,7 @@ export function AppMenu({ user }: AppMenuProps) {
 		<AppSettings user={user ?? null}>
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
-					<SidebarMenuButton className="h-auto justify-between rounded-full pr-4 pl-2">
+					<SidebarMenuButton className="sidebar-menu-trigger h-auto justify-between rounded-full pr-4 pl-2">
 						<div className="flex items-center gap-2.5 overflow-hidden">
 							<Avatar>
 								<AvatarFallback>

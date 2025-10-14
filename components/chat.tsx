@@ -52,8 +52,6 @@ export function Chat({
 		stream: true,
 	});
 
-	console.log("uimessages", uiMessages);
-
 	const messages = status === "LoadingFirstPage" ? initialMessages : uiMessages;
 
 	const lastOrder =

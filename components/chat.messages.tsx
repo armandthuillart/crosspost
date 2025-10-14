@@ -26,21 +26,21 @@ function hasContent(message: MyMessage): boolean {
 interface ChatMessagesProps {
 	messages: Array<MyMessage>;
 	loadMore: (numItems: number) => void;
-	isPending: boolean;
 	isStreaming: boolean;
 	canLoadMore: boolean;
 	isLoadingMore: boolean;
 	hasSentMessage: boolean;
+	isWaitingForResponse: boolean;
 }
 
 export function ChatMessages({
 	loadMore,
 	messages,
-	isPending,
 	canLoadMore,
 	isStreaming,
 	isLoadingMore,
 	hasSentMessage,
+	isWaitingForResponse,
 }: ChatMessagesProps) {
 	const t = useTranslations("ChatMessages");
 
@@ -68,7 +68,8 @@ export function ChatMessages({
 				{messages.map((m, i) => {
 					const isLast = i === messages.length - 1;
 					const hasCopied = copiedMessageId === m.id;
-					const hasScrollPadding = isLast && hasSentMessage;
+					const hasScrollPadding =
+						isLast && hasSentMessage && !isWaitingForResponse;
 
 					return (
 						<Message
@@ -100,7 +101,7 @@ export function ChatMessages({
 					);
 				})}
 
-				{isPending && (
+				{isWaitingForResponse && (
 					<Message from="assistant">
 						<MessageContent>
 							<MessageThinking />

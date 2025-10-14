@@ -140,7 +140,7 @@ export const streamChat = internalAction({
 					}),
 				},
 			},
-			{ saveStreamDeltas: { chunking: "word", throttleMs: 0 } },
+			{ saveStreamDeltas: true },
 		);
 
 		await consumeStream();

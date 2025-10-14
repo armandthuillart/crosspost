@@ -52,12 +52,24 @@ export function Chat({
 		stream: true,
 	});
 
+	console.log("uimessages", uiMessages);
+
 	const messages = status === "LoadingFirstPage" ? initialMessages : uiMessages;
 
-	const order = messages.find((m) => m.status === "streaming")?.order ?? 0;
-	const isPending = messages.some((m) => m.status === "pending");
-	const isStreaming = messages.some((m) => m.status === "streaming");
-	const hasSubmitted = messages.some((m) => m.status === "pending");
+	const lastOrder =
+		messages.find(({ status }) => status === "streaming")?.order ?? 0;
+
+	const isStreaming = messages.some(({ status }) => status === "streaming");
+
+	const isWaitingForResponse = messages.some(
+		({ text, role, status }) =>
+			role === "assistant" &&
+			(status === "pending" || (status === "streaming" && !text)),
+	);
+
+	const isProcessing = messages.some(
+		({ status }) => status === "pending" || status === "streaming",
+	);
 
 	const [hasSentMessage, setHasSentMessage] = useState(false);
 
@@ -68,10 +80,10 @@ export function Chat({
 	}, [chatId]);
 
 	useEffect(() => {
-		if (hasSubmitted) {
+		if (isProcessing) {
 			setHasSentMessage(true);
 		}
-	}, [hasSubmitted]);
+	}, [isProcessing]);
 
 	const inputRef = useRef<InputRef>(null);
 
@@ -95,8 +107,8 @@ export function Chat({
 							canLoadMore={status === "CanLoadMore"}
 							hasSentMessage={hasSentMessage}
 							isLoadingMore={status === "LoadingMore"}
-							isPending={isPending}
 							isStreaming={isStreaming}
+							isWaitingForResponse={isWaitingForResponse}
 							loadMore={loadMore}
 							messages={messages as Array<MyMessage>}
 						/>
@@ -116,11 +128,11 @@ export function Chat({
 
 							<ChatInput
 								chatId={chatId}
-								hasSubmitted={hasSubmitted}
 								isChat={isChat}
+								isProcessing={isProcessing}
 								isStreaming={isStreaming}
 								onStartNewChat={() => setHasBeenSubmitted(true)}
-								order={order}
+								order={lastOrder}
 								ref={inputRef}
 								user={user}
 								userLocation={userLocation}

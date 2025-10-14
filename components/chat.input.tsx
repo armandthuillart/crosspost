@@ -46,7 +46,7 @@ interface ChatInputProps {
 	chatId: string | null;
 	isStreaming: boolean;
 	countryCode?: string;
-	hasSubmitted: boolean;
+	isProcessing: boolean;
 	userLocation: { city?: string; country?: string; region?: string };
 	onStartNewChat?: () => void;
 }
@@ -60,7 +60,7 @@ export const ChatInput = forwardRef<InputRef, ChatInputProps>(
 			isChat,
 			isStreaming,
 			userLocation,
-			hasSubmitted,
+			isProcessing,
 			onStartNewChat,
 		},
 		ref,
@@ -271,7 +271,7 @@ export const ChatInput = forwardRef<InputRef, ChatInputProps>(
 						onClick={() => abortStreamByOrder({ order, threadId })}
 					/>
 				) : (
-					<PromptInputSubmit disabled={!isDirty || hasSubmitted} />
+					<PromptInputSubmit disabled={!isDirty || isProcessing} />
 				)}
 			</PromptInput>
 		);

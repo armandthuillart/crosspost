@@ -36,8 +36,6 @@ export function Chat({
 		}
 	}, [chatId]);
 
-	const isChat = !!chatId || hasBeenSubmitted;
-
 	const user = usePreloadedQuery(preloadedUser);
 	const isPro = user?.tier === "pro";
 	const isFree = user?.tier === "free";
@@ -53,6 +51,8 @@ export function Chat({
 	});
 
 	const messages = status === "LoadingFirstPage" ? initialMessages : uiMessages;
+
+	const isChat = !!chatId || hasBeenSubmitted || messages.length > 0;
 
 	const lastOrder =
 		messages.find(({ status }) => status === "streaming")?.order ?? 0;

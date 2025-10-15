@@ -8,6 +8,7 @@ import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { hasLocale, type Locale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { ConvexClientProvider } from "~/app/convex-client-provider";
 import { ThemeProvider } from "~/app/theme-provider";
 import { routing } from "~/i18n/routing";
@@ -75,15 +76,17 @@ export default async function LocaleLayout({
 					sans.variable,
 				)}
 			>
-				<ThemeProvider>
-					<JotaiProvider>
-						<Analytics debug={false} />
-						<SpeedInsights debug={false} />
-						<NextIntlClientProvider>
-							<ConvexClientProvider>{children}</ConvexClientProvider>
-						</NextIntlClientProvider>
-					</JotaiProvider>
-				</ThemeProvider>
+				<NuqsAdapter>
+					<ThemeProvider>
+						<JotaiProvider>
+							<Analytics debug={false} />
+							<SpeedInsights debug={false} />
+							<NextIntlClientProvider>
+								<ConvexClientProvider>{children}</ConvexClientProvider>
+							</NextIntlClientProvider>
+						</JotaiProvider>
+					</ThemeProvider>
+				</NuqsAdapter>
 			</body>
 		</html>
 	);

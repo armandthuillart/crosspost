@@ -5,6 +5,7 @@ import { isRateLimitError } from "@convex-dev/rate-limiter";
 import { useMutation } from "convex/react";
 import { useAtom } from "jotai";
 import { useLocale, useTranslations } from "next-intl";
+import { useQueryState } from "nuqs";
 import {
 	type FormEvent,
 	forwardRef,
@@ -111,8 +112,12 @@ export const ChatInput = forwardRef<InputRef, ChatInputProps>(
 
 			if (!chatId) {
 				onStartNewChat?.();
+
+				router.replace(`/chat?message=${encodeURIComponent(prompt)}`);
+
 				threadId = await createChat({ locale });
 				router.replace(`/chat/${threadId}`);
+
 				setThreadId(threadId);
 			}
 

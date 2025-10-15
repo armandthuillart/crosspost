@@ -5,7 +5,6 @@ import { isRateLimitError } from "@convex-dev/rate-limiter";
 import { useMutation } from "convex/react";
 import { useAtom } from "jotai";
 import { useLocale, useTranslations } from "next-intl";
-import { useQueryState } from "nuqs";
 import {
 	type FormEvent,
 	forwardRef,

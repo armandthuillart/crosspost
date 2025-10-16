@@ -28,7 +28,7 @@ export default async function ChatPage({
 
 	const { data, error } = await tryCatch(
 		fetchQuery(
-			api.chat.loadChat,
+			api.chats.loadChat,
 			{ paginationOpts: { cursor: null, numItems: 10 }, threadId },
 			{ token },
 		),

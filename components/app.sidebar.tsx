@@ -28,7 +28,7 @@ export function AppSidebar({
 	preloadedChats,
 	preloadedUser,
 }: {
-	preloadedChats: Preloaded<typeof api.chat.listChats>;
+	preloadedChats: Preloaded<typeof api.chats.listChats>;
 	preloadedUser: Preloaded<typeof api.auth.getUser>;
 }) {
 	const pathname = usePathname();

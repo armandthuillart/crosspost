@@ -1,22 +1,17 @@
 import { preloadedQueryResult, preloadQuery } from "convex/nextjs";
 import type { Locale } from "next-intl";
-import { createLoader, parseAsString } from "nuqs/server";
 import { Chat } from "~/components/chat";
 import { redirect } from "~/i18n/navigation";
 import { getToken } from "~/lib/auth-server";
 import type { MyMessage } from "~/lib/types";
 import { api } from "../../../../convex/_generated/api";
 
-export const searchParams = { message: parseAsString.withDefault("") };
-
-export const loadSearchParams = createLoader(searchParams);
-
 export default async function Page({
 	params,
 	searchParams,
 }: PageProps<"/[locale]/chat">) {
 	const [{ message }, token, { locale }] = await Promise.all([
-		loadSearchParams(searchParams),
+		searchParams,
 		getToken(),
 		params,
 	]);

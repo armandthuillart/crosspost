@@ -110,7 +110,9 @@ export const streamChat = internalAction({
 			ctx,
 			{ threadId, userId },
 			{
-				model: gateway.languageModel("anthropic/claude-sonnet-4.5"),
+				model: isPro
+					? gateway.languageModel("anthropic/claude-sonnet-4.5")
+					: gateway.languageModel("anthropic/claude-4.5-haiku"),
 				promptMessageId,
 				providerOptions: {
 					anthropic: {

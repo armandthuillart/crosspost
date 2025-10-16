@@ -14,7 +14,7 @@ export const chatAgent = new Agent(components.agent, {
 		},
 		searchOtherThreads: true,
 	},
-	languageModel: gateway.languageModel("anthropic/claude-3.5-haiku"),
+	languageModel: gateway.languageModel("anthropic/claude-4.5-haiku"),
 	name: "chat",
 	stopWhen: stepCountIs(3),
 	textEmbeddingModel: gateway.textEmbeddingModel(

@@ -54,9 +54,7 @@
 	},
 	"scripts": {
 		"build": "NODE_OPTIONS=--max-old-space-size=6144 next build",
-		"check": "biome check",
 		"dev": "next dev",
-		"format": "biome format",
 		"lint": "biome lint",
 		"start": "next start"
 	},

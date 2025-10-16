@@ -5,7 +5,7 @@ export const chatAgent = new Agent(components.agent, {
 	contextOptions: {
 		recentMessages: 40,
 		searchOptions: {
-			limit: 20,
+			limit: 10,
 			messageRange: { after: 2, before: 3 },
 			textSearch: true,
 			vectorScoreThreshold: 0.25,

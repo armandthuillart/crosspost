@@ -30,12 +30,6 @@ export const getDraft = createTool({
 	},
 });
 
-// await ctx.scheduler.runAfter(0, internal.posts.createPost, {
-// 	content,
-// 	platform,
-// 	title,
-// });
-
 export const renameChat = createTool({
 	args: z.object({
 		title: z

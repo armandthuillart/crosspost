@@ -23,9 +23,9 @@ export function SibebarHistorySearch({
 
 	const { chatId } = useParams<ParamsOf<"/[locale]/chat/[chatId]">>();
 
-	const deleteChats = useMutation(api.chat.deleteChats).withOptimisticUpdate(
+	const deleteChats = useMutation(api.chats.deleteChats).withOptimisticUpdate(
 		(localStore, { threadIds }) => {
-			const currentChats = localStore.getQuery(api.chat.listChats, {
+			const currentChats = localStore.getQuery(api.chats.listChats, {
 				paginationOpts: { cursor: null, numItems: 10 },
 			});
 
@@ -38,7 +38,7 @@ export function SibebarHistorySearch({
 				};
 
 				localStore.setQuery(
-					api.chat.listChats,
+					api.chats.listChats,
 					{ paginationOpts: { cursor: null, numItems: 10 } },
 					updatedResults,
 				);

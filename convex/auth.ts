@@ -89,7 +89,7 @@ export const createAuth = (
 						},
 					);
 
-					await requireActionCtx(ctx).runMutation(api.chat.migrateChats, {
+					await requireActionCtx(ctx).runMutation(api.chats.migrateChats, {
 						anonymousUserId: anonymousUser.id,
 						newUserId: newUser.id,
 					});

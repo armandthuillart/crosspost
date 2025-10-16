@@ -1,7 +1,4 @@
-import { type AnthropicProviderOptions, anthropic } from "@ai-sdk/anthropic";
-import type { GatewayProviderOptions } from "@ai-sdk/gateway";
 import {
-	abortStream,
 	createThread,
 	listMessages,
 	listUIMessages,
@@ -16,19 +13,12 @@ import { type PaginationResult, paginationOptsValidator } from "convex/server";
 import { v } from "convex/values";
 import type { Locale } from "next-intl";
 import { ChatSDKError } from "../lib/errors";
-import { CHAT_PROMPT } from "../lib/prompts";
 import { api, components, internal } from "./_generated/api";
-import { internalAction, mutation, query } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
 import { chatAgent } from "./agents";
 import { rateLimiter } from "./rateLimiting";
 import { locale } from "./schema";
-import { getDraft, renameChat } from "./tools";
 import { verifyOwnership } from "./utils";
-
-const CHAT_TITLE = ({ locale }: { locale: Locale }) => {
-	if (locale === "en") return "New Chat";
-	if (locale === "fr") return "Nouvelle discussion";
-};
 
 export const createChat = mutation({
 	args: { locale },
@@ -38,6 +28,11 @@ export const createChat = mutation({
 		if (!user) {
 			throw new ChatSDKError("unauthorized:auth");
 		}
+
+		const CHAT_TITLE = ({ locale }: { locale: Locale }) => {
+			if (locale === "en") return "New Chat";
+			if (locale === "fr") return "Nouvelle discussion";
+		};
 
 		return await createThread(ctx, components.agent, {
 			title: CHAT_TITLE({ locale }),
@@ -77,7 +72,7 @@ export const sendMessage = mutation({
 			userId,
 		});
 
-		await ctx.scheduler.runAfter(0, internal.chat.streamChat, {
+		await ctx.scheduler.runAfter(0, internal.streams.streamChat, {
 			city,
 			country,
 			isPro: user.tier === "pro",
@@ -86,82 +81,6 @@ export const sendMessage = mutation({
 			region,
 			threadId,
 			userId,
-		});
-	},
-	returns: v.null(),
-});
-
-export const streamChat = internalAction({
-	args: {
-		city: v.optional(v.string()),
-		country: v.optional(v.string()),
-		isPro: v.boolean(),
-		locale,
-		promptMessageId: v.string(),
-		region: v.optional(v.string()),
-		threadId: v.string(),
-		userId: v.string(),
-	},
-	handler: async (
-		ctx,
-		{ isPro, city, locale, userId, threadId, country, region, promptMessageId },
-	) => {
-		const { consumeStream } = await chatAgent.streamText(
-			ctx,
-			{ threadId, userId },
-			{
-				model: isPro
-					? "anthropic/claude-sonnet-4.5"
-					: "anthropic/claude-4.5-haiku",
-				promptMessageId,
-				providerOptions: {
-					anthropic: {
-						thinking: {
-							budgetTokens: 0.001,
-							type: isPro ? "enabled" : "disabled",
-						},
-					} as AnthropicProviderOptions,
-					gateway: { only: ["anthropic"] } as GatewayProviderOptions,
-				},
-				system: CHAT_PROMPT({ city, country, locale }),
-				tools: {
-					"get-draft": getDraft,
-					"rename-chat": renameChat,
-					...(isPro && {
-						"web-search": anthropic.tools.webSearch_20250305({
-							maxUses: 5,
-							...((city || country || region) && {
-								userLocation: {
-									...(city && { city }),
-									...(country && { country }),
-									...(region && { region }),
-									type: "approximate",
-								},
-							}),
-						}),
-					}),
-				},
-			},
-			{ saveStreamDeltas: true },
-		);
-
-		await consumeStream();
-	},
-	returns: v.null(),
-});
-
-export const abortStreamByOrder = mutation({
-	args: {
-		order: v.number(),
-		threadId: v.string(),
-	},
-	handler: async (ctx, { order, threadId }) => {
-		await verifyOwnership(ctx, threadId);
-
-		await abortStream(ctx, components.agent, {
-			order,
-			reason: "Aborting explicitly",
-			threadId,
 		});
 	},
 	returns: v.null(),

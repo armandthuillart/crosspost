@@ -19,7 +19,7 @@ export default async function ChatLayout({
 	const [preloadedUser, preloadedChats] = await Promise.all([
 		preloadQuery(api.auth.getUser, {}, { token }),
 		preloadQuery(
-			api.chat.listChats,
+			api.chats.listChats,
 			{ paginationOpts: { cursor: null, numItems: 10 } },
 			{ token },
 		),

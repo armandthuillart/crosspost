@@ -79,13 +79,13 @@ export const ChatInput = forwardRef<InputRef, ChatInputProps>(
 
 		const isDirty = prompt.trim().length > 0;
 
-		const createChat = useMutation(api.chat.createChat);
+		const createChat = useMutation(api.chats.createChat);
 
-		const sendMessage = useMutation(api.chat.sendMessage).withOptimisticUpdate(
-			optimisticallySendMessage(api.chat.loadChat),
+		const sendMessage = useMutation(api.chats.sendMessage).withOptimisticUpdate(
+			optimisticallySendMessage(api.chats.loadChat),
 		);
 
-		const abortStreamByOrder = useMutation(api.chat.abortStreamByOrder);
+		const abortStreamByOrder = useMutation(api.streams.abortStreamByOrder);
 
 		const resetHeight = () => {
 			if (inputRef.current) {

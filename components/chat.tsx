@@ -45,10 +45,14 @@ export function Chat({
 		status,
 		results: uiMessages,
 		loadMore,
-	} = useUIMessages(api.chat.loadChat, chatId ? { threadId: chatId } : "skip", {
-		initialNumItems: 10,
-		stream: true,
-	});
+	} = useUIMessages(
+		api.chats.loadChat,
+		chatId ? { threadId: chatId } : "skip",
+		{
+			initialNumItems: 10,
+			stream: true,
+		},
+	);
 
 	const messages = status === "LoadingFirstPage" ? initialMessages : uiMessages;
 

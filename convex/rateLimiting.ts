@@ -19,16 +19,16 @@ const rateLimitConfig: Record<Tier, RateLimitConfig> = {
 		rate: 10,
 	},
 	free: {
-		capacity: 150,
+		capacity: 100,
 		kind: "fixed window",
 		period: MONTH,
-		rate: 150,
+		rate: 100,
 	},
 	pro: {
-		capacity: 1500,
+		capacity: 1000,
 		kind: "fixed window",
 		period: MONTH,
-		rate: 1500,
+		rate: 1000,
 	},
 };
 
@@ -40,14 +40,7 @@ export const rateLimiter = new RateLimiter(
 export const { getRateLimit: getAnonymousRateLimit } =
 	rateLimiter.hookAPI<DataModel>("anonymous", {
 		async key(ctx) {
-			const identity = await ctx.auth.getUserIdentity();
-
-			if (!identity || !identity.subject) {
-				console.log("identity is null");
-				return "";
-			}
-
-			return identity.subject;
+			return ctx.auth.getUserIdentity().then((identity) => identity!.subject);
 		},
 	});
 

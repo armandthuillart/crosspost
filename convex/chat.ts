@@ -1,5 +1,5 @@
 import { type AnthropicProviderOptions, anthropic } from "@ai-sdk/anthropic";
-import { type GatewayProviderOptions, gateway } from "@ai-sdk/gateway";
+import type { GatewayProviderOptions } from "@ai-sdk/gateway";
 import {
 	abortStream,
 	createThread,
@@ -111,8 +111,8 @@ export const streamChat = internalAction({
 			{ threadId, userId },
 			{
 				model: isPro
-					? gateway.languageModel("anthropic/claude-sonnet-4.5")
-					: gateway.languageModel("anthropic/claude-4.5-haiku"),
+					? "anthropic/claude-sonnet-4.5"
+					: "anthropic/claude-4.5-haiku",
 				promptMessageId,
 				providerOptions: {
 					anthropic: {

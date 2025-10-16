@@ -10,7 +10,6 @@
 
 import type * as adapter from "../adapter.js";
 import type * as auth from "../auth.js";
-import type * as crons from "../crons.js";
 import type * as generatedSchema from "../generatedSchema.js";
 
 import type {
@@ -30,7 +29,6 @@ import type {
 declare const fullApi: ApiFromModules<{
   adapter: typeof adapter;
   auth: typeof auth;
-  crons: typeof crons;
   generatedSchema: typeof generatedSchema;
 }>;
 export type Mounts = {

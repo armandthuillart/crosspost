@@ -16,13 +16,13 @@ function Page({ children, className, avatar, ...props }: PageProps) {
 	return (
 		<div
 			className={cn(
-				"flex size-full items-center justify-center px-5",
+				"flex size-full items-center justify-center md:px-5",
 				className,
 			)}
 			{...props}
 		>
 			<div className="flex size-full max-w-160 flex-col [--header-height:--spacing(15)]">
-				<div className="z-1 flex h-(--header-height) w-full shrink-0 items-center justify-center">
+				<div className="z-1 hidden h-(--header-height) w-full shrink-0 items-center justify-center md:flex">
 					<div className="flex items-center gap-4">
 						<h1 className="font-semibold text-[0.9375rem] leading-5.25">
 							{t("forYou")}
@@ -48,9 +48,9 @@ function Page({ children, className, avatar, ...props }: PageProps) {
 					</div>
 				</div>
 
-				<div className="h-full overflow-hidden rounded-t-3xl border border-b-0 bg-card shadow-lg">
+				<div className="h-full overflow-hidden rounded-t-3xl border-b-0 bg-card shadow-lg md:border">
 					<div className="flex size-full flex-col">
-						<div className="-mt-(--header-height) flex size-full flex-col justify-end overflow-hidden">
+						<div className="md:-mt-(--header-height) flex size-full flex-col justify-end overflow-hidden">
 							<Placeholder />
 						</div>
 

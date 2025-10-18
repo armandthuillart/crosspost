@@ -178,7 +178,7 @@ export function Draft({ draftId }: DraftProps) {
 							<Card className="relative h-88 rounded-2xl border-0 p-0 shadow-none">
 								<CardContent
 									className={cn(
-										"size-full overflow-hidden rounded-[inherit] bg-background",
+										"size-full overflow-hidden rounded-[inherit] bg-background max-md:px-0",
 										platform === "linkedin" && "not-dark:ring ring-border",
 										platform,
 									)}

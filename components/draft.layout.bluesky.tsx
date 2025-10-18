@@ -12,12 +12,12 @@ function Page({ children, className, ...props }: ComponentProps<"div">) {
 	return (
 		<div
 			className={cn(
-				"bluesky flex h-full items-center justify-center px-4 [--header-height:--spacing(11.75)]",
+				"bluesky flex h-full items-center justify-center [--header-height:--spacing(11.75)] md:px-4",
 				className,
 			)}
 			{...props}
 		>
-			<div className="absolute top-0 z-1 mx-auto grid h-(--header-height) w-full max-w-150 shrink-0 grid-cols-2 border border-t-0 bg-background">
+			<div className="absolute top-0 z-1 mx-auto grid h-(--header-height) w-full max-w-150 shrink-0 grid-cols-2 border-b bg-background md:border-x">
 				<div className="flex justify-center p-3.5 pb-0 hover:bg-accent">
 					<div className="flex h-full flex-col items-center justify-between">
 						<p className="font-semibold text-[15px] text-foreground leading-5">
@@ -39,7 +39,7 @@ function Page({ children, className, ...props }: ComponentProps<"div">) {
 				</div>
 			</div>
 
-			<div className="mx-auto flex size-full w-full max-w-150 flex-col overflow-hidden border-x">
+			<div className="mx-auto flex size-full w-full max-w-150 flex-col overflow-hidden md:border-x">
 				<div className="flex flex-col justify-end">
 					<Placeholder />
 				</div>

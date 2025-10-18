@@ -11,7 +11,7 @@ function Page({ children, className, ...props }: ComponentProps<"div">) {
 	return (
 		<div
 			className={cn(
-				"relative mx-auto flex size-full max-w-149.5 flex-col border-x",
+				"relative mx-auto flex size-full max-w-149.5 flex-col md:border-x",
 				className,
 			)}
 			{...props}

@@ -38,7 +38,7 @@ function Post({ content, children, className }: PostProps) {
 	return (
 		<div
 			className={cn(
-				"@container/post relative rounded-lg border bg-card",
+				"@container/post relative border-y bg-card md:rounded-lg md:border-x",
 				className,
 			)}
 		>
@@ -242,7 +242,7 @@ function Placeholder({ className }: ComponentProps<"div">) {
 	return (
 		<div
 			className={cn(
-				"@container/post relative rounded-lg border bg-card",
+				"@container/post relative border-y bg-card md:rounded-lg md:border-x",
 				className,
 			)}
 		>

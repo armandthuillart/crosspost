@@ -1,7 +1,7 @@
 "use client";
 
-import { useAtom } from "jotai";
 import { useTranslations } from "next-intl";
+import { parseAsBoolean, useQueryState } from "nuqs";
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import {
@@ -25,7 +25,6 @@ import {
 	CloseIcon,
 } from "~/components/ui/icons";
 import { VisuallyHidden } from "~/components/ui/visually-hidden";
-import { showPoliciesAtom } from "~/lib/atoms";
 import type { LegalDocument } from "~/lib/types";
 import { cn } from "~/lib/utils";
 
@@ -36,7 +35,6 @@ export function AppLegalDocumentsClient({ pages }: { pages: LegalDocument[] }) {
 
 	const [snap, setSnap] = useState<number | string | null>(snapPoints[0]);
 	const [index, setIndex] = useState(0);
-	const [isOpen, setIsOpen] = useAtom(showPoliciesAtom);
 	const [viewer, setViewer] = useState<string | null>(null);
 
 	const hasViewer = !!viewer;
@@ -64,6 +62,11 @@ export function AppLegalDocumentsClient({ pages }: { pages: LegalDocument[] }) {
 		setIndex(index);
 		setViewer(id);
 	};
+
+	const [isOpen, setIsOpen] = useQueryState(
+		"policies",
+		parseAsBoolean.withDefault(false),
+	);
 
 	return (
 		<Drawer

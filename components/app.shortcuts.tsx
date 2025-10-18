@@ -1,7 +1,7 @@
 "use client";
 
-import { useAtom } from "jotai";
 import { useTranslations } from "next-intl";
+import { parseAsBoolean, useQueryState } from "nuqs";
 import type { CSSProperties } from "react";
 import { Button } from "~/components/ui/button";
 import {
@@ -15,11 +15,14 @@ import {
 import { PrintIcon } from "~/components/ui/icons";
 import { Kbd } from "~/components/ui/kbd";
 import { SHORTCUTS, useShortcut } from "~/hooks/use-shortcuts";
-import { showShortcutsAtom } from "~/lib/atoms";
 
 export function AppShortcuts() {
 	const t = useTranslations("AppShortcuts");
-	const [isOpen, setIsOpen] = useAtom(showShortcutsAtom);
+
+	const [isOpen, setIsOpen] = useQueryState(
+		"shortcuts",
+		parseAsBoolean.withDefault(false),
+	);
 
 	useShortcut(SHORTCUTS.SEE_SHORTCUTS, () => setIsOpen((isOpen) => !isOpen));
 

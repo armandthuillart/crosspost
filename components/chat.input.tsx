@@ -3,7 +3,6 @@
 import { optimisticallySendMessage } from "@convex-dev/agent/react";
 import { isRateLimitError } from "@convex-dev/rate-limiter";
 import { useMutation } from "convex/react";
-import { useAtom } from "jotai";
 import { useLocale, useTranslations } from "next-intl";
 import {
 	type FormEvent,
@@ -26,9 +25,9 @@ import { PlusIcon } from "~/components/ui/icons";
 import { useTextareaAutoFocus } from "~/hooks/use-auto-focus";
 import { useTypewriter } from "~/hooks/use-typewriter";
 import { useRouter } from "~/i18n/navigation";
-import { showBannerAtom } from "~/lib/atoms";
 import { authClient } from "~/lib/auth-client";
 import type { User } from "~/lib/types";
+import { useUsageStore } from "~/lib/usage";
 import { attr } from "~/lib/utils";
 import { api } from "../convex/_generated/api";
 
@@ -68,11 +67,11 @@ export const ChatInput = forwardRef<InputRef, ChatInputProps>(
 		const t = useTranslations("ChatInput");
 		const locale = useLocale();
 		const router = useRouter();
+		const showBanner = useUsageStore(({ showBanner }) => showBanner);
 		const [threadId, setThreadId] = useState(chatId);
 
 		const inputRef = useRef<HTMLTextAreaElement>(null);
 
-		const [, showBanner] = useAtom(showBannerAtom);
 		const [prompt, setPrompt] = useState("");
 		const [threshold, setThreshold] = useState<number | null>(null);
 		const [isExpanded, setIsExpanded] = useState(false);
@@ -133,7 +132,7 @@ export const ChatInput = forwardRef<InputRef, ChatInputProps>(
 				threadId,
 			}).catch((e) => {
 				if (isRateLimitError(e)) {
-					showBanner(true);
+					showBanner();
 				}
 			});
 

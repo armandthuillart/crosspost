@@ -1,11 +1,9 @@
 "use client";
 
-import { useAtom } from "jotai";
 import { type ComponentProps, useEffect, useRef } from "react";
 import { StickToBottom, useStickToBottomContext } from "use-stick-to-bottom";
 import { Button, type ButtonProps } from "~/components/ui/button";
 import { ScrollIcon } from "~/components/ui/icons";
-import { showBannerAtom } from "~/lib/atoms";
 import { cn } from "~/lib/utils";
 
 function Conversation({
@@ -43,14 +41,15 @@ function ConversationContent({
 
 function ConversationScrollButton({ className, ...props }: ButtonProps) {
 	const { isAtBottom, scrollToBottom } = useStickToBottomContext();
-	const [isVisible] = useAtom(showBannerAtom);
+	// todo: create a zustand store, the user shouldn't be able to close the banner
+	// const [isVisible] = useAtom(showBannerAtom);
 
 	return (
 		!isAtBottom && (
 			<Button
 				className={cn(
 					"-translate-x-1/2 absolute bottom-12 left-1/2 z-50 rounded-full bg-muted hover:bg-secondary",
-					isVisible && "bottom-32",
+					// isVisible && "bottom-32",
 					className,
 				)}
 				onClick={() => scrollToBottom()}

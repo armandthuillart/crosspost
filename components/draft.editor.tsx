@@ -29,7 +29,7 @@ import {
 	HoverCardTrigger,
 } from "~/components/ui/hover-card";
 import { getColor, Progress } from "~/components/ui/progress";
-import { optimisticallyUpdateDraft } from "~/lib/store";
+import { optimisticallyUpdateDraft } from "~/lib/optimistic";
 import type { Platform } from "~/lib/types";
 import { api } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";

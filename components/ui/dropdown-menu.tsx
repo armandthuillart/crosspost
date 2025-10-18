@@ -1,7 +1,6 @@
 "use client";
 
 import { DropdownMenu as DropdownMenuPrimitive } from "radix-ui";
-import type { ComponentProps } from "react";
 import { ChevronRightIcon } from "~/components/ui/icons";
 import { cn } from "~/lib/utils";
 
@@ -64,19 +63,6 @@ function DropdownMenuItem({
 	);
 }
 
-function DropdownMenuShortcut({ className, ...props }: ComponentProps<"span">) {
-	return (
-		<span
-			className={cn(
-				"ml-auto text-muted-foreground text-xs tracking-widest",
-				className,
-			)}
-			data-slot="dropdown-menu-shortcut"
-			{...props}
-		/>
-	);
-}
-
 function DropdownMenuSub({
 	...props
 }: DropdownMenuPrimitive.DropdownMenuSubProps) {
@@ -130,7 +116,6 @@ export {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 	DropdownMenuContent,
-	DropdownMenuShortcut,
 	DropdownMenuSubTrigger,
 	DropdownMenuSubContent,
 };

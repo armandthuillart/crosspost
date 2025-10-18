@@ -15,7 +15,7 @@ import { X } from "~/components/draft.layout.x";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
 import { ShareIcon } from "~/components/ui/icons";
-import { ShiningText } from "~/components/ui/shining-text";
+import { Skeleton } from "~/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import type { Platform } from "~/lib/types";
 import { cn, getURL } from "~/lib/utils";
@@ -122,7 +122,7 @@ export function Draft({ draftId }: DraftProps) {
 	const [platform, setPlatform] = useState<Platform>(platforms[0]);
 
 	if (!draft) {
-		return <ShiningText text="Loading draft..." />;
+		return <Skeleton className="h-88 w-full rounded-2xl" />;
 	}
 
 	function handlePost() {

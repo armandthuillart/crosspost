@@ -1,7 +1,6 @@
 import "~/app/globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { Provider as JotaiProvider } from "jotai";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { cookies } from "next/headers";
@@ -78,13 +77,11 @@ export default async function LocaleLayout({
 			>
 				<NuqsAdapter>
 					<ThemeProvider>
-						<JotaiProvider>
-							<Analytics debug={false} />
-							<SpeedInsights debug={false} />
-							<NextIntlClientProvider>
-								<ConvexClientProvider>{children}</ConvexClientProvider>
-							</NextIntlClientProvider>
-						</JotaiProvider>
+						<Analytics debug={false} />
+						<SpeedInsights debug={false} />
+						<NextIntlClientProvider>
+							<ConvexClientProvider>{children}</ConvexClientProvider>
+						</NextIntlClientProvider>
 					</ThemeProvider>
 				</NuqsAdapter>
 			</body>

@@ -8,6 +8,7 @@ import {
 export const themeColors = [
 	"default",
 	"orange",
+	"yellow",
 	"green",
 	"blue",
 	"pink",

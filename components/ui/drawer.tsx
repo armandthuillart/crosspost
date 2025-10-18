@@ -38,14 +38,16 @@ function DrawerOverlay({
 
 function DrawerContent({
 	showIndicator = true,
+	container,
 	className,
 	children,
 	...props
 }: ComponentProps<typeof DrawerPrimitive.Content> & {
 	showIndicator?: boolean;
+	container?: HTMLElement;
 }) {
 	return (
-		<DrawerPortal data-slot="drawer-portal">
+		<DrawerPortal container={container} data-slot="drawer-portal">
 			<DrawerOverlay />
 			<DrawerPrimitive.Content
 				className={cn(

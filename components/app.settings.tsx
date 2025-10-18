@@ -1,10 +1,10 @@
 "use client";
 
-import { atom, useAtom } from "jotai";
 import { type Locale, useLocale, useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
+import { parseAsBoolean, useQueryState } from "nuqs";
 import { VisuallyHidden } from "radix-ui";
-import { type ReactNode, useEffect, useState, useTransition } from "react";
+import { type ReactNode, useState, useTransition } from "react";
 import { themeColors } from "~/app/theme-provider";
 import { Button } from "~/components/ui/button";
 import {
@@ -32,29 +32,29 @@ import {
 import { Separator } from "~/components/ui/separator";
 import { usePathname, useRouter } from "~/i18n/navigation";
 import { routing } from "~/i18n/routing";
-import { themeColorAtom } from "~/lib/atoms";
 import { checkout, customer } from "~/lib/auth-client";
-import type { ThemeColor, User } from "~/lib/types";
+import { useThemeStore } from "~/lib/theme";
+import type { User } from "~/lib/types";
 import { cn } from "~/lib/utils";
 
 const snapPoints = [0.5, 1];
-const snapPointsAtom = atom<number | string | null>(snapPoints[0]);
 
 interface AppSettingsProps {
 	user: User | null;
+	isFree: boolean;
 	children: ReactNode;
 }
 
-export function AppSettings({ user, children }: AppSettingsProps) {
-	const [snap, setSnap] = useAtom(snapPointsAtom);
-	const [isOpen, setIsOpen] = useState(false);
-	const [themeColor, setThemeColor] = useAtom(themeColorAtom);
-	const [isPending, startTransition] = useTransition();
-
+export function AppSettings({ user, isFree, children }: AppSettingsProps) {
 	const t = useTranslations("AppSettings");
-	const pathname = usePathname();
 	const locale = useLocale();
 	const router = useRouter();
+	const pathname = usePathname();
+
+	const [snap, setSnap] = useState<number | string | null>(snapPoints[0]);
+	const { theme, themes, setTheme } = useTheme();
+	const [isPending, startTransition] = useTransition();
+	const { themeColor, setThemeColor } = useThemeStore();
 
 	function handleLocaleChange(locale: Locale) {
 		startTransition(() => {
@@ -62,19 +62,18 @@ export function AppSettings({ user, children }: AppSettingsProps) {
 		});
 	}
 
-	const { theme, themes, setTheme } = useTheme();
-
-	useEffect(() => {
-		document.documentElement.setAttribute("data-theme", themeColor);
-	}, [themeColor]);
-
 	async function handleSubscription() {
-		if (user?.tier === "free") {
+		if (isFree) {
 			await checkout({ slug: "pro" });
 		} else {
 			await customer.portal();
 		}
 	}
+
+	const [isOpen, setIsOpen] = useQueryState(
+		"settings",
+		parseAsBoolean.withDefault(false),
+	);
 
 	return (
 		<Drawer
@@ -162,11 +161,7 @@ export function AppSettings({ user, children }: AppSettingsProps) {
 									icon={<AppearanceIcon className="size-5" />}
 									title={t("appearance")}
 								>
-									<Select
-										defaultValue={theme}
-										onValueChange={setTheme}
-										value={theme}
-									>
+									<Select onValueChange={setTheme} value={theme}>
 										<SelectTrigger className="w-fit bg-background">
 											<SelectValue />
 										</SelectTrigger>
@@ -188,13 +183,7 @@ export function AppSettings({ user, children }: AppSettingsProps) {
 									icon={<PaintBrushIcon className="size-5" />}
 									title={t("themeColor")}
 								>
-									<Select
-										defaultValue={themeColor}
-										onValueChange={(value) =>
-											setThemeColor(value as ThemeColor)
-										}
-										value={themeColor}
-									>
+									<Select onValueChange={setThemeColor} value={themeColor}>
 										<SelectTrigger className="w-fit bg-background">
 											<SelectValue />
 										</SelectTrigger>

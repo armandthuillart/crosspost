@@ -5,12 +5,11 @@ import {
 	useRateLimit,
 } from "@convex-dev/rate-limiter/react";
 import { format, isToday, isTomorrow } from "date-fns";
-import { useAtom } from "jotai";
 import { AnimatePresence, motion } from "motion/react";
 import { Button } from "~/components/ui/button";
 import { CloseIcon } from "~/components/ui/icons";
-import { showBannerAtom } from "~/lib/atoms";
 import { authClient } from "~/lib/auth-client";
+import { useUsageStore } from "~/lib/usage";
 import { api } from "../convex/_generated/api";
 
 async function handleSignInWithGoogle() {
@@ -27,7 +26,8 @@ interface ChatBannerProps {
 }
 
 export function ChatBanner({ isPro, isFree, isAnonymous }: ChatBannerProps) {
-	const [isVisible, setIsVisible] = useAtom(showBannerAtom);
+	const isVisible = useUsageStore(({ isVisible }) => isVisible);
+	const hideBanner = useUsageStore(({ hideBanner }) => hideBanner);
 
 	let getRateLimitApi: GetRateLimitValueQuery =
 		api.rateLimiting.getAnonymousRateLimit;
@@ -116,7 +116,7 @@ export function ChatBanner({ isPro, isFree, isAnonymous }: ChatBannerProps) {
 
 									<Button
 										className="size-8 rounded-full"
-										onClick={() => setIsVisible(false)}
+										onClick={hideBanner}
 										size="icon"
 										variant="ghost"
 									>

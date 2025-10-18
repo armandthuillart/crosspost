@@ -1,7 +1,7 @@
 "use client";
 
-import { useSetAtom } from "jotai";
 import { useTranslations } from "next-intl";
+import { parseAsBoolean, useQueryState } from "nuqs";
 import { AppSettings } from "~/components/app.settings";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import { DrawerTrigger } from "~/components/ui/drawer";
@@ -9,7 +9,6 @@ import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
-	DropdownMenuShortcut,
 	DropdownMenuSub,
 	DropdownMenuSubContent,
 	DropdownMenuSubTrigger,
@@ -24,9 +23,7 @@ import {
 	SignatureIcon,
 } from "~/components/ui/icons";
 import { SidebarMenuButton } from "~/components/ui/sidebar";
-import { SHORTCUTS } from "~/hooks/use-shortcuts";
 import { usePathname, useRouter } from "~/i18n/navigation";
-import { showPoliciesAtom, showShortcutsAtom } from "~/lib/atoms";
 import { signOut } from "~/lib/auth-client";
 import type { User } from "~/lib/types";
 
@@ -39,8 +36,15 @@ export function AppMenu({ user }: AppMenuProps) {
 	const router = useRouter();
 	const pathname = usePathname();
 
-	const setShowShortcuts = useSetAtom(showShortcutsAtom);
-	const setShowPolicies = useSetAtom(showPoliciesAtom);
+	const [, setShowPolicies] = useQueryState(
+		"policies",
+		parseAsBoolean.withDefault(false),
+	);
+
+	const [, setShowShortcuts] = useQueryState(
+		"shortcuts",
+		parseAsBoolean.withDefault(false),
+	);
 
 	async function handleSignOut() {
 		await signOut();
@@ -53,7 +57,7 @@ export function AppMenu({ user }: AppMenuProps) {
 	}
 
 	return (
-		<AppSettings user={user ?? null}>
+		<AppSettings isFree={user?.tier === "free"} user={user ?? null}>
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
 					<SidebarMenuButton className="sidebar-menu-trigger h-auto justify-between rounded-full pr-4 pl-2">

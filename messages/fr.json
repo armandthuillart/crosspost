@@ -28,7 +28,8 @@
 		"system": "Système",
 		"themeColor": "Couleur d'accentuation",
 		"title": "Paramètres",
-		"upgrade": "Mettre à niveau"
+		"upgrade": "Mettre à niveau",
+		"yellow": "Jaune"
 	},
 	"AppShortcuts": {
 		"description": "Pour aller encore plus vite.",

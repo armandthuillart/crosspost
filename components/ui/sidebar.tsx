@@ -7,7 +7,9 @@ import {
 	type CSSProperties,
 	createContext,
 	type MouseEvent,
+	type RefObject,
 	useContext,
+	useRef,
 	useState,
 } from "react";
 import { Button, type ButtonProps } from "~/components/ui/button";
@@ -26,9 +28,10 @@ import { cn } from "~/lib/utils";
 const SIDEBAR_COOKIE_NAME = "SIDEBAR";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
 const SIDEBAR_WIDTH = "16rem";
-const SIDEBAR_WIDTH_MOBILE = "16.25rem";
+const SIDEBAR_WIDTH_MOBILE = "18rem";
 
 type SidebarContextProps = {
+	ref: RefObject<HTMLDivElement | null>;
 	state: "expanded" | "collapsed";
 	isOpen: boolean;
 	isMobile: boolean;
@@ -64,6 +67,7 @@ function SidebarProvider({
 	isOpen: isOpenProp,
 	...props
 }: SidebarProviderProps) {
+	const ref = useRef<HTMLDivElement>(null);
 	const isMobile = useIsMobile();
 
 	const [_isOpen, _setIsOpen] = useState(defaultOpen);
@@ -99,6 +103,7 @@ function SidebarProvider({
 		isMobile,
 		isOpen,
 		isOpenMobile,
+		ref,
 		setIsOpen,
 		setIsOpenMobile,
 		state,
@@ -110,7 +115,13 @@ function SidebarProvider({
 			<div
 				className={cn("group/sidebar-wrapper flex h-dvh w-full", className)}
 				data-slot="sidebar-wrapper"
-				style={{ "--sidebar-width": SIDEBAR_WIDTH } as CSSProperties}
+				ref={ref}
+				style={
+					{
+						"--sidebar-width": SIDEBAR_WIDTH,
+						"--sidebar-width-mobile": SIDEBAR_WIDTH_MOBILE,
+					} as CSSProperties
+				}
 				{...props}
 			>
 				{children}
@@ -120,7 +131,7 @@ function SidebarProvider({
 }
 
 function Sidebar({ className, children, ...props }: ComponentProps<"div">) {
-	const { isMobile, state, isOpenMobile, setIsOpenMobile } = useSidebar();
+	const { ref, isMobile, state, isOpenMobile, setIsOpenMobile } = useSidebar();
 
 	const styles = {
 		"--initial-transform": "calc(100% + 8px)",
@@ -130,12 +141,13 @@ function Sidebar({ className, children, ...props }: ComponentProps<"div">) {
 	if (isMobile) {
 		return (
 			<Drawer
+				container={ref.current}
 				direction="left"
 				onOpenChange={setIsOpenMobile}
 				open={isOpenMobile}
 			>
 				<DrawerContent
-					className="group/sidebar bg-sidebar p-0 text-sidebar-foreground data-[vaul-drawer-direction=left]:w-(--sidebar-width) [&>button]:hidden"
+					className="group/sidebar bg-sidebar p-0 text-sidebar-foreground data-[vaul-drawer-direction=left]:w-(--sidebar-width-mobile) [&>button]:hidden"
 					data-mobile="true"
 					data-sidebar="sidebar"
 					data-slot="sidebar"

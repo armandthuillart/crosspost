@@ -28,7 +28,8 @@
 		"system": "System",
 		"themeColor": "Accent color",
 		"title": "Settings",
-		"upgrade": "Upgrade"
+		"upgrade": "Upgrade",
+		"yellow": "Yellow"
 	},
 	"AppShortcuts": {
 		"description": "For even faster navigation.",

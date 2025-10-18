@@ -121,7 +121,7 @@ export function Draft({ draftId }: DraftProps) {
 
 	const [platform, setPlatform] = useState<Platform>(platforms[0]);
 
-	if (!draft) {
+	if (!draft || !platform) {
 		return <ShiningText text="Loading draft..." />;
 	}
 
@@ -139,7 +139,6 @@ export function Draft({ draftId }: DraftProps) {
 	return (
 		<Tabs
 			className="relative not-first:mt-4 mb-4 w-full gap-0 overflow-hidden rounded-4xl bg-muted"
-			defaultValue={platforms[0]}
 			onValueChange={(value) => setPlatform(value as Platform)}
 			value={platform}
 		>

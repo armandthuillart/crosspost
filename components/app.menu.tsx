@@ -96,12 +96,6 @@ export function AppMenu({ user }: AppMenuProps) {
 							<DropdownMenuItem onClick={() => setShowShortcuts(true)}>
 								<KeyboardKeyIcon className="size-4" />
 								{t("keyboardShortcuts")}
-
-								<DropdownMenuShortcut>
-									{SHORTCUTS.SEE_SHORTCUTS.modifier && "⌘"}
-									{SHORTCUTS.SEE_SHORTCUTS.shift && "⇧"}
-									{SHORTCUTS.SEE_SHORTCUTS.key}
-								</DropdownMenuShortcut>
 							</DropdownMenuItem>
 						</DropdownMenuSubContent>
 					</DropdownMenuSub>

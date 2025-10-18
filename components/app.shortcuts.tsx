@@ -31,6 +31,7 @@ export function AppShortcuts() {
 		>
 			<DrawerContent
 				className="data-[vaul-drawer-direction=left]:after:!bg-transparent gap-0 rounded-2xl before:bg-transparent data-[vaul-drawer-direction=left]:top-3 data-[vaul-drawer-direction=left]:bottom-3 data-[vaul-drawer-direction=left]:left-3 data-[vaul-drawer-direction=left]:sm:max-w-xs"
+				showIndicator={false}
 				style={{ "--initial-transform": "calc(100% + 12px)" } as CSSProperties}
 			>
 				<DrawerHeader className="p-6 pb-4">

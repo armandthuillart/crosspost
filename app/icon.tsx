@@ -10,7 +10,7 @@ export default async function Icon() {
 
 	const hexColors: Record<ThemeColor, string> = {
 		blue: "#339CFF",
-		default: "#000000",
+		default: "#262626",
 		green: "#00A240",
 		orange: "#FB6A23",
 		pink: "#FF66AE",

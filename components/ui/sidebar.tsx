@@ -139,6 +139,7 @@ function Sidebar({ className, children, ...props }: ComponentProps<"div">) {
 					data-mobile="true"
 					data-sidebar="sidebar"
 					data-slot="sidebar"
+					showIndicator={false}
 					style={styles}
 				>
 					<DrawerHeader className="sr-only">

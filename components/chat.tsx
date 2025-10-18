@@ -95,7 +95,7 @@ export function Chat({
 
 	return (
 		<main
-			className="group/chat @container/chat relative flex size-full flex-col"
+			className="group/chat @container/chat relative flex size-full flex-col [--header-height:--spacing(13)]"
 			{...attr("chat", isChat)}
 		>
 			<ChatHeader isAnonymous={isAnonymous} isChat={isChat} isFree={isFree} />

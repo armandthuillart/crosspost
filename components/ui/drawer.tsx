@@ -37,10 +37,13 @@ function DrawerOverlay({
 }
 
 function DrawerContent({
+	showIndicator = true,
 	className,
 	children,
 	...props
-}: ComponentProps<typeof DrawerPrimitive.Content>) {
+}: ComponentProps<typeof DrawerPrimitive.Content> & {
+	showIndicator?: boolean;
+}) {
 	return (
 		<DrawerPortal data-slot="drawer-portal">
 			<DrawerOverlay />
@@ -52,9 +55,11 @@ function DrawerContent({
 				data-slot="drawer-content"
 				{...props}
 			>
-				<div className="!m-0 p-4">
-					<div className="mx-auto hidden h-2 w-25 shrink-0 rounded-full bg-muted group-data-[vaul-drawer-direction=bottom]/drawer-content:block" />
-				</div>
+				{showIndicator && (
+					<div className="!m-0 p-4">
+						<div className="mx-auto hidden h-2 w-25 shrink-0 rounded-full bg-muted group-data-[vaul-drawer-direction=bottom]/drawer-content:block" />
+					</div>
+				)}
 
 				{children}
 			</DrawerPrimitive.Content>

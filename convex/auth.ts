@@ -170,3 +170,16 @@ export const getUser = query({
 		}),
 	),
 });
+
+export const getSession = query({
+	args: {},
+	handler: async (ctx) => {
+		const { auth, headers } = await getAuth(createAuth, ctx);
+
+		const session = await auth.api.getSession({
+			headers,
+		});
+
+		return session;
+	},
+});

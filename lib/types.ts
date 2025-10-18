@@ -2,6 +2,7 @@ import type { UIMessage } from "@convex-dev/agent/react";
 import type { InferUITool, UIDataTypes, UITool } from "ai";
 import type { ReactNode } from "react";
 import type { z } from "zod";
+import type { api } from "../convex/_generated/api";
 import type { getDraft, renameChat } from "../convex/tools";
 import type { platformSchema, tierSchema } from "../lib/schema";
 
@@ -35,3 +36,5 @@ export interface LegalDocument {
 	title: string;
 	description: string | undefined;
 }
+
+export type Session = typeof api.auth.getSession._returnType;

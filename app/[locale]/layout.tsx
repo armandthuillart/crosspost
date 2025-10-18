@@ -8,7 +8,7 @@ import { notFound } from "next/navigation";
 import { hasLocale, type Locale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
-import { ConvexClientProvider } from "~/app/convex-client-provider";
+import { ConvexSSRClientProvider } from "~/app/convex-ssr-client-provider";
 import { ThemeProvider } from "~/app/theme-provider";
 import { routing } from "~/i18n/routing";
 import { appName } from "~/lib/constants";
@@ -80,7 +80,7 @@ export default async function LocaleLayout({
 						<Analytics debug={false} />
 						<SpeedInsights debug={false} />
 						<NextIntlClientProvider>
-							<ConvexClientProvider>{children}</ConvexClientProvider>
+							<ConvexSSRClientProvider>{children}</ConvexSSRClientProvider>
 						</NextIntlClientProvider>
 					</ThemeProvider>
 				</NuqsAdapter>

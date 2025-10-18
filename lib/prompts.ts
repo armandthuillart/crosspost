@@ -76,3 +76,19 @@ When specifically writing content for LinkedIn:
 Context: 
 Today is ${format(new Date(), "EEEE, MMMM d, yyyy")}. ${city && country && `The user is in ${city}, ${getName(country, "en")}.`} ${locale && `The user has set the language to ${locale === "en" ? "English" : "French"}.`}
 `;
+
+export const CHAT_TITLE_PROMPT = ({ prompt }: { prompt: string }) => `
+Generate a concise, natural title that expresses the primary subject or concept of the first user message.
+
+Focus on the underlying topic, not the exact wording or form of the request or question.
+
+Use a short noun phrase or short gerund phrase in the same language as the message.  
+- If the message is a question, rephrase it naturally as a topic.
+- Avoid generic or filler framing words that do not add specific meaning to the topic.  
+
+Limit the title to 2-4 words, use sentence-case capitalization, and do not include terminal punctuation.
+
+Output only the title text.
+
+Message: ${prompt}
+`;

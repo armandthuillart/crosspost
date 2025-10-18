@@ -13,8 +13,9 @@ import { type PaginationResult, paginationOptsValidator } from "convex/server";
 import { v } from "convex/values";
 import type { Locale } from "next-intl";
 import { ChatSDKError } from "../lib/errors";
+import { CHAT_TITLE_PROMPT } from "../lib/prompts";
 import { api, components, internal } from "./_generated/api";
-import { mutation, query } from "./_generated/server";
+import { internalAction, mutation, query } from "./_generated/server";
 import { chatAgent } from "./agents";
 import { rateLimiter } from "./rateLimiting";
 import { locale } from "./schema";
@@ -65,19 +66,26 @@ export const sendMessage = mutation({
 			throws: true,
 		});
 
-		const { messageId: promptMessageId } = await chatAgent.saveMessage(ctx, {
+		const { message, messageId } = await chatAgent.saveMessage(ctx, {
 			prompt,
 			skipEmbeddings: true,
 			threadId,
 			userId,
 		});
 
+		if (message.order === 0) {
+			await ctx.scheduler.runAfter(0, internal.chats.nameChat, {
+				prompt,
+				threadId,
+			});
+		}
+
 		await ctx.scheduler.runAfter(0, internal.streams.streamChat, {
 			city,
 			country,
 			isPro: user.tier === "pro",
 			locale,
-			promptMessageId,
+			messageId,
 			region,
 			threadId,
 			userId,
@@ -239,4 +247,27 @@ export const deleteChats = mutation({
 		}
 	},
 	returns: v.null(),
+});
+
+export const nameChat = internalAction({
+	args: {
+		prompt: v.string(),
+		threadId: v.string(),
+	},
+	handler: async (ctx, { prompt, threadId }) => {
+		const { text } = await chatAgent.generateText(
+			ctx,
+			{ threadId },
+			{
+				model: "anthropic/claude-4.5-haiku",
+				prompt: CHAT_TITLE_PROMPT({ prompt }),
+			},
+			{ storageOptions: { saveMessages: "none" } },
+		);
+
+		await chatAgent.updateThreadMetadata(ctx, {
+			patch: { title: text },
+			threadId,
+		});
+	},
 });

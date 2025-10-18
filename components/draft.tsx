@@ -121,7 +121,7 @@ export function Draft({ draftId }: DraftProps) {
 
 	const [platform, setPlatform] = useState<Platform>(platforms[0]);
 
-	if (!draft || !platform) {
+	if (!draft) {
 		return <ShiningText text="Loading draft..." />;
 	}
 

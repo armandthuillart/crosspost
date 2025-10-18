@@ -16,14 +16,14 @@ export const streamChat = internalAction({
 		country: v.optional(v.string()),
 		isPro: v.boolean(),
 		locale,
-		promptMessageId: v.string(),
+		messageId: v.string(),
 		region: v.optional(v.string()),
 		threadId: v.string(),
 		userId: v.string(),
 	},
 	handler: async (
 		ctx,
-		{ isPro, city, locale, userId, threadId, country, region, promptMessageId },
+		{ isPro, city, locale, userId, threadId, country, region, messageId },
 	) => {
 		const { consumeStream } = await chatAgent.streamText(
 			ctx,
@@ -32,7 +32,7 @@ export const streamChat = internalAction({
 				model: isPro
 					? "anthropic/claude-sonnet-4.5"
 					: "anthropic/claude-4.5-haiku",
-				promptMessageId,
+				promptMessageId: messageId,
 				providerOptions: {
 					anthropic: {
 						thinking: {

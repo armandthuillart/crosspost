@@ -8,15 +8,17 @@ export const tier = v.union(
 );
 
 export const platform = v.union(
-	v.literal("threads"),
+	v.literal("mastodon"),
 	v.literal("linkedin"),
 	v.literal("bluesky"),
+	v.literal("threads"),
 	v.literal("x"),
 );
 
 export const versions = v.object({
 	bluesky: v.optional(v.string()),
 	linkedin: v.optional(v.string()),
+	mastodon: v.optional(v.string()),
 	threads: v.optional(v.string()),
 	x: v.optional(v.string()),
 });

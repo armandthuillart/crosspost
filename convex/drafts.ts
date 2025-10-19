@@ -9,12 +9,7 @@ export const createDraft = mutation({
 	args: v.object({
 		threadId: v.string(),
 		userId: v.string(),
-		versions: v.object({
-			bluesky: v.optional(v.string()),
-			linkedin: v.optional(v.string()),
-			threads: v.optional(v.string()),
-			x: v.optional(v.string()),
-		}),
+		versions,
 	}),
 	handler: async (
 		ctx,

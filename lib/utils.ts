@@ -10,7 +10,10 @@ export function attr(key: string, condition: boolean) {
 	return condition ? { [`data-${key}`]: true } : {};
 }
 
-export function getURL(platform: Platform, content: string): string {
+export function createPostIntentURL(
+	platform: Platform,
+	content: string,
+): string {
 	function parse(content: string): string {
 		const hashtags = content.match(/#\w+/g)?.map((tag) => tag.slice(1)) || [];
 		const urls = content.match(/https?:\/\/[^\s]+/g) || [];
@@ -47,6 +50,7 @@ export function getURL(platform: Platform, content: string): string {
 
 	const baseUrls: Record<Exclude<Platform, "linkedin">, string> = {
 		bluesky: "https://bsky.app/intent/compose",
+		mastodon: "https://mastodon.social",
 		threads: "https://www.threads.net/intent/post",
 		x: "https://x.com/intent/post",
 	};

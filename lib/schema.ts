@@ -2,7 +2,13 @@ import { z } from "zod";
 
 export const tierSchema = z.enum(["anonymous", "free", "pro"]);
 
-export const platformSchema = z.enum(["threads", "linkedin", "bluesky", "x"]);
+export const platformSchema = z.enum([
+	"x",
+	"threads",
+	"bluesky",
+	"linkedin",
+	"mastodon",
+]);
 
 export const draftSchema = z.object({
 	versions: z
@@ -14,6 +20,10 @@ export const draftSchema = z.object({
 			linkedin: z
 				.string()
 				.max(3000, { error: "Must be under 3000 characters" })
+				.optional(),
+			mastodon: z
+				.string()
+				.max(500, { error: "Must be under 500 characters" })
 				.optional(),
 			threads: z
 				.string()

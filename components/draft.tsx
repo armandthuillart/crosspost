@@ -10,6 +10,7 @@ import {
 import { DraftEditor } from "~/components/draft.editor";
 import { Bluesky } from "~/components/draft.layout.bluesky";
 import { LinkedIn } from "~/components/draft.layout.linkedin";
+import { Mastodon } from "~/components/draft.layout.mastodon";
 import { Threads } from "~/components/draft.layout.threads";
 import { X } from "~/components/draft.layout.x";
 import { Button } from "~/components/ui/button";
@@ -18,7 +19,7 @@ import { ShareIcon } from "~/components/ui/icons";
 import { Skeleton } from "~/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import type { Platform } from "~/lib/types";
-import { cn, getURL } from "~/lib/utils";
+import { cn, createPostIntentURL } from "~/lib/utils";
 import { api } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
 
@@ -54,6 +55,13 @@ const PLATFORM_CONFIG: Record<Platform, Options> = {
 			post: { component: LinkedIn.Post, props: {} },
 		},
 		maxLength: 3000,
+	},
+	mastodon: {
+		components: {
+			layout: Mastodon,
+			post: { component: Mastodon.Post, props: {} },
+		},
+		maxLength: 500,
 	},
 	threads: {
 		components: {
@@ -96,6 +104,7 @@ function renderIcon(platform: Platform, className: string) {
 	if (platform === "x") return <X.Icon className={className} />;
 	if (platform === "bluesky") return <Bluesky.Icon className={className} />;
 	if (platform === "threads") return <Threads.Icon className={className} />;
+	if (platform === "mastodon") return <Mastodon.Icon className={className} />;
 	if (platform === "linkedin") return <LinkedIn.Icon className={className} />;
 }
 
@@ -103,6 +112,7 @@ function getLabel(platform: Platform) {
 	if (platform === "x") return "X";
 	if (platform === "bluesky") return "Bluesky";
 	if (platform === "threads") return "Threads";
+	if (platform === "mastodon") return "Mastodon";
 	if (platform === "linkedin") return "LinkedIn";
 }
 
@@ -132,13 +142,14 @@ export function Draft({ draftId }: DraftProps) {
 
 		if (!content) return;
 
-		const url = getURL(platform, content);
+		const url = createPostIntentURL(platform, content);
 		window.open(url, "_blank", "noopener,noreferrer");
 	}
 
 	return (
 		<Tabs
 			className="relative not-first:mt-4 mb-4 w-full gap-0 overflow-hidden rounded-4xl bg-muted"
+			defaultValue={platforms[0]}
 			onValueChange={(value) => setPlatform(value as Platform)}
 			value={platform}
 		>
@@ -164,7 +175,6 @@ export function Draft({ draftId }: DraftProps) {
 
 				<Button className="rounded-full" onClick={handlePost} size="sm">
 					Post
-					<ShareIcon className="size-4" />
 				</Button>
 			</div>
 

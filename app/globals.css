@@ -329,6 +329,30 @@
 	--text-base: 0.875rem;
 }
 
+.mastodon {
+	--background: oklch(100% 0 0);
+	--foreground: oklch(0% 0 0);
+	--border: oklch(89% 0.0204 286);
+	--muted: oklch(94.7% 0.0238 304);
+	--muted-foreground: oklch(50.4% 0.0585 284);
+	--accent: oklch(94.7% 0.0238 304);
+	--accent-foreground: oklch(28.8% 0.0273 285);
+	--text-base: 0.9375rem;
+	--text-base--line-height: 1.375rem;
+}
+
+.dark .mastodon {
+	--background: oklch(20.9% 0.0197 285);
+	--foreground: oklch(89.3% 0.0207 298);
+	--border: oklch(32.2% 0.0336 284);
+	--muted: oklch(28.8% 0.0273 285);
+	--muted-foreground: oklch(50.4% 0.0585 284);
+	--accent: oklch(28.8% 0.0273 285);
+	--accent-foreground: oklch(70.9% 0.0653 285);
+	--text-base: 0.9375rem;
+	--text-base--line-height: 1.375rem;
+}
+
 @layer base {
 	* {
 		@apply border-border outline-ring/50 caret-primary;

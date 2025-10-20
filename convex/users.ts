@@ -57,7 +57,10 @@ export const createCustomer = action({
 
 		const customer = paginated.result.items[0];
 
-		if (!customer) {
+		const shouldCreateCustomer =
+			!customer && !!email && !email.includes("://") && !email.includes("/");
+
+		if (shouldCreateCustomer) {
 			await polarClient.customers.create({
 				email,
 				externalId: userId,

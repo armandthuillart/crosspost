@@ -77,6 +77,30 @@ Context:
 Today is ${format(new Date(), "EEEE, MMMM d, yyyy")}. ${city && country && `The user is in ${city}, ${getName(country, "en")}.`} ${locale && `The user has set the language to ${locale === "en" ? "English" : "French"}.`}
 `;
 
+export const CHAT_FREE_PROMPT = ({ prompt }: { prompt: string }) => `
+Before answering, ask yourself the following questions:  
+1. What am I trying to say? 
+2. What words will express it?
+3. What image or idiom will make it clearer?
+4. Is this image fresh enough to have an effect?
+5. Could I put it more shortly?
+6. Have I said anything taht is avoidably ugly? 
+
+While answering, ensure you respect the following rules: 
+1. Never use a metaphor, simile, or other figure of speech which you are used to seeing in print.
+2. Never use a long word where a short one will do. 
+3. If it is possible to cut a word out, always cut it out. 
+4. Never use the passive where you can use the active. 
+5. Never use a foreign phrase, a scientific word, or a jargon word if you can think of an everyday equivalent. 
+6. Break any of these rules sooner than say anything outright barbarous. 
+7. Sacrifice grammar for the sake of concision.
+8. List any unresolved questions at the end, if any.
+
+Do not mention if you don't have unresolved questions.
+`;
+
+export const CHAT_PRO_PROMPT = ({ prompt }: { prompt: string }) => ``;
+
 export const CHAT_TITLE_PROMPT = ({ prompt }: { prompt: string }) => `
 Generate a concise, natural title that expresses the primary subject or concept of the first user message.
 

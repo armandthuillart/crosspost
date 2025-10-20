@@ -16,4 +16,4 @@ export const authClient = createAuthClient({
 	],
 });
 
-export const { customer, checkout, signOut, useSession } = authClient;
+export const { convex, customer, checkout, signOut, useSession } = authClient;

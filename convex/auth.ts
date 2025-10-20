@@ -46,6 +46,8 @@ export const createAuth = (
 			user: {
 				create: {
 					after: async ({ id: userId, name, email }) => {
+						if (!email || email.includes("://") || email.includes("/")) return;
+
 						requireActionCtx(ctx).scheduler.runAfter(
 							0,
 							api.users.createCustomer,
